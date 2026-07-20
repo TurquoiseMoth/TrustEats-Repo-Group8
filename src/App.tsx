@@ -1,5 +1,7 @@
+import { AppRoutes } from "./routes";
+
 function App() {
-    return <div>TrustEats</div>;
+  return <AppRoutes />;
 }
 
 export default App;
