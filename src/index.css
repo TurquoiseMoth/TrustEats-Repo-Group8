@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+@theme {
+    /* Colors */
+    --color-brand-base: #3c7443;
+    --color-brand-nav: #7da282;
+    --color-brand-icons: #048340;
+
+    /* Spacing (padding/margin) */
+    --spacing-nav: 0.5rem 1rem 0.5rem 1rem;
+
+    /* font styles */
+    --font-family-body: 'Inter', sans-serif;
+    --text-size-heading:2.25rem;
+}

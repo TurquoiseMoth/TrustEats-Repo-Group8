@@ -1,10 +1,7 @@
 import { Routes, Route } from "react-router";
 import { ROUTES } from "../constants";
-
-function HomePage() {
-  return <div className="p-8 text-center"><h1 className="text-2xl font-bold">TrustEats</h1><p className="mt-2 text-gray-600">Scan. Verify. Trust.</p></div>;
-}
-
+import Layout from "../components/layout/Layout";
+import HomePage from "../pages/HomePage";
 function LoginPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Login</h1></div>;
 }
@@ -48,9 +45,11 @@ function ProfilePage() {
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path={ROUTES.HOME} element={<HomePage />} />
       <Route path={ROUTES.LOGIN} element={<LoginPage />} />
       <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+      <Route element={<Layout/>}>
+
+      <Route path={ROUTES.HOME} element={<HomePage />} />
       <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
       <Route path={ROUTES.SCAN} element={<ScanPage />} />
       <Route path={ROUTES.RESULT} element={<ResultPage />} />
@@ -59,6 +58,7 @@ export function AppRoutes() {
       <Route path={ROUTES.REPORTS} element={<ReportsPage />} />
       <Route path={ROUTES.HISTORY} element={<HistoryPage />} />
       <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+      </Route>
     </Routes>
   );
 }
