@@ -1,6 +1,6 @@
 
 
-function Button({children, className}) {
+function Button({children, className}: {children: React.ReactNode, className?: string}) {
   return (
     <div>
 

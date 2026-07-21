@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@layer base {
+    body {
+        color: #292d32;
+        background-color: #f0f8ff;
+    }
+}
+
 @theme {
     /* Colors */
     --color-brand-base: #3c7443;
@@ -10,6 +17,6 @@
     --spacing-nav: 0.5rem 1rem 0.5rem 1rem;
 
     /* font styles */
-    --font-family-body: 'Inter', sans-serif;
+    --font-family-body: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', sans-serif;
     --text-size-heading:2.25rem;
 }
