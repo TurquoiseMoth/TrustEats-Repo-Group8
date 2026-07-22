@@ -109,11 +109,11 @@ function Footer() {
 
   return (
     <footer className="bg-[#2D5A3D]">
-      {/* ── Top: Brand + Social ──────────────────────── */}
-      <div className="mx-auto max-w-6xl px-6 pt-14 pb-10">
-        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+      {/* ── Top: Brand + Links + Newsletter ─────────────── */}
+      <div className="mx-auto max-w-7xl px-6 pt-14 pb-10">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {/* Brand column */}
-          <div className="flex max-w-sm flex-col gap-4">
+          <div className="flex flex-col gap-4">
             {/* Logo placeholder */}
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/15">
               <span className="text-lg font-bold text-white">TE</span>
@@ -129,57 +129,54 @@ function Footer() {
             <SocialIconsRow icons={socialIcons} />
           </div>
 
-          {/* Link columns + Newsletter */}
-          <div className="flex flex-1 flex-col gap-10 md:flex-row md:gap-16 lg:gap-24">
-            {/* Link columns */}
-            <div className="flex gap-12">
-              <FooterLinkColumn title="Company" links={companyLinks} />
-              <FooterLinkColumn title="Support" links={supportLinks} />
-            </div>
+          {/* Company links */}
+          <FooterLinkColumn title="Company" links={companyLinks} />
 
-            {/* Newsletter */}
-            <div className="flex max-w-xs flex-col">
-              <h4 className="mb-3 text-[15px] font-bold text-white">
-                Stay Updated
-              </h4>
-              <p className="mb-4 text-[13px] leading-relaxed text-white/70">
-                Subscribe to our newsletter for the latest updates on food
-                safety and verification.
-              </p>
+          {/* Support links */}
+          <FooterLinkColumn title="Support" links={supportLinks} />
 
-              <form onSubmit={handleSubmit} className="relative">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  required
-                  className="w-full rounded-xl bg-white py-3 pl-4 pr-12 text-[14px] text-gray-800 placeholder-gray-400 outline-none"
-                />
-                <button
-                  type="submit"
-                  aria-label="Subscribe"
-                  className={twMerge(
-                    clsx(
-                      "absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#2D5A3D] text-white transition-colors hover:bg-[#3a7250]",
-                    ),
-                  )}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-              </form>
-            </div>
+          {/* Newsletter */}
+          <div className="flex flex-col">
+            <h4 className="mb-3 text-[15px] font-bold text-white">
+              Stay Updated
+            </h4>
+            <p className="mb-4 text-[13px] leading-relaxed text-white/70">
+              Subscribe to our newsletter for the latest updates on food
+              safety and verification.
+            </p>
+
+            <form onSubmit={handleSubmit} className="relative">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+                className="w-full rounded-xl bg-white py-3 pl-4 pr-12 text-[14px] text-gray-800 placeholder-gray-400 outline-none"
+              />
+              <button
+                type="submit"
+                aria-label="Subscribe"
+                className={twMerge(
+                  clsx(
+                    "absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#2D5A3D] text-white transition-colors hover:bg-[#3a7250]",
+                  ),
+                )}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </form>
           </div>
         </div>
       </div>
 
       {/* ── Divider ─────────────────────────────────── */}
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-7xl px-6">
         <div className="h-px w-full bg-white/15" />
       </div>
 
       {/* ── Bottom: Copyright ────────────────────────── */}
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-6 py-6 sm:flex-row sm:justify-between">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 px-6 py-6 sm:flex-row sm:justify-between">
         <div className="flex items-center gap-2">
           <Shield className="h-4 w-4 text-[#F59E0B]" />
           <span className="text-[13px] text-white/60">
