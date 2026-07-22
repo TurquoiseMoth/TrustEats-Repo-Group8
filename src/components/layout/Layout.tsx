@@ -9,6 +9,7 @@ function Layout() {
 
       <Outlet/>
         </div>
+        <div className="mt-20" />
         <Footer/>
     </div>
   )
