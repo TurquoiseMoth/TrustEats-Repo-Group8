@@ -1,17 +1,17 @@
 import apiClient from "./api";
-import type { AuthResponse, LoginRequest, RegisterRequest } from "../types";
+import type { AuthResponse, LoginRequest, RegisterRequest, ApiResponse } from "../types";
 
 export const authService = {
   login: (data: LoginRequest) =>
-    apiClient.post<AuthResponse>("/auth/login", data).then((res) => res.data),
+    apiClient.post<ApiResponse<AuthResponse>>("/auth/login", data).then((res) => res.data.data!),
 
   register: (data: RegisterRequest) =>
-    apiClient.post<AuthResponse>("/auth/register", data).then((res) => res.data),
+    apiClient.post<ApiResponse<AuthResponse>>("/auth/register", data).then((res) => res.data.data!),
 
   logout: () => {
     localStorage.removeItem("auth_token");
   },
 
   getCurrentUser: () =>
-    apiClient.get<AuthResponse>("/auth/me").then((res) => res.data),
+    apiClient.get<ApiResponse<AuthResponse>>("/auth/me").then((res) => res.data.data!),
 };

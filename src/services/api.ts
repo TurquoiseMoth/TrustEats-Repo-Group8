@@ -4,7 +4,7 @@ import type { ApiError } from "../types";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_BASE_URL?.endsWith('/api') ? API_BASE_URL : `${API_BASE_URL || ''}/api`,
   headers: {
     "Content-Type": "application/json",
   },
@@ -22,9 +22,9 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     const apiError: ApiError = {
+      success: false,
       message: error.response?.data?.message ?? "An unexpected error occurred",
-      status: error.response?.status ?? 500,
-      code: error.response?.data?.code,
+      details: error.response?.data?.details,
     };
     return Promise.reject(apiError);
   },

@@ -4,10 +4,10 @@ export const ROUTES = {
   REGISTER: "/register",
   DASHBOARD: "/dashboard",
   SCAN: "/scan",
-  RESULT: "/result/:barcode",
+  RESULT: "/result/:code",
   PRODUCT: "/product/:id",
-  VERIFY: "/verify/:productId",
-  REPORTS: "/reports",
+  VERIFY: "/verify/:code",
+  ANALYTICS: "/analytics",
   HISTORY: "/history",
   PROFILE: "/profile",
 } as const;

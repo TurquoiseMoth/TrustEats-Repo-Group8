@@ -30,8 +30,8 @@ function VerifyPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Verification</h1></div>;
 }
 
-function ReportsPage() {
-  return <div className="p-8"><h1 className="text-2xl font-bold">Reports</h1></div>;
+function AnalyticsPage() {
+  return <div className="p-8"><h1 className="text-2xl font-bold">Analytics</h1></div>;
 }
 
 function HistoryPage() {
@@ -55,7 +55,7 @@ export function AppRoutes() {
       <Route path={ROUTES.RESULT} element={<ResultPage />} />
       <Route path={ROUTES.PRODUCT} element={<ProductPage />} />
       <Route path={ROUTES.VERIFY} element={<VerifyPage />} />
-      <Route path={ROUTES.REPORTS} element={<ReportsPage />} />
+      <Route path={ROUTES.ANALYTICS} element={<AnalyticsPage />} />
       <Route path={ROUTES.HISTORY} element={<HistoryPage />} />
       <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
       </Route>

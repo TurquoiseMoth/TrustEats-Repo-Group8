@@ -1,12 +1,25 @@
-import type { VerificationStatus } from "./verification";
-
 export interface Product {
   id: string;
   name: string;
-  barcode: string;
-  brand: string;
+  description?: string;
+  category?: string;
   imageUrl?: string;
-  verificationStatus: VerificationStatus;
+  batchNumber?: string;
+  manufactureDate?: string;
+  expiryDate?: string;
+  _count?: {
+    verificationCodes: number;
+  };
+  createdAt?: string;
+}
+
+export interface VerificationCode {
+  id: string;
+  code: string;
+  unitSerial: string;
+  status: string; // ACTIVE, REVOKED, etc.
+  qrCodeUrl: string;
+  maxExpectedScans: number;
+  productId: string;
   createdAt: string;
-  updatedAt: string;
 }

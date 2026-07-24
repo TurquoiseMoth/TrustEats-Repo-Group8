@@ -1,8 +1,11 @@
-export interface User {
+export interface Manufacturer {
   id: string;
-  email: string;
   name: string;
-  createdAt: string;
+  email: string;
+  role?: string;
+  isVerified?: boolean;
+  apiKey?: string;
+  createdAt?: string;
 }
 
 export interface LoginRequest {
@@ -17,6 +20,6 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-  user: User;
-  token: string;
+  manufacturer: Manufacturer;
+  token?: string;
 }
