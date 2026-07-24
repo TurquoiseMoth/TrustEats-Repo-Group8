@@ -2,6 +2,8 @@ import { Routes, Route } from "react-router";
 import { ROUTES } from "../constants";
 import Layout from "../components/layout/Layout";
 import HomePage from "../pages/HomePage";
+import HistoryPage from "../pages/HistoryPage";
+import VerifyPage from "../pages/VerifyPage";
 function LoginPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Login</h1></div>;
 }
@@ -26,16 +28,10 @@ function ProductPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Product Details</h1></div>;
 }
 
-function VerifyPage() {
-  return <div className="p-8"><h1 className="text-2xl font-bold">Verification</h1></div>;
-}
+
 
 function AnalyticsPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Analytics</h1></div>;
-}
-
-function HistoryPage() {
-  return <div className="p-8"><h1 className="text-2xl font-bold">History</h1></div>;
 }
 
 function ProfilePage() {
