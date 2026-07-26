@@ -1,26 +1,28 @@
 import apiClient from "./api";
-import type { Product, PaginatedResponse } from "../types";
+import type { Product, VerificationCode, ApiResponse } from "../types";
 
 export const productService = {
-  getAll: (page = 1, pageSize = 20) =>
-    apiClient
-      .get<PaginatedResponse<Product>>("/products", {
-        params: { page, pageSize },
-      })
-      .then((res) => res.data),
+  create: (data: Partial<Product>) =>
+    apiClient.post<ApiResponse<Product>>("/products", data).then((res) => res.data.data!),
+
+  getAll: () =>
+    apiClient.get<ApiResponse<Product[]>>("/products").then((res) => res.data.data!),
 
   getById: (id: string) =>
-    apiClient.get<Product>(`/products/${id}`).then((res) => res.data),
+    apiClient.get<ApiResponse<Product>>(`/products/${id}`).then((res) => res.data.data!),
 
-  getByBarcode: (barcode: string) =>
-    apiClient
-      .get<Product>(`/products/barcode/${barcode}`)
-      .then((res) => res.data),
+  update: (id: string, data: Partial<Product>) =>
+    apiClient.patch<ApiResponse<Product>>(`/products/${id}`, data).then((res) => res.data.data!),
 
-  search: (query: string) =>
-    apiClient
-      .get<PaginatedResponse<Product>>("/products/search", {
-        params: { q: query },
-      })
-      .then((res) => res.data),
+  delete: (id: string) =>
+    apiClient.delete<ApiResponse<null>>(`/products/${id}`).then((res) => res.data),
+
+  generateCodes: (productId: string, quantity: number, unitSerialPrefix: string) =>
+    apiClient.post<ApiResponse<{ count: number; codes: VerificationCode[] }>>(`/products/${productId}/codes`, { quantity, unitSerialPrefix }).then((res) => res.data.data!),
+
+  getCodes: (productId: string) =>
+    apiClient.get<ApiResponse<VerificationCode[]>>(`/products/${productId}/codes`).then((res) => res.data.data!),
+
+  revokeCode: (codeId: string) =>
+    apiClient.post<ApiResponse<VerificationCode>>(`/products/codes/${codeId}/revoke`).then((res) => res.data.data!),
 };

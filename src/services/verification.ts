@@ -1,19 +1,14 @@
 import apiClient from "./api";
-import type { VerificationResult, ScanResult } from "../types";
+import type { VerificationResult, VerificationRequest, ApiResponse } from "../types";
 
 export const verificationService = {
-  verifyProduct: (productId: string) =>
+  verifyCode: (code: string) =>
     apiClient
-      .post<VerificationResult>(`/verification/${productId}`)
-      .then((res) => res.data),
+      .get<ApiResponse<VerificationResult>>(`/verify/${code}`)
+      .then((res) => res.data.data!),
 
-  getResult: (id: string) =>
+  verifyCodeWithContext: (data: VerificationRequest) =>
     apiClient
-      .get<VerificationResult>(`/verification/${id}`)
-      .then((res) => res.data),
-
-  scanBarcode: (barcode: string) =>
-    apiClient
-      .post<ScanResult>("/verification/scan", { barcode })
-      .then((res) => res.data),
+      .post<ApiResponse<VerificationResult>>("/verify", data)
+      .then((res) => res.data.data!),
 };

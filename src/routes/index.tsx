@@ -4,11 +4,23 @@ import { Routes, Route } from "react-router";
 import { ROUTES } from "../constants";
 import Layout from "../components/layout/Layout";
 import HomePage from "../pages/HomePage";
+<<<<<<< HEAD
 import RegisterPage from "../pages/SignUpPage";
 import LoginPage from "../pages/SignInPage";
 import ScanPage from "../pages/ScanPage";
 import VerifyPage from '../pages/VerifyPage';
 import ResultPage from "../pages/ResultPage";
+=======
+import HistoryPage from "../pages/HistoryPage";
+import VerifyPage from "../pages/VerifyPage";
+function LoginPage() {
+  return <div className="p-8"><h1 className="text-2xl font-bold">Login</h1></div>;
+}
+
+function RegisterPage() {
+  return <div className="p-8"><h1 className="text-2xl font-bold">Register</h1></div>;
+}
+>>>>>>> b052239b5b3dc9cd345a4e11f7b9d1e078b1506f
 
 function DashboardPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Dashboard</h1></div>;
@@ -18,12 +30,16 @@ function ProductPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Product Details</h1></div>;
 }
 
+<<<<<<< HEAD
 function ReportsPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Reports</h1></div>;
 }
+=======
 
-function HistoryPage() {
-  return <div className="p-8"><h1 className="text-2xl font-bold">History</h1></div>;
+>>>>>>> b052239b5b3dc9cd345a4e11f7b9d1e078b1506f
+
+function AnalyticsPage() {
+  return <div className="p-8"><h1 className="text-2xl font-bold">Analytics</h1></div>;
 }
 
 function ProfilePage() {
@@ -43,7 +59,7 @@ export function AppRoutes() {
       <Route path={ROUTES.RESULT} element={<ResultPage />} />
       <Route path={ROUTES.PRODUCT} element={<ProductPage />} />
       <Route path={ROUTES.VERIFY} element={<VerifyPage />} />
-      <Route path={ROUTES.REPORTS} element={<ReportsPage />} />
+      <Route path={ROUTES.ANALYTICS} element={<AnalyticsPage />} />
       <Route path={ROUTES.HISTORY} element={<HistoryPage />} />
       <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
       </Route>
