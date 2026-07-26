@@ -23,3 +23,10 @@ export interface AuthResponse {
   manufacturer: Manufacturer;
   token?: string;
 }
+
+export interface SignUpFormData {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
