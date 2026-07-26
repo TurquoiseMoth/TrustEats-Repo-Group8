@@ -11,3 +11,4 @@ export const ROUTES = {
   HISTORY: "/history",
   PROFILE: "/profile",
 } as const;
+export const SIGNUP = '/sign-up';   

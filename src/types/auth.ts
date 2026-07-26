@@ -20,3 +20,10 @@ export interface AuthResponse {
   user: User;
   token: string;
 }
+
+export interface SignUpFormData {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}

@@ -1,33 +1,21 @@
 import { Routes, Route } from "react-router";
+// Trigger recompile
+
 import { ROUTES } from "../constants";
 import Layout from "../components/layout/Layout";
 import HomePage from "../pages/HomePage";
-function LoginPage() {
-  return <div className="p-8"><h1 className="text-2xl font-bold">Login</h1></div>;
-}
-
-function RegisterPage() {
-  return <div className="p-8"><h1 className="text-2xl font-bold">Register</h1></div>;
-}
+import RegisterPage from "../pages/SignUpPage";
+import LoginPage from "../pages/SignInPage";
+import ScanPage from "../pages/ScanPage";
+import VerifyPage from '../pages/VerifyPage';
+import ResultPage from "../pages/ResultPage";
 
 function DashboardPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Dashboard</h1></div>;
 }
 
-function ScanPage() {
-  return <div className="p-8"><h1 className="text-2xl font-bold">Scan</h1></div>;
-}
-
-function ResultPage() {
-  return <div className="p-8"><h1 className="text-2xl font-bold">Scan Result</h1></div>;
-}
-
 function ProductPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Product Details</h1></div>;
-}
-
-function VerifyPage() {
-  return <div className="p-8"><h1 className="text-2xl font-bold">Verification</h1></div>;
 }
 
 function ReportsPage() {
