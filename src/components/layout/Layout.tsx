@@ -1,5 +1,6 @@
 import Navbar from "./Navbar"
 import Footer from "./Footer"
+import BottomNav from "./BottomNav"
 import { Outlet, useLocation } from "react-router"
 import { ROUTES } from "../../constants"
 
@@ -10,7 +11,7 @@ function Layout() {
   return (
     <div>
         <Navbar/>
-        <div className="px-4 md:px-8 lg:px-16 max-w-7xl mx-auto">
+        <div className="px-4 md:px-8 lg:px-16 max-w-7xl mx-auto pb-16 md:pb-0">
             <Outlet/>
         </div>
         
@@ -20,6 +21,8 @@ function Layout() {
             <Footer/>
           </>
         )}
+
+        {!isHomePage && <BottomNav/>}
     </div>
   )
 }

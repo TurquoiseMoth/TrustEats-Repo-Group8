@@ -1,32 +1,36 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
-<<<<<<< HEAD
-import { ROUTES } from "../../constants";
-=======
 import { Button } from "../ui";
 
+/* 
+ * Nav links include all user-facing pages in the app.
+ * Parameterised routes (e.g. /verify/:code) are excluded since they
+ * require dynamic data and aren't meaningful as static nav targets.
+ */
 const navLinks = [
     { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
-    { label: "Why Us", href: "/why-us" },
-    { label: "FAQ", href: "/faq" },
+    { label: "Scan", href: "/scan" },
     { label: "History", href: "/history" },
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Analytics", href: "/analytics" },
+    { label: "Profile", href: "/profile" },
 ];
->>>>>>> b052239b5b3dc9cd345a4e11f7b9d1e078b1506f
 
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     return (
-<<<<<<< HEAD
-        <nav className="bg-brand-nav w-full p-nav relative z-50">
-            <div className="flex items-center justify-between h-12">
-=======
-        <nav className="bg-brand-nav w-full h-12 px-4 md:px-8">
-            <div className="mx-auto flex h-full max-w-7xl items-center justify-between">
+        <nav className="bg-brand-nav w-full relative z-50 px-4 md:px-8">
+            {/* ── Top bar (always h-12) ─────────────────── */}
+            <div className="mx-auto flex h-12 max-w-7xl items-center justify-between">
                 {/* Logo */}
->>>>>>> b052239b5b3dc9cd345a4e11f7b9d1e078b1506f
-                <p className="text-white font-bold text-xl">TrustEats Logo</p>
+                <Link to="/" className="flex items-center gap-1">
+                    <img
+                        src="/assets/trusteats-logo.png"
+                        alt="TrustEats"
+                        className="h-8 w-auto"
+                    />
+                </Link>
 
                 {/* Centered nav links - desktop only */}
                 <div className="hidden md:flex items-center gap-8">
@@ -63,15 +67,9 @@ function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile menu dropdown */}
+            {/* ── Mobile menu dropdown (overlays page content) ── */}
             {isMenuOpen && (
-<<<<<<< HEAD
-                <div className="absolute top-full left-0 bg-[#2E6B3E] w-full p-4 flex flex-col gap-4 shadow-lg">
-                    <Link to={ROUTES.HOME} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Home</Link>
-                    <Link to={ROUTES.REGISTER} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Sign Up</Link>
-                    <Link to={ROUTES.LOGIN} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Login</Link>
-=======
-                <div className="flex flex-col gap-2 px-2 py-4 md:hidden">
+                <div className="absolute left-0 right-0 top-12 z-50 flex flex-col gap-2 bg-brand-nav px-6 py-4 shadow-lg md:hidden">
                     {navLinks.map((link) => (
                         <Link
                             key={link.label}
@@ -84,13 +82,12 @@ function Navbar() {
                     ))}
                     <div className="mt-2 flex flex-col gap-2 border-t border-white/20 pt-3">
                         <Button className="cursor-pointer rounded-full border border-white/40 px-5 py-2 text-sm font-medium text-white">
-                            <Link to="/login">Log In</Link>
+                            <Link to="/login" onClick={() => setIsMenuOpen(false)}>Log In</Link>
                         </Button>
                         <Button className="cursor-pointer rounded-full bg-white px-5 py-2 text-sm font-semibold text-brand-nav">
-                            <Link to="/register">Sign Up</Link>
+                            <Link to="/register" onClick={() => setIsMenuOpen(false)}>Sign Up</Link>
                         </Button>
                     </div>
->>>>>>> b052239b5b3dc9cd345a4e11f7b9d1e078b1506f
                 </div>
             )}
         </nav>

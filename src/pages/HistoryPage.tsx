@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, CheckCircle2, AlertTriangle, XCircle, Home, ScanLine, History as HistoryIcon, User, X, BadgeCheck } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { ChevronLeft, ChevronRight, CheckCircle2, AlertTriangle, XCircle, X, BadgeCheck } from "lucide-react";
+import { useNavigate } from "react-router";
 
 // Dummy data for history, now with image paths
 const historyItems = [
@@ -68,28 +68,6 @@ export default function HistoryPage() {
                         </div>
                     </div>
                 ))}
-            </div>
-
-            {/* Bottom Nav */}
-            <div className="fixed bottom-0 left-0 right-0 border-t border-gray-200 bg-[#F4F7F9] pb-4 pt-2 z-10">
-                <div className="flex justify-around items-center h-[52px] max-w-md mx-auto px-4">
-                    <Link to="/" className="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors">
-                        <Home size={22} />
-                        <span className="text-[11px] font-medium">Home</span>
-                    </Link>
-                    <Link to="/scan" className="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors">
-                        <ScanLine size={22} />
-                        <span className="text-[11px] font-medium">Scan</span>
-                    </Link>
-                    <Link to="/history" className="flex flex-col items-center gap-1 text-[#397240]">
-                        <HistoryIcon size={22} />
-                        <span className="text-[11px] font-medium">History</span>
-                    </Link>
-                    <Link to="/profile" className="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors">
-                        <User size={22} />
-                        <span className="text-[11px] font-medium">Profile</span>
-                    </Link>
-                </div>
             </div>
 
             {/* Modal Backdrop */}

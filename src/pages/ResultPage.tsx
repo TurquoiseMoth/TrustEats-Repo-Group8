@@ -1,26 +1,70 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams, useLocation } from 'react-router';
+import { useQuery } from '@tanstack/react-query';
 import { ROUTES } from '../constants';
+import { verificationService } from '../services/verification';
+import { Spinner } from '../components/ui';
+import type { VerificationResult } from '../types';
 
 export default function ResultPage() {
   const navigate = useNavigate();
+  const { code } = useParams<{ code: string }>();
+  const location = useLocation();
 
-  const product = {
-    name: 'Gino Pepper and Onion Paste',
-    nafdac: '2782864',
-    manufacturedDate: '20/06/2026',
-    expiryDate: '22/06/2027',
-    company: 'Gino',
-  };
+  const passedResult = location.state?.result as VerificationResult | undefined;
+
+  const { data: result, isLoading, error } = useQuery<VerificationResult>({
+    queryKey: ['verification', code],
+    queryFn: () => verificationService.verifyCode(code!),
+    enabled: !passedResult && !!code,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const verification = passedResult ?? result;
+
+  if (isLoading) {
+    return (
+      <div style={styles.page}>
+        <div style={styles.statusContainer}>
+          <Spinner size="lg" />
+          <p style={styles.statusText}>Loading result...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !verification) {
+    return (
+      <div style={styles.page}>
+        <div style={styles.statusContainer}>
+          <div style={styles.errorIcon}>!</div>
+          <p style={styles.errorTitle}>Could not load result</p>
+          <p style={styles.errorText}>Please check your connection and try again.</p>
+          <button style={styles.retryBtn} onClick={() => navigate(ROUTES.SCAN)}>
+            Return to Scan
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const isFake = verification.status === 'FAKE';
+  const product = verification.product;
+
+  const bannerBg = isFake ? '#FDEAEA' : '#FFF8E1';
+  const bannerBorder = isFake ? '#F5C6C6' : '#FFE082';
+  const bannerIconBg = isFake ? '#D32F2F' : '#F9A825';
+  const bannerTitleColor = isFake ? '#B71C1C' : '#F57F17';
+  const bannerTitle = isFake ? 'Product Not Verified' : 'Suspicious Product';
+  const bannerSub = verification.reason;
 
   return (
     <div style={styles.page}>
-
-      {/* Verified banner */}
-      <div style={styles.banner}>
-        <div style={styles.bannerIcon}>✓</div>
+      {/* Status banner */}
+      <div style={{ ...styles.banner, background: bannerBg, border: `1px solid ${bannerBorder}` }}>
+        <div style={{ ...styles.bannerIcon, background: bannerIconBg }}>!</div>
         <div>
-          <p style={styles.bannerTitle}>Product is Verified</p>
-          <p style={styles.bannerSub}>Duly verified by <strong>NAFDAC</strong></p>
+          <p style={{ ...styles.bannerTitle, color: bannerTitleColor }}>{bannerTitle}</p>
+          <p style={styles.bannerSub}>{bannerSub}</p>
         </div>
       </div>
 
@@ -28,27 +72,53 @@ export default function ResultPage() {
       <div style={styles.card}>
         <h2 style={styles.cardTitle}>Product Details</h2>
 
-        <Row label="Product Name" value={product.name} />
-        <Row label="NAFDAC Number" value={product.nafdac} />
-        <Row label="Manufactured Date" value={product.manufacturedDate} />
-        <Row label="Expiry Date" value={product.expiryDate} />
-        <Row label="Company / Brand" value={product.company} last />
+        {product ? (
+          <>
+            <Row label="Product Name" value={product.name} />
+            <Row label="NAFDAC Number" value={product.verificationCode} />
+            <Row label="Manufactured Date" value={product.manufactureDate} />
+            <Row label="Expiry Date" value={product.expiryDate} />
+            <Row label="Company / Brand" value={product.manufacturer.name} last />
+          </>
+        ) : (
+          <Row label="Verification Code" value={code ?? 'N/A'} last />
+        )}
       </div>
+
+      {/* Scan stats (if suspicious) */}
+      {verification.scanStats && (
+        <div style={styles.statsCard}>
+          <h3 style={styles.statsTitle}>Scan Activity</h3>
+          <div style={styles.statsGrid}>
+            <div style={styles.statItem}>
+              <span style={styles.statValue}>{verification.scanStats.scansInWindow}</span>
+              <span style={styles.statLabel}>Total Scans</span>
+            </div>
+            <div style={styles.statItem}>
+              <span style={styles.statValue}>{verification.scanStats.distinctLocationsInWindow}</span>
+              <span style={styles.statLabel}>Locations</span>
+            </div>
+            <div style={styles.statItem}>
+              <span style={styles.statValue}>{verification.scanStats.windowHours}h</span>
+              <span style={styles.statLabel}>Time Window</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Actions */}
       <div style={styles.actions}>
         <button style={styles.btnPrimary} onClick={() => navigate(ROUTES.SCAN)}>
           Return to Scan
         </button>
-        <button style={styles.btnSecondary} onClick={() => navigate(ROUTES.REPORTS)}>
+        <button style={styles.btnSecondary}>
           Report
         </button>
       </div>
 
       <button style={styles.dashLink} onClick={() => navigate(ROUTES.HOME)}>
-        ← Return to Dashboard
+        &larr; Return to Dashboard
       </button>
-
     </div>
   );
 }
@@ -71,9 +141,55 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     padding: '24px 20px 40px',
   },
+  statusContainer: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '16px',
+  },
+  statusText: {
+    color: '#888',
+    fontSize: '14px',
+  },
+  errorIcon: {
+    width: '48px',
+    height: '48px',
+    borderRadius: '50%',
+    background: '#D32F2F',
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '24px',
+    fontWeight: 700,
+  },
+  errorTitle: {
+    color: '#111',
+    fontSize: '16px',
+    fontWeight: 700,
+    margin: 0,
+  },
+  errorText: {
+    color: '#888',
+    fontSize: '13px',
+    textAlign: 'center',
+    maxWidth: '280px',
+    margin: 0,
+  },
+  retryBtn: {
+    marginTop: '8px',
+    padding: '10px 24px',
+    background: '#3F7A46',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '14px',
+    fontWeight: 600,
+    cursor: 'pointer',
+  },
   banner: {
-    background: '#EAF4EC',
-    border: '1px solid #C2DEC6',
     borderRadius: '12px',
     padding: '16px',
     display: 'flex',
@@ -85,7 +201,6 @@ const styles: Record<string, React.CSSProperties> = {
     width: '36px',
     height: '36px',
     borderRadius: '50%',
-    background: '#3F7A46',
     color: '#fff',
     display: 'flex',
     alignItems: 'center',
@@ -97,7 +212,6 @@ const styles: Record<string, React.CSSProperties> = {
   bannerTitle: {
     fontSize: '15px',
     fontWeight: 700,
-    color: '#2E6B3E',
     margin: 0,
     marginBottom: '2px',
   },
@@ -111,7 +225,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: '1px solid #E8EDE8',
     borderRadius: '12px',
     padding: '20px',
-    marginBottom: '24px',
+    marginBottom: '16px',
   },
   cardTitle: {
     fontSize: '16px',
@@ -142,6 +256,39 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 600,
     textAlign: 'right',
     flex: 1,
+  },
+  statsCard: {
+    background: '#ffffff',
+    border: '1px solid #E8EDE8',
+    borderRadius: '12px',
+    padding: '16px',
+    marginBottom: '20px',
+  },
+  statsTitle: {
+    fontSize: '14px',
+    fontWeight: 700,
+    color: '#111',
+    marginBottom: '12px',
+    margin: '0 0 12px 0',
+  },
+  statsGrid: {
+    display: 'flex',
+    justifyContent: 'space-around',
+  },
+  statItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '4px',
+  },
+  statValue: {
+    fontSize: '18px',
+    fontWeight: 700,
+    color: '#3F7A46',
+  },
+  statLabel: {
+    fontSize: '12px',
+    color: '#888',
   },
   actions: {
     display: 'flex',
