@@ -1,6 +1,7 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
+import { ROUTES } from "../../constants";
 import { Button } from "../ui";
 
 /* 
@@ -9,90 +10,60 @@ import { Button } from "../ui";
  * require dynamic data and aren't meaningful as static nav targets.
  */
 const navLinks = [
-    { label: "Home", href: "/" },
-    { label: "Scan", href: "/scan" },
-    { label: "History", href: "/history" },
-    { label: "Dashboard", href: "/dashboard" },
-    { label: "Analytics", href: "/analytics" },
-    { label: "Profile", href: "/profile" },
-    { label: "Report", href: "/report" },
+  { label: "Home", href: ROUTES.HOME },
+  { label: "History", href: ROUTES.HISTORY },
+  { label: "Profile", href: ROUTES.PROFILE },
 ];
 
 function Navbar() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    return (
-        <nav className="bg-brand-nav w-full relative z-50 px-4 md:px-8">
-            {/* ── Top bar (always h-12) ─────────────────── */}
-            <div className="mx-auto flex h-12 max-w-7xl items-center justify-between">
-                {/* Logo */}
-                <Link to="/" className="flex items-center gap-1">
-                    <img
-                        src="/assets/trusteats-logo.png"
-                        alt="TrustEats"
-                        className="h-8 w-auto"
-                    />
-                </Link>
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-                {/* Centered nav links - desktop only */}
-                <div className="hidden md:flex items-center gap-8">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.label}
-                            to={link.href}
-                            className="text-white/90 text-sm font-medium transition-colors hover:text-white"
-                        >
-                            {link.label}
-                        </Link>
-                    ))}
-                </div>
+  return (
+    <nav className="bg-brand-nav w-full p-nav relative z-50">
+      <div className="flex items-center justify-between h-12">
+        <p className="text-white font-bold text-xl">TrustEats Logo</p>
 
-                {/* Right side: Auth buttons (desktop) / Hamburger (mobile) */}
-                <div className="flex items-center gap-3">
-                    {/* Desktop auth buttons in pill container */}
-                    <div className="hidden md:flex items-center gap-2 rounded-full bg-white/15 px-2 py-1">
-                        <Button className="cursor-pointer rounded-full px-5 py-1.5 text-sm font-medium text-white transition-colors hover:bg-white/10">
-                            <Link to="/login">Log In</Link>
-                        </Button>
-                        <Button className="cursor-pointer rounded-full bg-white px-5 py-1.5 text-sm font-semibold text-brand-nav transition-colors hover:bg-white/90">
-                            <Link to="/register">Sign Up</Link>
-                        </Button>
-                    </div>
+        {/* Desktop nav links */}
+        <div className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.label}
+              to={link.href}
+              className="text-white/90 text-sm font-medium transition-colors hover:text-white"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
 
-                    {/* Mobile hamburger */}
-                    <button
-                        className="text-white md:hidden"
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    >
-                        {isMenuOpen ? <X /> : <Menu />}
-                    </button>
-                </div>
-            </div>
+        {/* Desktop auth buttons */}
+        <div className="hidden md:flex items-center gap-2 rounded-full bg-white/15 px-2 py-1">
+          <Button className="cursor-pointer rounded-full px-5 py-1.5 text-sm font-medium text-white hover:bg-white/10">
+            <Link to={ROUTES.LOGIN}>Log In</Link>
+          </Button>
+          <Button className="cursor-pointer rounded-full bg-white px-5 py-1.5 text-sm font-semibold text-brand-nav hover:bg-white/90">
+            <Link to={ROUTES.REGISTER}>Sign Up</Link>
+          </Button>
+        </div>
 
-            {/* ── Mobile menu dropdown (overlays page content) ── */}
-            {isMenuOpen && (
-                <div className="absolute left-0 right-0 top-12 z-50 flex flex-col gap-2 bg-brand-nav px-6 py-4 shadow-lg md:hidden">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.label}
-                            to={link.href}
-                            className="text-white/90 text-sm font-medium px-3 py-2 rounded-lg transition-colors hover:bg-white/10"
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            {link.label}
-                        </Link>
-                    ))}
-                    <div className="mt-2 flex flex-col gap-2 border-t border-white/20 pt-3">
-                        <Button className="cursor-pointer rounded-full border border-white/40 px-5 py-2 text-sm font-medium text-white">
-                            <Link to="/login" onClick={() => setIsMenuOpen(false)}>Log In</Link>
-                        </Button>
-                        <Button className="cursor-pointer rounded-full bg-white px-5 py-2 text-sm font-semibold text-brand-nav">
-                            <Link to="/register" onClick={() => setIsMenuOpen(false)}>Sign Up</Link>
-                        </Button>
-                    </div>
-                </div>
-            )}
-        </nav>
-    )
+        {/* Mobile hamburger */}
+        <button className="text-white md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          {isMenuOpen ? <X /> : <Menu />}
+        </button>
+      </div>
+
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="absolute top-full left-0 bg-[#2E6B3E] w-full p-4 flex flex-col gap-4 shadow-lg">
+          <Link to={ROUTES.HOME} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Home</Link>
+          <Link to={ROUTES.HISTORY} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>History</Link>
+          <Link to={ROUTES.PROFILE} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Profile</Link>
+          <Link to={ROUTES.REGISTER} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Sign Up</Link>
+          <Link to={ROUTES.LOGIN} className="text-white font-medium text-lg" onClick={() => setIsMenuOpen(false)}>Log In</Link>
+        </div>
+      )}
+    </nav>
+  );
 }
 
 export default Navbar;

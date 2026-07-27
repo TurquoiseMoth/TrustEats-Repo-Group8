@@ -1,16 +1,44 @@
 import { useState } from "react";
+import { ChevronLeft, ChevronRight, CheckCircle2, AlertTriangle, XCircle, Home, ScanLine, History as HistoryIcon, User, X, BadgeCheck } from "lucide-react";
+import { Link, useNavigate } from "react-router";
+import { MOCK_VERIFICATIONS, PRODUCT_META } from "../utils/mockData";
 import { ChevronLeft, ChevronRight, CheckCircle2, AlertTriangle, XCircle, X, BadgeCheck } from "lucide-react";
 import { useNavigate } from "react-router";
 
-// Dummy data for history, now with image paths
-const historyItems = [
-    { id: 1, name: "Gino Pepper & Onion Paste", status: "Verified", date: "Today, 12:53 PM", image: "/assets/products/gino-pepper-and-onion-paste-product-image.png", NAFDAC: "2782864", mfg: "20/06/2026", exp: "22/06/2027", brand: "Gino" },
-    { id: 2, name: "PureTeaste Tomatoes sauce", status: "Verified", date: "Today, 12:53 PM", image: "/assets/products/pureteaste-tomatoes-sauce-product-image.png", NAFDAC: "1234567", mfg: "15/05/2026", exp: "15/05/2027", brand: "PureTeaste" },
-    { id: 3, name: "SunHarvest Oil", status: "Verified", date: "Today, 12:53 PM", image: "/assets/products/sunharvest-vegetable-oil-product-image.png", NAFDAC: "9876543", mfg: "10/01/2026", exp: "10/01/2028", brand: "SunHarvest" },
-    { id: 4, name: "Golden Morn", status: "Verified", date: "Today, 12:53 PM", image: "/assets/products/golden-morn-cereal-product-image.png", NAFDAC: "4567890", mfg: "05/03/2026", exp: "05/09/2026", brand: "Nestle" },
-    { id: 5, name: "Unidentified", status: "NOT Verified", date: "Today, 12:53 PM", image: "/assets/products/unidentified-corn-tomato-chips-product-image.png", NAFDAC: "N/A", mfg: "N/A", exp: "N/A", brand: "Unknown" },
-    { id: 6, name: "Unidentified", status: "Fake", date: "Today, 12:53 PM", image: "/assets/products/farm-milk-bottle-product-image.png", NAFDAC: "N/A", mfg: "N/A", exp: "N/A", brand: "Unknown" },
-];
+// Helper: map verification result to display status
+function mapResult(result: string): 'Verified' | 'NOT Verified' | 'Fake' {
+    if (result === 'Genuine') return 'Verified';
+    if (result === 'Counterfeit') return 'Fake';
+    return 'NOT Verified';
+}
+
+// Helper: format "2026-08-01 23:56" → "Aug 1, 11:56 PM"
+function formatScanDate(dateStr: string): string {
+    const date = new Date(dateStr.replace(' ', 'T'));
+    if (isNaN(date.getTime())) return dateStr;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        + ', ' + date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
+
+// Build history items from mock verification records
+const historyItems = MOCK_VERIFICATIONS.map((v, idx) => {
+    const meta = PRODUCT_META[v.product] ?? { nafdac: 'N/A', mfg: 'N/A', exp: 'N/A', image: '' };
+    return {
+        id: idx + 1,
+        verificationId: v.id,
+        name: v.product,
+        status: mapResult(v.result),
+        date: formatScanDate(v.scanDate),
+        image: meta.image,
+        NAFDAC: meta.nafdac,
+        mfg: meta.mfg,
+        exp: meta.exp,
+        brand: v.manufacturer,
+        state: v.state,
+        method: v.method,
+        device: v.device,
+    };
+});
 
 export default function HistoryPage() {
     const navigate = useNavigate();
