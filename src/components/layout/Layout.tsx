@@ -1,5 +1,6 @@
 import Navbar from "./Navbar"
 import Footer from "./Footer"
+import BottomNav from "./BottomNav"
 import { Outlet, useLocation } from "react-router"
 import { ROUTES } from "../../constants"
 

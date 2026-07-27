@@ -4,6 +4,11 @@ import { Link } from "react-router";
 import { ROUTES } from "../../constants";
 import { Button } from "../ui";
 
+/* 
+ * Nav links include all user-facing pages in the app.
+ * Parameterised routes (e.g. /verify/:code) are excluded since they
+ * require dynamic data and aren't meaningful as static nav targets.
+ */
 const navLinks = [
   { label: "Home", href: ROUTES.HOME },
   { label: "History", href: ROUTES.HISTORY },

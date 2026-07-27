@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
 
 export default function VerifyPage() {
+  const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
-  const [nafdac, setNafdac] = useState('');
-  const [company, setCompany] = useState('');
-  const [error, setError] = useState('');
+  const location = useLocation();
 
   const handleVerify = () => {
     if (!nafdac.trim()) {
@@ -17,25 +16,50 @@ export default function VerifyPage() {
     navigate(ROUTES.RESULT.replace(':code', nafdac));
   };
 
-  return (
-    <div style={styles.page}>
+  const { data: result, isLoading, error } = useQuery<VerificationResult>({
+    queryKey: ["verification", code],
+    queryFn: () => verificationService.verifyCode(code!),
+    enabled: !passedResult && !!code,
+    staleTime: 5 * 60 * 1000,
+  });
 
-      <div style={styles.header}>
-        <button style={styles.backBtn} onClick={() => navigate(-1)}>‹</button>
-        <h1 style={styles.headerTitle}>Scan & Verify</h1>
+  const verification = passedResult ?? result;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#F4F7F9] flex flex-col items-center justify-center px-4 font-sans">
+        <Spinner size="lg" />
+        <p className="mt-4 text-gray-500 text-sm">Loading product details...</p>
       </div>
+    );
+  }
 
-      <div style={styles.camera}>
-        <div style={{ position: 'absolute', top: 20, left: 20, width: 40, height: 40, borderTop: '3px solid #3F7A46', borderLeft: '3px solid #3F7A46' }} />
-        <div style={{ position: 'absolute', top: 20, right: 20, width: 40, height: 40, borderTop: '3px solid #3F7A46', borderRight: '3px solid #3F7A46' }} />
-        <div style={{ position: 'absolute', bottom: 20, left: 20, width: 40, height: 40, borderBottom: '3px solid #3F7A46', borderLeft: '3px solid #3F7A46' }} />
-        <div style={{ position: 'absolute', bottom: 20, right: 20, width: 40, height: 40, borderBottom: '3px solid #3F7A46', borderRight: '3px solid #3F7A46' }} />
-        <div style={styles.scanLine} />
+  if (error || !verification) {
+    return (
+      <div className="min-h-screen bg-[#F4F7F9] flex flex-col items-center justify-center px-4 font-sans">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-red-100 border border-red-200">
+          <span className="text-red-500 text-3xl font-bold">!</span>
+        </div>
+        <p className="mt-6 text-lg font-semibold text-gray-800">Could not load product</p>
+        <p className="mt-2 text-sm text-gray-500 text-center max-w-xs">
+          The product could not be verified. Please check the code and try again.
+        </p>
+        <button
+          onClick={() => navigate(ROUTES.SCAN)}
+          className="mt-6 px-6 py-3 bg-[#397240] text-white rounded-full text-sm font-semibold hover:bg-green-800 transition-colors"
+        >
+          Return to Scan
+        </button>
       </div>
+    );
+  }
 
-      <div style={styles.form}>
-        <h2 style={styles.formTitle}>Verify with NAFDAC Number</h2>
-        <p style={styles.formSubtitle}>Enter the product details below to verify authenticity</p>
+  if (verification.status !== "GENUINE") {
+    navigate(ROUTES.RESULT.replace(":code", code ?? ""), { state: { result: verification }, replace: true });
+    return null;
+  }
+
+  const product = verification.product;
 
         <div style={styles.field}>
           <label style={styles.label}>
@@ -64,14 +88,15 @@ export default function VerifyPage() {
           />
         </div>
 
-        <button style={styles.btnPrimary} onClick={handleVerify}>
-          Verify Product
-        </button>
+        <p className="mt-4 max-w-xs text-center text-[15px] leading-relaxed text-gray-500">
+          This product has undergone all verification and is duly verified by{" "}
+          <span className="font-bold text-gray-700">NAFDAC</span>
+        </p>
       </div>
 
-    </div>
-  );
-}
+      {/* Product Details Card */}
+      <div className="w-full max-w-95 rounded-[1.25rem] border-[1.5px] border-[#397240]/40 bg-[#F4F7F9] p-6 shadow-sm mb-10">
+        <h3 className="mb-6 text-[17px] font-bold text-gray-900 tracking-wide">Product Details</h3>
 
 const styles: Record<string, React.CSSProperties> = {
   page: {

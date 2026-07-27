@@ -1,38 +1,122 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
+import QrScanner from '../components/QrScanner';
+import { verificationService } from '../services/verification';
+import type { VerificationResult } from '../types';
+
+type ScanState = 'scanning' | 'verifying' | 'error' | 'manual-input';
 
 export default function ScanPage() {
   const navigate = useNavigate();
+  const [scanState, setScanState] = useState<ScanState>('scanning');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [manualCode, setManualCode] = useState('');
+
+  async function handleVerification(code: string) {
+    setScanState('verifying');
+    try {
+      const result: VerificationResult = await verificationService.verifyCode(code);
+      if (result.status === 'GENUINE') {
+        navigate(ROUTES.VERIFY.replace(':code', code), { state: { result } });
+      } else {
+        navigate(ROUTES.RESULT.replace(':code', code), { state: { result } });
+      }
+    } catch {
+      setErrorMessage('Could not verify product. Please check your connection and try again.');
+      setScanState('error');
+    }
+  }
+
+  function handleScanSuccess(decodedText: string) {
+    handleVerification(decodedText);
+  }
+
+  function handleManualSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = manualCode.trim();
+    if (trimmed) handleVerification(trimmed);
+  }
 
   return (
     <div style={styles.page}>
-
       <div style={styles.header}>
-        <button style={styles.backBtn} onClick={() => navigate(-1)}>‹</button>
+        <button style={styles.backBtn} onClick={() => navigate(-1)}>&lsaquo;</button>
         <h1 style={styles.headerTitle}>Scan & Verify</h1>
       </div>
 
       <div style={styles.cameraSection}>
-        <div style={styles.camera}>
-          <div style={{ position: 'absolute', top: 20, left: 20, width: 40, height: 40, borderTop: '3px solid #3F7A46', borderLeft: '3px solid #3F7A46' }} />
-          <div style={{ position: 'absolute', top: 20, right: 20, width: 40, height: 40, borderTop: '3px solid #3F7A46', borderRight: '3px solid #3F7A46' }} />
-          <div style={{ position: 'absolute', bottom: 20, left: 20, width: 40, height: 40, borderBottom: '3px solid #3F7A46', borderLeft: '3px solid #3F7A46' }} />
-          <div style={{ position: 'absolute', bottom: 20, right: 20, width: 40, height: 40, borderBottom: '3px solid #3F7A46', borderRight: '3px solid #3F7A46' }} />
-          <div style={styles.scanLine} />
-        </div>
-        <p style={styles.cameraHint}>Point your camera at a barcode</p>
+        {scanState === 'scanning' && (
+          <div style={styles.camera}>
+            <QrScanner
+              onScanSuccess={handleScanSuccess}
+              qrboxSize={250}
+              fps={10}
+            />
+            {/* Corner brackets overlay */}
+            <div style={{ ...styles.bracket, top: 20, left: 20, borderTop: '3px solid #3F7A46', borderLeft: '3px solid #3F7A46' }} />
+            <div style={{ ...styles.bracket, top: 20, right: 20, borderTop: '3px solid #3F7A46', borderRight: '3px solid #3F7A46' }} />
+            <div style={{ ...styles.bracket, bottom: 20, left: 20, borderBottom: '3px solid #3F7A46', borderLeft: '3px solid #3F7A46' }} />
+            <div style={{ ...styles.bracket, bottom: 20, right: 20, borderBottom: '3px solid #3F7A46', borderRight: '3px solid #3F7A46' }} />
+            <div style={styles.scanLine} />
+          </div>
+        )}
+
+        {scanState === 'verifying' && (
+          <div style={styles.statusContainer}>
+            <div style={styles.spinner} />
+            <p style={styles.statusText}>Verifying product...</p>
+          </div>
+        )}
+
+        {scanState === 'error' && (
+          <div style={styles.statusContainer}>
+            <p style={styles.errorIcon}>!</p>
+            <p style={styles.errorTitle}>Verification Failed</p>
+            <p style={styles.errorText}>{errorMessage}</p>
+            <button style={styles.retryBtn} onClick={() => setScanState('scanning')}>
+              Try Again
+            </button>
+          </div>
+        )}
+
+        {scanState === 'manual-input' && (
+          <div style={styles.statusContainer}>
+            <p style={styles.manualTitle}>Enter NAFDAC Number</p>
+            <p style={styles.manualHint}>Type the verification code printed on the product</p>
+            <form onSubmit={handleManualSubmit} style={styles.manualForm}>
+              <input
+                type="text"
+                value={manualCode}
+                onChange={(e) => setManualCode(e.target.value)}
+                placeholder="e.g. 2782864"
+                style={styles.manualInput}
+                autoFocus
+              />
+              <button type="submit" style={styles.manualSubmitBtn} disabled={!manualCode.trim()}>
+                Verify
+              </button>
+            </form>
+          </div>
+        )}
+
+        {scanState !== 'verifying' && (
+          <p style={styles.cameraHint}>Point your camera at a barcode</p>
+        )}
       </div>
 
       <div style={styles.bottom}>
         <p style={styles.orText}>or verify manually</p>
-        <button
-          style={styles.manualBtn}
-          onClick={() => navigate(ROUTES.VERIFY.replace(':productId', 'manual'))}
-        >
-          Enter NAFDAC Number
-        </button>
+        {scanState === 'manual-input' ? (
+          <button style={styles.manualBtn} onClick={() => { setScanState('scanning'); setManualCode(''); }}>
+            Scan with Camera
+          </button>
+        ) : (
+          <button style={styles.manualBtn} onClick={() => setScanState('manual-input')}>
+            Enter NAFDAC Number
+          </button>
+        )}
       </div>
-
     </div>
   );
 }
@@ -81,18 +165,130 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  bracket: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    zIndex: 10,
   },
   scanLine: {
+    position: 'absolute',
     width: '60%',
     height: '2px',
     background: '#3F7A46',
     opacity: 0.9,
+    zIndex: 10,
+    top: '50%',
+    left: '20%',
   },
   cameraHint: {
     fontSize: '13px',
     color: '#888',
     marginTop: '16px',
     textAlign: 'center',
+  },
+  statusContainer: {
+    width: '100%',
+    height: '380px',
+    background: '#0D0D0D',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '16px',
+    padding: '24px',
+  },
+  spinner: {
+    width: '40px',
+    height: '40px',
+    border: '3px solid #333',
+    borderTop: '3px solid #3F7A46',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite',
+  },
+  statusText: {
+    color: '#ccc',
+    fontSize: '14px',
+  },
+  errorIcon: {
+    width: '48px',
+    height: '48px',
+    borderRadius: '50%',
+    background: '#D32F2F',
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '24px',
+    fontWeight: 700,
+    margin: 0,
+  },
+  errorTitle: {
+    color: '#fff',
+    fontSize: '16px',
+    fontWeight: 700,
+    margin: 0,
+  },
+  errorText: {
+    color: '#aaa',
+    fontSize: '13px',
+    textAlign: 'center',
+    maxWidth: '280px',
+    margin: 0,
+  },
+  retryBtn: {
+    marginTop: '8px',
+    padding: '10px 24px',
+    background: '#3F7A46',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '14px',
+    fontWeight: 600,
+    cursor: 'pointer',
+  },
+  manualTitle: {
+    color: '#fff',
+    fontSize: '17px',
+    fontWeight: 700,
+    margin: 0,
+  },
+  manualHint: {
+    color: '#888',
+    fontSize: '13px',
+    margin: 0,
+  },
+  manualForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+    width: '100%',
+    maxWidth: '280px',
+  },
+  manualInput: {
+    width: '100%',
+    padding: '14px 16px',
+    background: '#1a1a1a',
+    border: '1.5px solid #3F7A46',
+    borderRadius: '8px',
+    color: '#fff',
+    fontSize: '16px',
+    fontFamily: "'Inter', sans-serif",
+    outline: 'none',
+    boxSizing: 'border-box',
+  },
+  manualSubmitBtn: {
+    width: '100%',
+    padding: '14px',
+    background: '#3F7A46',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '15px',
+    fontWeight: 700,
+    cursor: 'pointer',
   },
   bottom: {
     padding: '20px 24px 40px',
