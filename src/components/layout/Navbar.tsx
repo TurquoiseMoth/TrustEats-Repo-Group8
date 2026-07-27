@@ -15,6 +15,7 @@ const navLinks = [
     { label: "Dashboard", href: "/dashboard" },
     { label: "Analytics", href: "/analytics" },
     { label: "Profile", href: "/profile" },
+    { label: "Report", href: "/report" },
 ];
 
 function Navbar() {

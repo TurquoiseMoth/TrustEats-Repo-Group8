@@ -9,6 +9,7 @@ import ScanPage from "../pages/ScanPage";
 import ResultPage from "../pages/ResultPage";
 import SignInPage from "../pages/SignInPage";
 import SignUpPage from "../pages/SignUpPage";
+import ReportPage from "../pages/ReportPage";
 
 function DashboardPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Dashboard</h1></div>;
@@ -43,6 +44,7 @@ export function AppRoutes() {
       <Route path={ROUTES.ANALYTICS} element={<AnalyticsPage />} />
       <Route path={ROUTES.HISTORY} element={<HistoryPage />} />
       <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+      <Route path={ROUTES.REPORT} element={<ReportPage />} />
       </Route>
     </Routes>
   );

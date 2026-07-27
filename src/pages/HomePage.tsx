@@ -6,42 +6,64 @@ function HomePage() {
     return (
         <section>
             {/* ── Hero Section ─────────────────────────── */}
-            <header className="flex flex-col items-center gap-8 py-12 md:flex-row md:items-center md:justify-between md:gap-12 md:py-20 lg:py-24">
-                <div className="flex-1">
-                    <h1 className="text-size-heading font-bold leading-tight md:text-[40px] lg:text-[48px]">Verify Every Product.</h1>
-                    <h2 className="text-size-heading font-bold leading-tight text-brand-base md:text-[40px] lg:text-[48px]">Trust Every Bite.</h2>
-                    <p className="mt-4 max-w-md text-[15px] leading-relaxed text-[#6B7280] md:text-[16px]">
-                        TrustEats helps you verify the authenticity of food products in seconds using a simple QR scan.
-                    </p>
-                    <div className="mt-8 flex flex-row gap-4">
-                        <Button className="cursor-pointer rounded-2xl bg-[#14833B] px-7 py-3 text-[15px] font-semibold text-white transition-opacity hover:opacity-90">
-                            Scan a Product
-                            <ArrowRight className="ml-2 inline h-4 w-4" />
-                        </Button>
-                        <Button className="cursor-pointer rounded-2xl border border-[#E5E7EB] bg-white px-7 py-3 text-[15px] font-semibold text-[#2F3437] transition-colors hover:bg-gray-50">
-                            Verify with NAFDAC NO.
-                        </Button>
+            <header>
+                <div className="mx-auto flex max-w-7xl flex-row items-center gap-8 px-8 py-12 md:items-center md:justify-between md:gap-16 md:px-12 md:py-20 lg:py-24">
+                    {/* Left column — text content */}
+                    <div className="flex min-w-0 flex-1 flex-col">
+                        <h1 className="text-[38px] font-bold leading-[1.1] text-[#2E3137] md:text-[46px] lg:text-[52px]">
+                            Verify Every<br />Product.
+                        </h1>
+                        <h1 className="mt-1 text-[38px] font-bold leading-[1.1] text-[#2E7D32] md:text-[46px] lg:text-[52px]">
+                            Trust Every<br />Bite.
+                        </h1>
+
+                        <p className="mt-6 max-w-md text-[16px] leading-[1.6] text-[#6B7280] md:mt-7 md:text-[17px]">
+                            TrustEats helps you verify the authenticity of food products in seconds using a simple QR scan.
+                        </p>
+
+                        <div className="mt-8 flex flex-row gap-3 md:mt-9 md:gap-4">
+                            <Button className="cursor-pointer rounded-2xl bg-[#14833B] px-6 py-3 text-[14px] font-semibold text-white transition-opacity hover:opacity-90 md:px-8 md:py-3.5 md:text-[15px]">
+                                Scan a Product
+                                <ArrowRight className="ml-2 inline h-4 w-4" />
+                            </Button>
+                            <Button className="cursor-pointer rounded-2xl border border-[#E5E7EB] bg-white px-6 py-3 text-[14px] font-semibold text-[#2F3437] transition-colors hover:bg-gray-50 md:px-8 md:py-3.5 md:text-[15px]">
+                                Verify with NAFDAC NO.
+                            </Button>
+                        </div>
+
+                        {/* Feature cards */}
+                        <div className="mt-8 grid grid-cols-3 gap-4 md:mt-10 md:gap-5">
+                            {[
+                                { icon: CheckCheckIcon, title: "Authentic\nProducts" },
+                                { icon: User, title: "Consumer\nSafety" },
+                                { icon: Landmark, title: "NAFDAC\nAligned" },
+                            ].map((feature) => (
+                                <div
+                                    key={feature.title}
+                                    className="flex flex-col items-center rounded-2xl bg-white px-3 py-5 text-center shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:rounded-3xl md:px-5 md:py-7"
+                                >
+                                    <feature.icon className="h-6 w-6 text-[#14833B] md:h-8 md:w-8" />
+                                    <p className="mt-2.5 text-[12px] font-semibold leading-snug text-[#2F3437] md:mt-3 md:text-[14px] lg:text-[15px]">
+                                        {feature.title.split("\n").map((line, i) => (
+                                            <span key={i}>
+                                                {line}
+                                                {i === 0 && <br />}
+                                            </span>
+                                        ))}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                    <div className="mt-8 flex flex-row flex-wrap gap-4">
-                        {[
-                            { icon: CheckCheckIcon, label: "Authentic Products" },
-                            { icon: User, label: "Consumer Safety" },
-                            { icon: Landmark, label: "NAFDAC Aligned" },
-                        ].map((badge) => (
-                            <div key={badge.label} className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium shadow-[0_2px_6px_rgba(0,0,0,0.08)] text-[#374151]">
-                                <badge.icon className="h-4 w-4 text-[#14833B]" />
-                                <span>{badge.label}</span>
-                            </div>
-                        ))}
+
+                    {/* Right column — product image */}
+                    <div className="flex w-[38%] shrink-0 items-center justify-center md:w-[40%] md:justify-end">
+                        <img
+                            src="/assets/ketchup-bottle.png"
+                            alt="TrustEats verifying a food product"
+                            className="w-full max-w-[200px] object-contain md:max-w-[300px] lg:max-w-[360px]"
+                        />
                     </div>
-                </div>
-                <div className="relative flex w-full justify-center lg:w-1/2 lg:justify-end">
-                    <div className="absolute inset-0 -z-10 scale-110 rounded-full bg-[#E8F5E9] blur-3xl opacity-60" />
-                    <img
-                        src="/assets/ketchup-bottle.png"
-                        alt="TrustEats scanning a ketchup bottle"
-                        className="w-full max-w-lg object-contain"
-                    />
                 </div>
             </header>
 
