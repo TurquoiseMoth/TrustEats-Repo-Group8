@@ -10,5 +10,6 @@ export const ROUTES = {
   ANALYTICS: "/analytics",
   HISTORY: "/history",
   PROFILE: "/profile",
+  REPORTS: "/reports",
+  NOTIFICATIONS: "/notifications",
 } as const;
-export const SIGNUP = '/sign-up';   
