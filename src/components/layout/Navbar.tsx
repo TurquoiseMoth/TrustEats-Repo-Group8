@@ -13,6 +13,7 @@ const navLinks = [
   { label: "Home", href: ROUTES.HOME },
   { label: "History", href: ROUTES.HISTORY },
   { label: "Profile", href: ROUTES.PROFILE },
+  { label: "Notifications", href: ROUTES.NOTIFICATIONS },
 ];
 
 function Navbar() {
@@ -52,12 +53,13 @@ function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
+       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="absolute top-full left-0 bg-[#2E6B3E] w-full p-4 flex flex-col gap-4 shadow-lg">
           <Link to={ROUTES.HOME} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Home</Link>
           <Link to={ROUTES.HISTORY} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>History</Link>
           <Link to={ROUTES.PROFILE} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Profile</Link>
+          <Link to={ROUTES.NOTIFICATIONS} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Notifications</Link>
           <Link to={ROUTES.REGISTER} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Sign Up</Link>
           <Link to={ROUTES.LOGIN} className="text-white font-medium text-lg" onClick={() => setIsMenuOpen(false)}>Log In</Link>
         </div>

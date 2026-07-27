@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import type { CSSProperties } from 'react';
+import { useNavigate } from 'react-router';
 import { ChevronLeft, Bell, AlertTriangle, Info } from 'lucide-react';
 import { MOCK_NOTIFICATIONS } from '../utils/mockData';
 
@@ -52,7 +53,7 @@ export default function NotificationsPage() {
   );
 }
 
-const s: Record<string, React.CSSProperties> = {
+const s: Record<string, CSSProperties> = {
   page: { minHeight: '100vh', background: '#EEF2F5', fontFamily: "'Inter', sans-serif" },
   header: { display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 20px' },
   backBtn: { background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#111' },

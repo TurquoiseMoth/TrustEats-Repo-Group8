@@ -19,10 +19,6 @@ function ProductPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Product Details</h1></div>;
 }
 
-function ReportsPage() {
-  return <div className="p-8"><h1 className="text-2xl font-bold">Reports</h1></div>;
-}
-
 function AnalyticsPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Analytics</h1></div>;
 }
