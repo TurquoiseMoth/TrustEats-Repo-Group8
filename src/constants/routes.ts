@@ -1,6 +1,8 @@
 export const ROUTES = {
   HOME: "/",
   LOGIN: "/login",
+  MANUFACTURER_LOGIN: "/manufacturer/login",
+  MANUFACTURER_SIGNUP: "/manufacturer/signup",
   REGISTER: "/register",
   DASHBOARD: "/dashboard",
   SCAN: "/scan",
@@ -12,4 +14,7 @@ export const ROUTES = {
   PROFILE: "/profile",
   REPORTS: "/reports",
   NOTIFICATIONS: "/notifications",
+  FORGOT_PASSWORD: "/forgot-password",
+  CHECK_YOUR_EMAIL: "/check-your-email",
+  PRODUCT_UPLOAD: "/manufacturer/products/upload",
 } as const;

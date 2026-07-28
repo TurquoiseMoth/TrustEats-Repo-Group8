@@ -1,0 +1,153 @@
+import { Link } from 'react-router';
+import { ROUTES } from '../constants';
+
+export default function CheckYourEmailPage() {
+  return (
+    <div style={styles.phone}>
+
+      {/* Top decoration image */}
+      <img
+        src="/assets/Deco.svg"
+        alt=""
+        style={styles.archImg}
+      />
+
+      {/* Logo */}
+      <div style={styles.logoWrap}>
+        <svg width="24" height="28" viewBox="0 0 24 28" fill="none">
+          <path
+            d="M12 2L2 7V13C2 19.63 6.35 25.78 12 27C17.65 25.78 22 19.63 22 13V7L12 2Z"
+            fill="#3F7A46"
+          />
+          <path
+            d="M9 14L11 16L15 12"
+            stroke="white"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <span style={styles.logoText}>TrustEats</span>
+      </div>
+
+      {/* Content */}
+      <div style={styles.content}>
+        {/* Hero illustration */}
+        <div style={styles.illustrationWrap}>
+          <img
+            src="/assets/email.svg"
+            alt="Email sent"
+            style={styles.illustration}
+          />
+        </div>
+
+        <h1 style={styles.heading}>Check Your Email</h1>
+        <p style={styles.body}>
+          We've sent a password reset link to your email address.
+        </p>
+        <p style={styles.body}>
+          Please check your inbox and follow the instructions.
+        </p>
+
+        <div style={styles.actions}>
+          <button style={styles.btnPrimary} onClick={() => window.open('mailto:', '_self')}>
+            Open Email App
+          </button>
+
+          <Link to={ROUTES.LOGIN} style={styles.backLink}>
+            Back to Sign In
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const styles: Record<string, React.CSSProperties> = {
+  phone: {
+    minHeight: '100vh',
+    background: '#EEF2F5',
+    fontFamily: "'Inter', sans-serif",
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  archImg: {
+    width: '100%',
+    height: 'auto',
+    display: 'block',
+    marginTop: '-40px',
+  },
+  logoWrap: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    marginTop: '-10px',
+    zIndex: 2,
+    position: 'relative',
+  },
+  logoText: {
+    fontSize: '22px',
+    fontWeight: 700,
+    color: '#3F7A46',
+  },
+  content: {
+    padding: '16px 20px 48px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    flex: 1,
+  },
+  illustrationWrap: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: '24px',
+  },
+  illustration: {
+    width: '160px',
+    height: 'auto',
+  },
+  heading: {
+    fontSize: '24px',
+    fontWeight: 700,
+    color: '#111',
+    textAlign: 'center',
+    marginBottom: '12px',
+  },
+  body: {
+    fontSize: '14px',
+    color: '#444',
+    textAlign: 'center',
+    lineHeight: '1.5',
+    marginBottom: '4px',
+  },
+  actions: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: '32px',
+  },
+  btnPrimary: {
+    width: '100%',
+    height: '52px',
+    background: '#3F7A46',
+    color: '#fff',
+    fontSize: '17px',
+    fontWeight: 700,
+    fontFamily: "'Inter', sans-serif",
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    marginBottom: '16px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backLink: {
+    fontSize: '15px',
+    color: '#3F7A46',
+    textDecoration: 'none',
+    fontWeight: 600,
+    textAlign: 'center',
+  },
+};

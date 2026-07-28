@@ -151,6 +151,7 @@ function HomePage() {
                         buttonText="Register as a User →"
                         loginPrefix="Already have an account?"
                         loginText="Log in"
+                        loginHref={ROUTES.LOGIN}
                     />
                     <RoleCard
                         icon={Factory}
@@ -160,8 +161,10 @@ function HomePage() {
                         backgroundColor="bg-[#F5F3FF]"
                         buttonBgColor="bg-[#7C3AED]"
                         buttonText="Register as Manufacturer →"
+                        buttonHref={ROUTES.MANUFACTURER_LOGIN}
                         loginPrefix="Already have an account?"
                         loginText="Log in"
+                        loginHref={ROUTES.MANUFACTURER_LOGIN}
                     />
                 </div>
             </div>
