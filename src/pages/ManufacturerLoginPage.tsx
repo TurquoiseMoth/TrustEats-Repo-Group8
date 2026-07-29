@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 
 export default function ManufacturerLoginPage() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [rememberMe, setRememberMe] = useState(false);
   const isDesktop = useMediaQuery('(min-width: 768px)');
@@ -14,7 +15,7 @@ export default function ManufacturerLoginPage() {
 
   const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log('Manufacturer login:', form, rememberMe);
+    navigate(ROUTES.MANUFACTURER_DASHBOARD);
   };
 
   return (
@@ -70,7 +71,7 @@ export default function ManufacturerLoginPage() {
                 />
                 Remember me
               </label>
-              <Link to="#" style={styles.forgotLink}>Forget Password?</Link>
+              <Link to={ROUTES.FORGOT_PASSWORD} style={styles.forgotLink}>Forget Password?</Link>
             </div>
 
             <button style={styles.btnPrimary} onClick={handleSubmit}>

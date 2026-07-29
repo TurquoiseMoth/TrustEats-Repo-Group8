@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
 
 export default function SignInPage() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -12,7 +13,7 @@ export default function SignInPage() {
 
   const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log(form, rememberMe);
+    navigate(ROUTES.DASHBOARD);
   };
 
   return (

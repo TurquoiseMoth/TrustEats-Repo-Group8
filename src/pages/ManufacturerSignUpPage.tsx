@@ -1,7 +1,10 @@
 import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router';
+import { ROUTES } from '../constants';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 
 export default function ManufacturerSignUpPage() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     companyName: '',
     napamsEmail: '',
@@ -28,7 +31,7 @@ export default function ManufacturerSignUpPage() {
 
   const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log('Manufacturer signup:', { ...form, corFile, agreed });
+    navigate(ROUTES.MANUFACTURER_DASHBOARD);
   };
 
   return (

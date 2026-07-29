@@ -16,6 +16,7 @@ const navLinks = [
   { label: "Consumer Profile", href: ROUTES.PROFILE },
   { label: "Consumer Notifications", href: ROUTES.NOTIFICATIONS },
   { label: "Consumer Dashboard", href: ROUTES.DASHBOARD },
+  { label: "Consumer Scan Confirm", href: ROUTES.SCAN_CONFIRM },
   { label: "Consumer Forgot Password", href: ROUTES.FORGOT_PASSWORD },
   { label: "Manufacturer Dashboard", href: ROUTES.MANUFACTURER_DASHBOARD },
   { label: "Manufacturer Organizations", href: ROUTES.MANUFACTURER_ORGANIZATIONS },
@@ -83,6 +84,7 @@ function Navbar() {
           <Link to={ROUTES.PROFILE} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Consumer Profile</Link>
           <Link to={ROUTES.NOTIFICATIONS} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Consumer Notifications</Link>
           <Link to={ROUTES.DASHBOARD} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Consumer Dashboard</Link>
+          <Link to={ROUTES.SCAN_CONFIRM} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Consumer Scan Confirm</Link>
           <Link to={ROUTES.FORGOT_PASSWORD} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Consumer Forgot Password</Link>
           <Link to={ROUTES.MANUFACTURER_DASHBOARD} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Manufacturer Dashboard</Link>
           <Link to={ROUTES.QR_CODE} className="text-white font-medium text-lg border-b border-white/20 pb-2" onClick={() => setIsMenuOpen(false)}>Manufacturer QR Code</Link>

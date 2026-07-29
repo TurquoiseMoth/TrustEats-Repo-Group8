@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { ROUTES } from '../constants';
 import type { SignUpFormData } from '../types/auth';
 
 export default function SignUpPage() {
+  const navigate = useNavigate();
   const [form, setForm] = useState<SignUpFormData>({
     fullName: '',
     email: '',
@@ -15,7 +18,7 @@ export default function SignUpPage() {
 
   const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log(form);
+    navigate(ROUTES.VERIFY_EMAIL, { state: { email: form.email } });
   };
 
   return (

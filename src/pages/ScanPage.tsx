@@ -35,7 +35,7 @@ export default function ScanPage() {
   function handleManualSubmit(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = manualCode.trim();
-    if (trimmed) handleVerification(trimmed);
+    if (trimmed) navigate(ROUTES.SCAN_CONFIRM, { state: { code: trimmed } });
   }
 
   return (

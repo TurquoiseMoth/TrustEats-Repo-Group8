@@ -35,7 +35,7 @@ function HomePage() {
                                     <ArrowRight className="ml-2 inline h-4 w-4" />
                                 </Button>
                             </Link>
-                            <Link to={ROUTES.REGISTER}>
+                            <Link to={ROUTES.SCAN}>
                                 <Button className="rounded-2xl border border-[#E5E7EB] bg-white px-6 py-3 text-sm font-semibold text-[#2F3437] transition-colors hover:bg-gray-50 md:px-8 md:py-3.5 md:text-[15px]">
                                     Verify with NAFDAC NO.
                                 </Button>
@@ -149,6 +149,7 @@ function HomePage() {
                         backgroundColor="bg-[#F0FDF4]"
                         buttonBgColor="bg-[#16A34A]"
                         buttonText="Register as a User →"
+                        buttonHref={ROUTES.REGISTER}
                         loginPrefix="Already have an account?"
                         loginText="Log in"
                         loginHref={ROUTES.LOGIN}
@@ -161,7 +162,7 @@ function HomePage() {
                         backgroundColor="bg-[#F5F3FF]"
                         buttonBgColor="bg-[#7C3AED]"
                         buttonText="Register as Manufacturer →"
-                        buttonHref={ROUTES.MANUFACTURER_LOGIN}
+                        buttonHref={ROUTES.MANUFACTURER_SIGNUP}
                         loginPrefix="Already have an account?"
                         loginText="Log in"
                         loginHref={ROUTES.MANUFACTURER_LOGIN}

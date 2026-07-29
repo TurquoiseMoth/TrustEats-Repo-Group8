@@ -14,43 +14,51 @@ import {
   Megaphone,
   Bell,
   PackagePlus,
-  Construction,
+  Package,
+  ChevronRight,
 } from "lucide-react";
 
 const sidebarLinks = [
-  { label: "Dashboard", href: ROUTES.MANUFACTURER_DASHBOARD, icon: LayoutDashboard, active: true },
+  { label: "Dashboard", href: ROUTES.MANUFACTURER_DASHBOARD, icon: LayoutDashboard },
   { label: "Organizations", href: ROUTES.MANUFACTURER_ORGANIZATIONS, icon: Building2 },
   { label: "Applications", href: ROUTES.MANUFACTURER_APPLICATIONS, icon: FileText },
   { label: "Consumer Reports", href: ROUTES.MANUFACTURER_CONSUMER_REPORTS, icon: BarChart3 },
+  { label: "QR Code", href: ROUTES.QR_CODE, icon: QrCode },
   { label: "Add Product", href: ROUTES.PRODUCT_UPLOAD, icon: PackagePlus },
+  { label: "Product List", href: ROUTES.PRODUCT_LIST, icon: Package },
   { label: "Promotion & Tips", href: ROUTES.MANUFACTURER_PROMOTION_TIPS, icon: Megaphone },
   { label: "Notification", href: ROUTES.MANUFACTURER_NOTIFICATIONS, icon: Bell },
 ];
 
-const mobileTabs = [
-  { label: "Home", href: ROUTES.HOME, icon: Home },
-  { label: "QR Code", href: ROUTES.SCAN, icon: QrCode },
-  { label: "Dashboard", href: ROUTES.MANUFACTURER_DASHBOARD, icon: LayoutDashboard, active: true },
-  { label: "Settings", href: ROUTES.SETTINGS, icon: Settings },
+const quickLinks = [
+  { label: "Add Product", href: ROUTES.PRODUCT_UPLOAD, icon: PackagePlus, desc: "Register a new product batch" },
+  { label: "QR Code Generator", href: ROUTES.QR_CODE, icon: QrCode, desc: "Generate codes for your products" },
+  { label: "Product List", href: ROUTES.PRODUCT_LIST, icon: Package, desc: "View all your registered products" },
+  { label: "Notifications", href: ROUTES.MANUFACTURER_NOTIFICATIONS, icon: Bell, desc: "Check alerts and updates" },
 ];
 
-function PlaceholderContent() {
+function DashboardPlaceholder() {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-yellow-100">
-        <Construction className="h-12 w-12 text-yellow-600" />
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-gray-900">Manufacturer Dashboard</h2>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {quickLinks.map(({ label, href, icon: Icon, desc }) => (
+          <Link
+            key={href}
+            to={href}
+            className="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F0F7F1]">
+              <Icon className="h-6 w-6 text-[#3F7A46]" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-gray-900">{label}</p>
+              <p className="text-xs text-gray-500">{desc}</p>
+            </div>
+            <ChevronRight className="h-5 w-5 text-gray-400" />
+          </Link>
+        ))}
       </div>
-      <h2 className="text-2xl font-black text-gray-900 uppercase tracking-wide">
-        Manufacturer Dashboard
-      </h2>
-      <div className="inline-block rounded-full bg-yellow-200 px-6 py-2">
-        <span className="text-sm font-bold uppercase tracking-widest text-yellow-800">
-          Under Construction
-        </span>
-      </div>
-      <p className="max-w-md text-base text-gray-500">
-        This page is being implemented by another developer. Please check back later.
-      </p>
     </div>
   );
 }
@@ -69,31 +77,27 @@ function ManufacturerDashboardPage() {
         </header>
 
         <main className="flex-1 overflow-y-auto px-4 py-6 pb-20">
-          <PlaceholderContent />
+          <DashboardPlaceholder />
         </main>
 
         <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white md:hidden">
           <div className="flex h-14 items-center justify-around">
-            {mobileTabs.map(({ label, href, icon: Icon, active }) => (
-              <Link
-                key={label}
-                to={href}
-                className="flex w-full flex-col items-center justify-center gap-0.5"
-              >
-                <Icon
-                  size={20}
-                  strokeWidth={active ? 2.5 : 1.8}
-                  className={active ? "text-[#3F7A46]" : "text-gray-400"}
-                />
-                <span
-                  className={`text-xs font-medium ${
-                    active ? "text-[#3F7A46]" : "text-gray-400"
-                  }`}
-                >
-                  {label}
-                </span>
-              </Link>
-            ))}
+            <Link to={ROUTES.HOME} className="flex w-full flex-col items-center justify-center gap-0.5 text-gray-400">
+              <Home size={20} strokeWidth={1.8} />
+              <span className="text-xs font-medium">Home</span>
+            </Link>
+            <Link to={ROUTES.QR_CODE} className="flex w-full flex-col items-center justify-center gap-0.5 text-gray-400">
+              <QrCode size={20} strokeWidth={1.8} />
+              <span className="text-xs font-medium">QR Code</span>
+            </Link>
+            <Link to={ROUTES.MANUFACTURER_DASHBOARD} className="flex w-full flex-col items-center justify-center gap-0.5 text-[#3F7A46]">
+              <LayoutDashboard size={20} strokeWidth={2.5} />
+              <span className="text-xs font-medium text-[#3F7A46]">Dashboard</span>
+            </Link>
+            <Link to={ROUTES.SETTINGS} className="flex w-full flex-col items-center justify-center gap-0.5 text-gray-400">
+              <Settings size={20} strokeWidth={1.8} />
+              <span className="text-xs font-medium">Settings</span>
+            </Link>
           </div>
         </nav>
       </div>
@@ -108,16 +112,12 @@ function ManufacturerDashboardPage() {
           <span className="text-lg font-bold text-[#3F7A46]">TrustEats</span>
         </div>
 
-        <nav className="flex flex-1 flex-col gap-1 px-3">
-          {sidebarLinks.map(({ label, href, icon: Icon, active }) => (
+        <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3">
+          {sidebarLinks.map(({ label, href, icon: Icon }) => (
             <Link
               key={label}
               to={href}
-              className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
-                active
-                  ? "bg-[#3F7A46] text-white"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-              }`}
+              className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
             >
               <Icon className="h-5 w-5" />
               {label}
@@ -143,7 +143,7 @@ function ManufacturerDashboardPage() {
 
         <main className="flex-1 overflow-y-auto px-8 py-8">
           <div className="mx-auto max-w-5xl">
-            <PlaceholderContent />
+            <DashboardPlaceholder />
           </div>
         </main>
       </div>

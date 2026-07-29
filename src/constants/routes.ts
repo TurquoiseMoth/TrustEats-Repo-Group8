@@ -29,6 +29,7 @@ export const ROUTES = {
   SETTINGS: "/settings",
   FORGOT_PASSWORD: "/forgot-password",
   CHECK_YOUR_EMAIL: "/check-your-email",
+  SCAN_CONFIRM: "/scan-confirm",
   PRODUCT_UPLOAD: "/product-upload",
   MANUFACTURER_DASHBOARD: "/manufacturer/dashboard",
   MANUFACTURER_ORGANIZATIONS: "/manufacturer/organizations",

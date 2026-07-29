@@ -1,11 +1,11 @@
 import { Link, useLocation } from "react-router";
-import { Home, QrCode, Package, User } from "lucide-react";
+import { Home, Scan, History, User } from "lucide-react";
 import { ROUTES } from "../../constants";
 
 const navItems = [
-  { label: "Home", href: ROUTES.HOME, icon: Home },
-  { label: "QR Code", href: ROUTES.QR_CODE, icon: QrCode },
-  { label: "Product", href: ROUTES.PRODUCT_LIST, icon: Package },
+  { label: "Home", href: ROUTES.DASHBOARD, icon: Home },
+  { label: "Scan", href: ROUTES.SCAN, icon: Scan },
+  { label: "History", href: ROUTES.HISTORY, icon: History },
   { label: "Profile", href: ROUTES.PROFILE, icon: User },
 ];
 

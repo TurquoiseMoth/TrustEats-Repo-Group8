@@ -26,10 +26,10 @@ import CheckYourEmailPage from "../pages/CheckYourEmailPage";
 import ProductUploadPage from "../pages/ProductUploadPage";
 import ManufacturerDashboardPage from "../pages/ManufacturerDashboardPage";
 import QrCodePage from "../pages/QrCodePage";
-
-function DashboardPage() {
-  return <div className="p-8"><h1 className="text-2xl font-bold">Dashboard</h1></div>;
-}
+import ConsumerDashboardPage from "../pages/ConsumerDashboardPage";
+import ScanConfirmPage from "../pages/ScanConfirmPage";
+import ReportPage from "../pages/ReportPage";
+import ManufacturerNotificationPage from "../pages/ManufacturerNotificationPage";
 
 function ProductPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Product Details</h1></div>;
@@ -58,9 +58,11 @@ export function AppRoutes() {
       <Route path={ROUTES.MANUFACTURER_APPLICATIONS} element={<ManufacturerDashboardPage />} />
       <Route path={ROUTES.MANUFACTURER_CONSUMER_REPORTS} element={<ManufacturerDashboardPage />} />
       <Route path={ROUTES.MANUFACTURER_PROMOTION_TIPS} element={<ManufacturerDashboardPage />} />
-      <Route path={ROUTES.MANUFACTURER_NOTIFICATIONS} element={<ManufacturerDashboardPage />} />
+      <Route path={ROUTES.MANUFACTURER_NOTIFICATIONS} element={<ManufacturerNotificationPage />} />
       <Route path={ROUTES.QR_CODE} element={<QrCodePage />} />
       <Route path={ROUTES.RESULT} element={<ResultPage />} />
+      <Route path={ROUTES.SCAN_CONFIRM} element={<ScanConfirmPage />} />
+      <Route path={ROUTES.REPORTS} element={<ReportPage />} />
 
       {/* With consumer layout (top navbar) */}
       <Route element={<Layout />}>
@@ -74,7 +76,7 @@ export function AppRoutes() {
 
       {/* With dashboard layout (sidebar / bottom nav) */}
       <Route element={<DashboardLayout />}>
-        <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+        <Route path={ROUTES.DASHBOARD} element={<ConsumerDashboardPage />} />
         <Route path={ROUTES.PRODUCT_LIST} element={<ProductListPage />} />
         <Route path={ROUTES.ANALYTICS} element={<AnalyticsPage />} />
       </Route>
