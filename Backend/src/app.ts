@@ -10,7 +10,7 @@ import configureCloudinary from "./config/cloudinary";
 import { sanitiseQuery } from "./middleware/sanitiseQuery";
 import { errorHandler } from "./middleware/errorHandler";
 
-import authRoutes from "./modules/auth/auth.route";
+import authRoutes from "./modules/auth/auth.routes";
 import manufacturerRoutes from "./modules/manufacturers/manufacturer.route";
 import productRoutes from "./modules/products/product.route";
 import batchRoutes from "./modules/batches/batch.route";
