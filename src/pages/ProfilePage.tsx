@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
 
@@ -138,7 +138,7 @@ function AccountRow({ label, value, last }: { label: string; value: string; last
 function NotifRow({
   icon, label, sub, value, onToggle, last
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
   sub: string;
   value: boolean;
@@ -168,7 +168,7 @@ function NotifRow({
   );
 }
 
-const styles: Record<string, React.CSSProperties> = {
+const styles: Record<string, CSSProperties> = {
   page: {
     minHeight: '100vh',
     background: '#EEF2F5',

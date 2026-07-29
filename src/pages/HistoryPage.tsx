@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, CheckCircle2, AlertTriangle, XCircle, Home, ScanLine, History as HistoryIcon, User, X, BadgeCheck } from "lucide-react";
-import { Link, useNavigate } from "react-router";
-import { MOCK_VERIFICATIONS, PRODUCT_META } from "../utils/mockData";
 import { ChevronLeft, ChevronRight, CheckCircle2, AlertTriangle, XCircle, X, BadgeCheck } from "lucide-react";
 import { useNavigate } from "react-router";
+import { MOCK_VERIFICATIONS, PRODUCT_META } from "../utils/mockData";
 
 // Helper: map verification result to display status
 function mapResult(result: string): 'Verified' | 'NOT Verified' | 'Fake' {

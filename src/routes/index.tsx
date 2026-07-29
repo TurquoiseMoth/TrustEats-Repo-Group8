@@ -6,6 +6,8 @@ import AdminLayout from "../components/admin/AdminLayout";
 import HomePage from "../pages/HomePage";
 import RegisterPage from "../pages/SignUpPage";
 import LoginPage from "../pages/SignInPage";
+import ManufacturerLoginPage from "../pages/ManufacturerLoginPage";
+import ManufacturerSignUpPage from "../pages/ManufacturerSignUpPage";
 import ScanPage from "../pages/ScanPage";
 import VerifyPage from "../pages/VerifyPage";
 import VerifyEmailPage from "../pages/VerifyEmailPage";
@@ -26,10 +28,6 @@ function ProductPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Product Details</h1></div>;
 }
 
-function ReportsPage() {
-  return <div className="p-8"><h1 className="text-2xl font-bold">Reports</h1></div>;
-}
-
 function AnalyticsPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Analytics</h1></div>;
 }
@@ -39,7 +37,12 @@ export function AppRoutes() {
     <Routes>
       {/* No layout */}
       <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+      <Route path={ROUTES.MANUFACTURER_LOGIN} element={<ManufacturerLoginPage />} />
+      <Route path={ROUTES.MANUFACTURER_SIGNUP} element={<ManufacturerSignUpPage />} />
       <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+      <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
+      <Route path={ROUTES.CHECK_YOUR_EMAIL} element={<CheckYourEmailPage />} />
+      <Route path={ROUTES.PRODUCT_UPLOAD} element={<ProductUploadPage />} />
       <Route path={ROUTES.VERIFY} element={<VerifyPage />} />
       <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmailPage />} />
       <Route path={ROUTES.ADMIN_LOGIN} element={<AdminSignInPage />} />
