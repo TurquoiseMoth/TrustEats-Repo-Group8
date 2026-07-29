@@ -15,6 +15,7 @@ export const ROUTES = {
   ADMIN_DASHBOARD: "/admin/dashboard",
   ADMIN_ORGANIZATIONS: "/admin/organizations",
   ADMIN_APPLICATIONS: "/admin/applications",
+  ADMIN_APPLICATION_DETAIL: "/admin/applications/:id",
   ADMIN_CONSUMER_REPORTS: "/admin/consumer-reports",
   ADMIN_PROMOTION_TIPS: "/admin/promotion-tips",
   ADMIN_NOTIFICATIONS: "/admin/notifications",

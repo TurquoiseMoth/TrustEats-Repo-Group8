@@ -21,6 +21,8 @@ function Layout() {
           <Footer/>
         </>
       )}
+
+      {!isHomePage && <BottomNav />}
     </div>
   )
 }

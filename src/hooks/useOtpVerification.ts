@@ -156,7 +156,8 @@ export function useOtpVerification({
   // Auto-submit the moment the last box is filled
   useEffect(() => {
     if (isComplete && status === "idle") {
-      submit(code);
+      const timeoutId = setTimeout(() => submit(code), 0);
+      return () => clearTimeout(timeoutId);
     }
   }, [isComplete, status, code, submit]);
 
