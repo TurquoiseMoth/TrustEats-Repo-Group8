@@ -66,7 +66,7 @@ export default function SignInPage() {
               />
               Remember me
             </label>
-            <Link to="#" style={styles.forgotLink}>Forget Password?</Link>
+            <Link to={ROUTES.FORGOT_PASSWORD} style={styles.forgotLink}>Forget Password?</Link>
           </div>
 
           <button style={styles.btnPrimary} onClick={handleSubmit}>

@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { Link } from "react-router";
 import { Card } from "./Card";
 
 interface RoleCardProps {
@@ -11,6 +12,8 @@ interface RoleCardProps {
   buttonText: string;
   loginPrefix: string;
   loginText: string;
+  loginHref?: string;
+  buttonHref?: string;
 }
 
 export function RoleCard({
@@ -23,6 +26,8 @@ export function RoleCard({
   buttonText,
   loginPrefix,
   loginText,
+  loginHref,
+  buttonHref,
 }: RoleCardProps) {
   return (
     <Card
@@ -40,17 +45,32 @@ export function RoleCard({
         {description}
       </p>
 
-      <button
-        className={`mb-6 w-full cursor-pointer rounded-2xl py-2.5 text-[15px] font-semibold text-white transition-opacity hover:opacity-90 ${buttonBgColor}`}
-      >
-        {buttonText}
-      </button>
+      {buttonHref ? (
+        <Link
+          to={buttonHref}
+          className={`mb-6 flex w-full items-center justify-center rounded-2xl py-2.5 text-[15px] font-semibold text-white transition-opacity hover:opacity-90 no-underline ${buttonBgColor}`}
+        >
+          {buttonText}
+        </Link>
+      ) : (
+        <button
+          className={`mb-6 w-full cursor-pointer rounded-2xl py-2.5 text-[15px] font-semibold text-white transition-opacity hover:opacity-90 ${buttonBgColor}`}
+        >
+          {buttonText}
+        </button>
+      )}
 
       <p className="text-[13px] text-[#9CA3AF]">
         {loginPrefix}{" "}
-        <span className={`cursor-pointer font-semibold ${accentColor}`}>
-          {loginText}
-        </span>
+        {loginHref ? (
+          <Link to={loginHref} className={`cursor-pointer font-semibold ${accentColor}`}>
+            {loginText}
+          </Link>
+        ) : (
+          <span className={`cursor-pointer font-semibold ${accentColor}`}>
+            {loginText}
+          </span>
+        )}
       </p>
     </Card>
   );

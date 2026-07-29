@@ -117,6 +117,13 @@ interface VerificationResult {
 - **Button component** — forwards all standard button HTML props (onClick, disabled, type, etc.)
 - **ResultPage** — uses ROUTES.SCAN and ROUTES.HOME (not ROUTES.REPORTS which doesn't exist)
 
+## Nav Dropdown Convention (MANDATORY)
+- The Navbar (src/components/layout/Navbar.tsx) contains nav links for all user-facing pages
+- **When adding a new page, ALWAYS add a link to it in the nav dropdown (both desktop and mobile menu)** — this is required for dev purposes so all pages are accessible during development
+- The navLinks array defines desktop links; the mobile menu renders them separately
+- Parameterised routes (e.g. /verify/:code, /result/:code) are excluded since they require dynamic data
+- Current nav links: Home, Scan, History, Profile, Notifications, Manufacturer Login, Manufacturer Sign Up
+
 ## When Adding Features
 1. Read the existing file(s) you'll be modifying to understand their conventions
 2. Match the styling approach (Tailwind vs inline) of the file you're editing
@@ -125,3 +132,4 @@ interface VerificationResult {
 5. Use React Query (useQuery/useMutation) for any new data fetching
 6. Run `npm run build` and `npm run lint` after changes
 7. Check for unused imports and remove them
+8. Add new pages to the nav dropdown in Navbar.tsx (both desktop and mobile)
