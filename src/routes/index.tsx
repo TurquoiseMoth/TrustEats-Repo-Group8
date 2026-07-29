@@ -14,6 +14,8 @@ import VerifyEmailPage from "../pages/VerifyEmailPage";
 import AdminSignInPage from "../pages/AdminSignInPage";
 import AdminDashboardPage from "../pages/AdminDashboardPage";
 import AdminOrganizationsPage from "../pages/AdminOrganizationsPage";
+import AdminApplicationsPage from "../pages/AdminApplicationsPage";
+import AdminApplicationDetailPage from "../pages/AdminApplicationDetailPage";
 import ResultPage from "../pages/ResultPage";
 import HistoryPage from "../pages/HistoryPage";
 import ProfilePage from "../pages/ProfilePage";
@@ -90,10 +92,8 @@ export function AppRoutes() {
       <Route element={<AdminLayout />}>
         <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboardPage />} />
         <Route path={ROUTES.ADMIN_ORGANIZATIONS} element={<AdminOrganizationsPage />} />
-        <Route path={ROUTES.ADMIN_APPLICATIONS} element={<PlaceholderPage title="Applications" />} />
-        <Route path={ROUTES.ADMIN_CONSUMER_REPORTS} element={<PlaceholderPage title="Consumer Reports" />} />
-        <Route path={ROUTES.ADMIN_PROMOTION_TIPS} element={<PlaceholderPage title="Promotion & Tips" />} />
-        <Route path={ROUTES.ADMIN_NOTIFICATIONS} element={<PlaceholderPage title="Notifications" />} />
+        <Route path={ROUTES.ADMIN_APPLICATIONS} element={<AdminApplicationsPage />} />
+        <Route path={ROUTES.ADMIN_APPLICATION_DETAIL} element={<AdminApplicationDetailPage />} />
       </Route>
     </Routes>
   );
