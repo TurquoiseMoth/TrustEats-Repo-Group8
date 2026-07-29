@@ -26,4 +26,13 @@ export const ROUTES = {
   REPORTS: "/reports",
   NOTIFICATIONS: "/notifications",
   SETTINGS: "/settings",
+  FORGOT_PASSWORD: "/forgot-password",
+  CHECK_YOUR_EMAIL: "/check-your-email",
+  PRODUCT_UPLOAD: "/product-upload",
+  MANUFACTURER_DASHBOARD: "/manufacturer/dashboard",
+  MANUFACTURER_ORGANIZATIONS: "/manufacturer/organizations",
+  MANUFACTURER_APPLICATIONS: "/manufacturer/applications",
+  MANUFACTURER_CONSUMER_REPORTS: "/manufacturer/consumer-reports",
+  MANUFACTURER_PROMOTION_TIPS: "/manufacturer/promotion-tips",
+  MANUFACTURER_NOTIFICATIONS: "/manufacturer/notifications",
 } as const;

@@ -19,6 +19,11 @@ import HistoryPage from "../pages/HistoryPage";
 import ProfilePage from "../pages/ProfilePage";
 import NotificationsPage from "../pages/NotificationPage";
 import ProductListPage from "../pages/ProductListPage";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage";
+import CheckYourEmailPage from "../pages/CheckYourEmailPage";
+import ProductUploadPage from "../pages/ProductUploadPage";
+import ManufacturerDashboardPage from "../pages/ManufacturerDashboardPage";
+import QrCodePage from "../pages/QrCodePage";
 
 function DashboardPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Dashboard</h1></div>;
@@ -30,6 +35,15 @@ function ProductPage() {
 
 function AnalyticsPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Analytics</h1></div>;
+}
+
+function PlaceholderPage({ title }: { title: string }) {
+  return (
+    <div className="p-8">
+      <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+      <p className="mt-2 text-gray-500">This page is under construction.</p>
+    </div>
+  );
 }
 
 export function AppRoutes() {
@@ -46,6 +60,13 @@ export function AppRoutes() {
       <Route path={ROUTES.VERIFY} element={<VerifyPage />} />
       <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmailPage />} />
       <Route path={ROUTES.ADMIN_LOGIN} element={<AdminSignInPage />} />
+      <Route path={ROUTES.MANUFACTURER_DASHBOARD} element={<ManufacturerDashboardPage />} />
+      <Route path={ROUTES.MANUFACTURER_ORGANIZATIONS} element={<ManufacturerDashboardPage />} />
+      <Route path={ROUTES.MANUFACTURER_APPLICATIONS} element={<ManufacturerDashboardPage />} />
+      <Route path={ROUTES.MANUFACTURER_CONSUMER_REPORTS} element={<ManufacturerDashboardPage />} />
+      <Route path={ROUTES.MANUFACTURER_PROMOTION_TIPS} element={<ManufacturerDashboardPage />} />
+      <Route path={ROUTES.MANUFACTURER_NOTIFICATIONS} element={<ManufacturerDashboardPage />} />
+      <Route path={ROUTES.QR_CODE} element={<QrCodePage />} />
       <Route path={ROUTES.RESULT} element={<ResultPage />} />
 
       {/* With consumer layout (top navbar) */}
@@ -69,6 +90,10 @@ export function AppRoutes() {
       <Route element={<AdminLayout />}>
         <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboardPage />} />
         <Route path={ROUTES.ADMIN_ORGANIZATIONS} element={<AdminOrganizationsPage />} />
+        <Route path={ROUTES.ADMIN_APPLICATIONS} element={<PlaceholderPage title="Applications" />} />
+        <Route path={ROUTES.ADMIN_CONSUMER_REPORTS} element={<PlaceholderPage title="Consumer Reports" />} />
+        <Route path={ROUTES.ADMIN_PROMOTION_TIPS} element={<PlaceholderPage title="Promotion & Tips" />} />
+        <Route path={ROUTES.ADMIN_NOTIFICATIONS} element={<PlaceholderPage title="Notifications" />} />
       </Route>
     </Routes>
   );
