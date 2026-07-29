@@ -1,12 +1,17 @@
 
-
-function Button({children, className}: {children: React.ReactNode, className?: string}) {
-  return (
-    <div>
-
-      <button className={className}>{children}</button>
-    </div>
-  )
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  className?: string;
 }
 
-export default Button
+function Button({ children, className, ...props }: ButtonProps) {
+  return (
+    <div>
+      <button className={className} {...props}>
+        {children}
+      </button>
+    </div>
+  );
+}
+
+export default Button;
