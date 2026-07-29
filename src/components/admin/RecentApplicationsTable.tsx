@@ -1,4 +1,6 @@
+import { Link } from "react-router";
 import type { Application } from "../../types/application.types";
+import { ROUTES } from "../../constants";
 import StatusBadge from "./StatusBadge";
 
 interface RecentApplicationsTableProps {
@@ -8,7 +10,15 @@ interface RecentApplicationsTableProps {
 function RecentApplicationsTable({ applications }: RecentApplicationsTableProps) {
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm">
-      <h3 className="text-lg font-bold text-gray-900 mb-5">Recent Applications</h3>
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-lg font-bold text-gray-900">Recent Applications</h3>
+        <Link
+          to={ROUTES.ADMIN_APPLICATIONS}
+          className="text-sm font-semibold text-emerald-700 hover:text-emerald-800 hover:underline underline-offset-2"
+        >
+          View All
+        </Link>
+      </div>
 
       {applications.length === 0 ? (
         <p className="text-sm text-gray-500 py-8 text-center">No applications yet.</p>

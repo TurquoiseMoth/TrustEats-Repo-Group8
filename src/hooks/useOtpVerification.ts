@@ -157,26 +157,6 @@ export function useOtpVerification({
     focusBox(0);
   }, [length]);
 
-  const submit = useCallback(
-    async (codeToSubmit: string) => {
-      setStatus("submitting");
-      setErrorMessage(null);
-      try {
-        const ok = await onSubmit(codeToSubmit);
-        if (ok) {
-          setStatus("success");
-        } else {
-          setStatus("error");
-          setErrorMessage("That code doesn't look right. Check it and try again.");
-        }
-      } catch {
-        setStatus("error");
-        setErrorMessage("Something went wrong verifying your code. Please try again.");
-      }
-    },
-    [onSubmit]
-  );
-
   // Auto-submit the moment the last box is filled
   useEffect(() => {
     if (isComplete && status === "idle") {

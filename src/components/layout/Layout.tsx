@@ -15,8 +15,6 @@ function Layout() {
         <Outlet/>
       </div>
 
-      {!isHomePage && <BottomNav />}
-
       {isHomePage && (
         <>
           <div className="mt-20" />

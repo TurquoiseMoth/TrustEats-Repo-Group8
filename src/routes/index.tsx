@@ -39,15 +39,6 @@ function AnalyticsPage() {
   return <div className="p-8"><h1 className="text-2xl font-bold">Analytics</h1></div>;
 }
 
-function PlaceholderPage({ title }: { title: string }) {
-  return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-      <p className="mt-2 text-gray-500">This page is under construction.</p>
-    </div>
-  );
-}
-
 export function AppRoutes() {
   return (
     <Routes>

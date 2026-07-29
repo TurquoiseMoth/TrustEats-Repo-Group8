@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import { EmailVerification } from "../components/EmailVerification";
 
 // Adjust this import to wherever your API client actually lives
