@@ -16,6 +16,9 @@ import AdminDashboardPage from "../pages/AdminDashboardPage";
 import AdminOrganizationsPage from "../pages/AdminOrganizationsPage";
 import AdminApplicationsPage from "../pages/AdminApplicationsPage";
 import AdminApplicationDetailPage from "../pages/AdminApplicationDetailPage";
+import AdminConsumerReportsPage from "../pages/AdminConsumerReportsPage";
+import AdminPromotionTipsPage from "../pages/AdminPromotionTipsPage";
+import AdminNotificationsPage from "../pages/AdminNotificationsPage";
 import ResultPage from "../pages/ResultPage";
 import HistoryPage from "../pages/HistoryPage";
 import ProfilePage from "../pages/ProfilePage";
@@ -87,6 +90,9 @@ export function AppRoutes() {
         <Route path={ROUTES.ADMIN_ORGANIZATIONS} element={<AdminOrganizationsPage />} />
         <Route path={ROUTES.ADMIN_APPLICATIONS} element={<AdminApplicationsPage />} />
         <Route path={ROUTES.ADMIN_APPLICATION_DETAIL} element={<AdminApplicationDetailPage />} />
+        <Route path={ROUTES.ADMIN_CONSUMER_REPORTS} element={<AdminConsumerReportsPage />} />
+        <Route path={ROUTES.ADMIN_PROMOTION_TIPS} element={<AdminPromotionTipsPage />} />
+        <Route path={ROUTES.ADMIN_NOTIFICATIONS} element={<AdminNotificationsPage />} />
       </Route>
     </Routes>
   );
