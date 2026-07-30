@@ -1,0 +1,427 @@
+/* Base Reset & Colors */
+:root {
+  --primary-green: #417551;
+  --primary-dark: #325d3e;
+  --bg-light: #f2f7f7;
+  --card-bg-light: #d6e5dd;
+  --text-dark: #2c3e35;
+  --text-muted: #62776a;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Layout Container */
+.dashboardContainer {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-light);
+}
+
+/* ================= Sidebar ================= */
+.sidebar {
+  width: 287px;
+  min-height: 100vh; /* Changed from height: 1350px */
+  background-color: var(--white);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Automatically pushes settingBtn to the bottom */
+  border-right: 1px solid #e0e6e3;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.logo {
+  padding: 8px 12px;
+  margin-top: 24px;
+  margin-bottom: 82px;
+  width: 182px;
+height: 52px;
+top: 50px;
+left: 60px;
+}
+
+.logoIcon img {
+  max-width: 140px;
+  height: auto;
+  display: block;
+  align-items: center;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 171px;
+  height: 268px;
+  top: 245px;
+  left: 58px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: var(--primary-green);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease; 
+}
+
+.navItem svg {
+  font-size: 20px;
+}
+
+.navItem.active {
+  background-color: var(--primary-green);
+  color: var(--white);
+}
+
+.navItem:hover:not(.active) {
+  background-color: #f0f5f2;
+}
+
+.settingBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #3C7443;
+  background: transparent;
+  color: #3C7443;
+  font-weight: 590;
+  cursor: pointer;
+  transition: background 0.2s;
+position: absolute;
+  width: 145px;
+height: 44px;
+top: 805px;
+left: 71px;
+gap: 10px;
+border-radius: 8px;
+padding-top: 8px;
+padding-right: 16px;
+padding-bottom: 8px;
+padding-left: 16px;
+border-width: 1px;
+}
+
+.settingBtn:hover {
+  background-color: #f0f5f2;
+}
+
+/* ================= Main Content ================= */
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Bar */
+.header {
+  background: #7DA282;
+  padding: 1px 35px;
+  color: var(--white);
+height: 72px;
+left: 287px;
+  }
+
+.header h2 {
+  font-size: 18px;
+  width: 100%;             /* Allow full width for text centering */
+  font-weight: 700;
+  line-height: 72px;       /* Match container height for vertical centering */
+  letter-spacing: 0%;
+  color: #FFFFFF;
+  align-items: center;      /* Centers text horizontally */
+}
+
+/* Main Body Content */
+.mainContent > section,
+.mainContent > div {
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+/* ================= Hero Card ================= */
+.heroCard {
+  margin: 32px;
+  background-color: #3C744333;
+  border-radius: 12px;
+  padding: 38px 0;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  /* Crucial: remove overflow: hidden so the image can hang past the bottom edge */
+  overflow: visible; 
+  height: 429px;
+  color: #292D32;
+}
+
+.heroLeft {
+  max-width: 55%;
+  padding-left: 18px;
+}
+
+.heroLeft h1 {
+  font-size: 30px;
+  color: #1c2e24;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.heroDesc {
+  font-size: 13px;
+  color: #4b5e53;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.heroSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.step h4 {
+  font-size: 13px;
+  color: #1c2e24;
+  font-weight: 700;
+}
+
+.step p {
+  font-size: 12px;
+  color: #4b5e53;
+  border-bottom: 1px solid #bdceb5;
+  padding-bottom: 8px;
+}
+
+.registerBtn {
+  background-color: #3C7443;
+  color: var(--white);
+  border: none;
+  padding: 12px 36px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.registerBtn:hover {
+  background-color: var(--primary-dark);
+}
+
+.heroRight {
+  flex: 1;
+  display: flex;
+  align-items: flex-end; /* Align the image baseline toward the bottom */
+  justify-content: flex-end; /* Push image toward the right edge */
+  position: relative;
+  height: 100%;
+}
+
+.heroRight img {
+  position: absolute;
+  left: 8px;          /* Slight offset to align nicely with the right margin */
+  bottom: -38px;         /* Pulls the image past the bottom edge of the hero card */
+  height: 430px;         /* Increase height so it extends both up and down */
+  width: auto;
+  object-fit: contain;
+  pointer-events: none;  /* Prevents unwanted image dragging/selection */
+}
+
+/* ================= Stats Grid ================= */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 0 32px 32px 32px;
+}
+
+.statCard {
+  background-color: var(--card-bg-light);
+  padding: 16px 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.statCard small {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #292D32;
+}
+
+.statCard h2 {
+  font-size: 22px;
+  color: var(--primary-green);
+  font-weight: 700;
+  color: #3C7443; 
+}
+
+/* ================= Quick Access ================= */
+.quickSection {
+  margin: 0 32px 32px 32px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  color: #122118;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.quickCard {
+  background-color: #3C7443;
+  color: var(--white);
+  padding: 18px 24px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.quickCard:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.quickIcon {
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.quickCard h4 {
+  font-size: 15px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.quickCard p {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* ================= Recent Activities ================= */
+.activitySection {
+  margin: 0 32px 32px 32px;
+  background-color: var(--white);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.activityHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.activityHeader h3 {
+  font-size: 16px;
+  color: #122118;
+  font-weight: 700;
+}
+
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activityCard {
+  background-color: #e5ece8;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.activityLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.activityIcon {
+  width: 40px;
+  height: 38px;
+  font-size: 24px; /* Scaled up slightly to stay balanced with the larger container */
+  color: #2b4536;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Ensures image corners stay rounded */
+  flex-shrink: 0;
+}
+
+/* Style for product images inside activity items */
+.activityIcon img.productThumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.activityLeft h4 {
+  font-size: 13px;
+  color: #1a2a21;
+  margin-bottom: 2px;
+}
+
+.activityLeft p {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.activityRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.verifiedBadge {
+  background-color: #ffffff;
+  color: #3c7443;
+  border: 1px solid #3c7443;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.activityRight small {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
