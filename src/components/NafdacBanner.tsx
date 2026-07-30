@@ -17,7 +17,7 @@ export function NafdacBanner() {
       {/* Right: NAFDAC logo (25-30%) */}
       <div className="flex shrink-0 items-center justify-end md:w-1/4">
         <img
-          src="/assets/national-symbol.png"
+          src="/assets/nafdac-aligned.png"
           alt="NAFDAC"
           className="h-auto w-36 object-contain md:w-44"
         />
