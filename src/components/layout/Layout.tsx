@@ -6,9 +6,11 @@ import { ROUTES } from "../../constants";
 
 function Layout() {
   const location = useLocation();
-  const isHomePage = location.pathname === ROUTES.HOME || location.pathname === "/";
-  
-  // List routes that have their own sidebar/header layout and shouldn't display the top Navbar
+
+  const isHomePage =
+    location.pathname === ROUTES.HOME || location.pathname === "/";
+
+  // Routes that use their own layout (no top Navbar)
   const isDashboardRoute = [
     "/promotions",
     "/dashboard",
@@ -22,15 +24,15 @@ function Layout() {
 
   return (
     <div>
-      {/* Only render Navbar if we are NOT on a dashboard/admin page */}
+      {/* Hide Navbar on dashboard/admin pages */}
       {!isDashboardRoute && <Navbar />}
 
-      <div>
-        <Outlet />
-      </div>
+      <Outlet />
 
-      {!isHomePage && !isDashboardRoute && <BottomNav />}
+      {/* Show BottomNav on every page except the home page */}
+      {!isHomePage && <BottomNav />}
 
+      {/* Show Footer only on the home page */}
       {isHomePage && (
         <>
           <div className="mt-20" />

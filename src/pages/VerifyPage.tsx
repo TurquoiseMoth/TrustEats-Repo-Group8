@@ -25,7 +25,7 @@ export default function VerifyPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F4F7F9] flex flex-col items-center justify-center px-4 font-sans">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 font-sans">
         <Spinner size="lg" />
         <p className="mt-4 text-gray-500 text-sm">Loading product details...</p>
       </div>
@@ -34,7 +34,7 @@ export default function VerifyPage() {
 
   if (error || !verification) {
     return (
-      <div className="min-h-screen bg-[#F4F7F9] flex flex-col items-center justify-center px-4 font-sans">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 font-sans">
         <div className="flex h-20 w-20 items-center justify-center rounded-full bg-red-100 border border-red-200">
           <span className="text-red-500 text-3xl font-bold">!</span>
         </div>
@@ -44,7 +44,7 @@ export default function VerifyPage() {
         </p>
         <button
           onClick={() => navigate(ROUTES.SCAN)}
-          className="mt-6 px-6 py-3 bg-[#397240] text-white rounded-full text-sm font-semibold hover:bg-green-800 transition-colors"
+          className="mt-6 px-6 py-3 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary/90 transition-colors"
         >
           Return to Scan
         </button>
@@ -52,19 +52,20 @@ export default function VerifyPage() {
     );
   }
 
-  if (verification.status !== "GENUINE") {
+  if (verification.status !== "genuine") {
     navigate(ROUTES.RESULT.replace(":code", code ?? ""), { state: { result: verification }, replace: true });
     return null;
   }
 
   const product = verification.product;
+  const manufacturer = verification.manufacturer;
+  const batch = verification.batch;
 
   return (
-    <div className="min-h-screen bg-[#F4F7F9] flex flex-col items-center px-4 py-12 font-sans">
-      {/* Success Section */}
+    <div className="min-h-screen bg-background flex flex-col items-center px-4 py-12 font-sans">
       <div className="relative mt-8 mb-6 flex flex-col items-center">
-        <div className="relative flex h-25 w-25 items-center justify-center rounded-full bg-green-100 shadow-sm border border-green-200">
-          <div className="flex h-17.5 w-17.5 items-center justify-center rounded-full bg-green-500 text-white shadow-md">
+        <div className="relative flex h-25 w-25 items-center justify-center rounded-full bg-green-100 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] border border-green-200">
+          <div className="flex h-17.5 w-17.5 items-center justify-center rounded-full bg-green-500 text-white shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
             <Check size={36} strokeWidth={3} />
           </div>
           <div className="absolute -top-2.5 -left-5 h-3 w-3 rotate-45 bg-blue-400"></div>
@@ -77,7 +78,7 @@ export default function VerifyPage() {
           <div className="absolute top-12.5 -right-10 h-2.5 w-2.5 rotate-[-20deg] bg-cyan-400"></div>
         </div>
 
-        <div className="mt-8 flex items-center gap-1.5 rounded-full border border-green-200 bg-white px-4 py-1.5 text-sm font-semibold text-[#397240] shadow-sm">
+        <div className="mt-8 flex items-center gap-1.5 rounded-full border border-green-200 bg-white px-4 py-1.5 text-sm font-semibold text-primary shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
           <Check size={16} strokeWidth={2.5} /> Product is Verified
         </div>
 
@@ -87,8 +88,7 @@ export default function VerifyPage() {
         </p>
       </div>
 
-      {/* Product Details Card */}
-      <div className="w-full max-w-95 rounded-[1.25rem] border-[1.5px] border-[#397240]/40 bg-[#F4F7F9] p-6 shadow-sm mb-10">
+      <div className="w-full max-w-95 rounded-[1.25rem] border-[1.5px] border-primary/40 bg-background p-6 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] mb-10">
         <h3 className="mb-6 text-[17px] font-bold text-gray-900 tracking-wide">Product Details</h3>
 
         <div className="space-y-4">
@@ -100,51 +100,50 @@ export default function VerifyPage() {
           </div>
 
           <div className="flex justify-between border-b border-gray-300 pb-4 pt-1">
-            <span className="text-[15px] text-gray-600">NAFDAC Number</span>
+            <span className="text-[15px] text-gray-600">Brand</span>
             <span className="text-[15px] font-medium text-gray-800">
-              {product?.verificationCode ?? code}
+              {product?.brand ?? code}
             </span>
           </div>
 
           <div className="flex justify-between border-b border-gray-300 pb-4 pt-1">
-            <span className="text-[15px] text-gray-600">Manufactured Date</span>
+            <span className="text-[15px] text-gray-600">Batch Number</span>
             <span className="text-[15px] font-medium text-gray-800">
-              {product?.manufactureDate ?? "N/A"}
+              {batch?.batchNumber ?? "N/A"}
             </span>
           </div>
 
           <div className="flex justify-between border-b border-gray-300 pb-4 pt-1">
             <span className="text-[15px] text-gray-600">Expiry Date</span>
             <span className="text-[15px] font-medium text-gray-800">
-              {product?.expiryDate ?? "N/A"}
+              {batch?.expiryDate ? new Date(batch.expiryDate).toLocaleDateString() : "N/A"}
             </span>
           </div>
 
           <div className="flex justify-between pt-2">
             <span className="text-[15px] text-gray-600">Company/Brand</span>
             <span className="text-[15px] font-medium text-gray-800">
-              {product?.manufacturer?.name ?? "N/A"}
+              {manufacturer?.companyName ?? "N/A"}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className="w-full max-w-95 flex gap-3 mb-10">
         <Button
-          className="flex-1 rounded-full bg-[#397240] py-6 text-[15px] font-semibold text-white hover:bg-green-800 transition-colors shadow-sm"
+          className="flex-1 rounded-full bg-primary py-6 text-[15px] font-semibold text-white hover:bg-primary/90 transition-colors shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]"
           onClick={() => navigate(ROUTES.SCAN)}
         >
           Return to Scan
         </Button>
-        <Button className="flex-1 rounded-full border-2 border-[#397240] bg-transparent py-6 text-[15px] font-semibold text-[#397240] hover:bg-green-50 transition-colors">
+        <Button className="flex-1 rounded-full border-2 border-primary bg-transparent py-6 text-[15px] font-semibold text-primary hover:bg-green-50 transition-colors">
           Report
         </Button>
       </div>
 
       <Link
         to="/dashboard"
-        className="flex items-center gap-2 text-[15px] font-semibold text-[#397240] hover:underline underline-offset-4 mt-2"
+        className="flex items-center gap-2 text-[15px] font-semibold text-primary hover:underline underline-offset-4 mt-2"
       >
         <ArrowLeft size={18} strokeWidth={2.5} /> Return to Dashboard
       </Link>

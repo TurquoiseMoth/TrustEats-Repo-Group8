@@ -1,13 +1,16 @@
-export type { ApiResponse, PaginatedResponse, ApiError } from "./api";
+export type { ApiResponse, ApiError } from "./api";
 export type {
-  Manufacturer,
+  User,
   LoginRequest,
   RegisterRequest,
-  AuthResponse,
+  RegisterResponse,
 } from "./auth";
-export type { Product, VerificationCode } from "./product";
+export type { Product, Batch, CreateBatchPayload } from "./product";
 export type {
   VerificationResult,
   VerificationRequest,
+  VerificationStatus,
+  ScanEvent,
+  ScanHistoryResponse,
 } from "./verification";
 export type { AnalyticsSummary, RecentFlag } from "./analytics";

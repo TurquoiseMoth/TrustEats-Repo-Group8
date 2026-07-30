@@ -2,11 +2,16 @@ import { useState } from 'react';
 import type { CSSProperties } from 'react';
 import { useNavigate } from 'react-router';
 import { ChevronLeft, Bell, AlertTriangle, Info } from 'lucide-react';
-import { MOCK_NOTIFICATIONS } from '../utils/mockData';
+
+const PLACEHOLDER_NOTIFICATIONS = [
+  { id: '1', type: 'info' as const, title: 'Welcome to TrustEats', message: 'Start scanning products to verify their authenticity.', createdAt: 'Just now', read: false },
+  { id: '2', type: 'warning' as const, title: 'Stay Safe', message: 'Always check the NAFDAC number before purchasing packaged foods.', createdAt: '1 day ago', read: false },
+  { id: '3', type: 'alert' as const, title: 'Report Counterfeits', message: 'Found a suspicious product? Use the Report feature to alert authorities.', createdAt: '3 days ago', read: true },
+];
 
 export default function NotificationsPage() {
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState(PLACEHOLDER_NOTIFICATIONS);
 
   const markAllRead = () => setNotifications(n => n.map(item => ({ ...item, read: true })));
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -20,7 +25,7 @@ export default function NotificationsPage() {
 
       {notifications.length === 0 ? (
         <div style={s.empty}>
-          <Bell size={48} color="#ccc" />
+          <Bell size={48} color="#cccccc" />
           <p style={s.emptyText}>No notifications yet</p>
         </div>
       ) : (
@@ -36,7 +41,7 @@ export default function NotificationsPage() {
               <div key={n.id} style={{ ...s.item, ...(!n.read ? s.unread : {}) }}
                 onClick={() => setNotifications(prev => prev.map(item => item.id === n.id ? { ...item, read: true } : item))}>
                 <div style={{ ...s.iconWrap, background: n.type === 'alert' ? '#FEE2E2' : n.type === 'warning' ? '#FEF3C7' : '#EAF4EC' }}>
-                  {n.type === 'alert' ? <AlertTriangle size={18} color="#EF4444" /> : n.type === 'warning' ? <AlertTriangle size={18} color="#D97706" /> : <Info size={18} color="#3F7A46" />}
+                  {n.type === 'alert' ? <AlertTriangle size={18} color="#EF4444" /> : n.type === 'warning' ? <AlertTriangle size={18} color="#D97706" /> : <Info size={18} color="#3c7443" />}
                 </div>
                 <div style={s.itemContent}>
                   <p style={s.itemTitle}>{n.title}</p>
@@ -54,23 +59,23 @@ export default function NotificationsPage() {
 }
 
 const s: Record<string, CSSProperties> = {
-  page: { minHeight: '100vh', background: '#EEF2F5', fontFamily: "'Inter', sans-serif" },
+  page: { minHeight: '100vh',     background: '#f0f8ff', fontFamily: "'Inter', sans-serif" },
   header: { display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 20px' },
-  backBtn: { background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#111' },
-  title: { fontSize: '18px', fontWeight: 700, color: '#111' },
+  backBtn: { background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#292d32' },
+  title: { fontSize: '18px', fontWeight: 700, color: '#292d32' },
   empty: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: '12px', padding: '80px 20px' },
-  emptyText: { fontSize: '15px', color: '#aaa' },
+  emptyText: { fontSize: '15px', color: '#aaaaaa' },
   content: { padding: '0 16px 24px' },
   topRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' },
-  countText: { fontSize: '13px', color: '#666' },
-  markAll: { background: 'none', border: '1px solid #E0E0E0', borderRadius: '6px', padding: '6px 12px', fontSize: '13px', color: '#333', cursor: 'pointer' },
+  countText: { fontSize: '13px', color: '#6B7280' },
+  markAll: { background: 'none', border: '1px solid #E5E7EB', borderRadius: '6px', padding: '6px 12px', fontSize: '13px', color: '#333333', cursor: 'pointer' },
   list: { display: 'flex', flexDirection: 'column', gap: '8px' },
-  item: { background: '#fff', borderRadius: '12px', padding: '14px', display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer', border: '1px solid #E8EDE8' },
-  unread: { background: '#F0F7F1', border: '1px solid #C2DEC6' },
+  item: { background: '#ffffff', borderRadius: '12px', padding: '14px', display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer', border: '1px solid #E8EDE8' },
+  unread: { background: '#f0f8ff', border: '1px solid #C2DEC6' },
   iconWrap: { width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
   itemContent: { flex: 1 },
-  itemTitle: { fontSize: '14px', fontWeight: 600, color: '#111', marginBottom: '3px' },
-  itemMsg: { fontSize: '13px', color: '#555', lineHeight: 1.4, marginBottom: '4px' },
-  itemTime: { fontSize: '12px', color: '#aaa' },
-  dot: { width: '8px', height: '8px', borderRadius: '50%', background: '#3F7A46', flexShrink: 0, marginTop: '4px' },
+  itemTitle: { fontSize: '14px', fontWeight: 600, color: '#292d32', marginBottom: '3px' },
+  itemMsg: { fontSize: '13px', color: '#555555', lineHeight: 1.4, marginBottom: '4px' },
+  itemTime: { fontSize: '12px', color: '#aaaaaa' },
+  dot: { width: '8px', height: '8px', borderRadius: '50%', background: '#3c7443', flexShrink: 0, marginTop: '4px' },
 };

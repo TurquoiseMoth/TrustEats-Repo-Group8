@@ -107,7 +107,7 @@ export default function QrScanner({
           alignItems: "center",
           justifyContent: "center",
           background: "#0D0D0D",
-          color: "#fff",
+          color: "#ffffff",
           padding: "24px",
           textAlign: "center",
           gap: "12px",
@@ -117,7 +117,7 @@ export default function QrScanner({
         <p style={{ fontSize: "15px", fontWeight: 600 }}>
           Camera access denied
         </p>
-        <p style={{ fontSize: "13px", color: "#aaa", maxWidth: "280px" }}>
+        <p style={{ fontSize: "13px", color: "#aaaaaa", maxWidth: "280px" }}>
           Please allow camera access in your browser settings to scan QR codes.
         </p>
       </div>
@@ -150,7 +150,7 @@ export default function QrScanner({
             alignItems: "center",
             justifyContent: "center",
             background: "#0D0D0D",
-            color: "#aaa",
+            color: "#aaaaaa",
             fontSize: "14px",
           }}
         >

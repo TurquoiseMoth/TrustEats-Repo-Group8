@@ -1,7 +1,10 @@
 import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router';
+import { ROUTES } from '../constants';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-
+import { manufacturerService } from '../services/manufacturers';
 export default function ManufacturerSignUpPage() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     companyName: '',
     napamsEmail: '',
@@ -10,6 +13,8 @@ export default function ManufacturerSignUpPage() {
   });
   const [corFile, setCorFile] = useState<File | null>(null);
   const [agreed, setAgreed] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
@@ -26,9 +31,25 @@ export default function ManufacturerSignUpPage() {
     fileInputRef.current?.click();
   };
 
-  const handleSubmit = (e: React.MouseEvent) => {
+  const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log('Manufacturer signup:', { ...form, corFile, agreed });
+    if (!agreed) return;
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      await manufacturerService.submitProfile({
+        companyName: form.companyName,
+        napamsEmail: form.napamsEmail,
+        cacNumber: form.cacNumber,
+        nafdacCofRNumber: form.nafdacCorNo,
+        corFile: corFile,
+      });
+      navigate(ROUTES.MANUFACTURER_DASHBOARD);
+    } catch {
+      setSubmitError("Registration failed. Please check your information and try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -43,20 +64,7 @@ export default function ManufacturerSignUpPage() {
 
       {/* Logo */}
       <div style={isDesktop ? desktopStyles.logoWrap : styles.logoWrap}>
-        <svg width="24" height="28" viewBox="0 0 24 28" fill="none">
-          <path
-            d="M12 2L2 7V13C2 19.63 6.35 25.78 12 27C17.65 25.78 22 19.63 22 13V7L12 2Z"
-            fill="#3F7A46"
-          />
-          <path
-            d="M9 14L11 16L15 12"
-            stroke="white"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <span style={isDesktop ? desktopStyles.logoText : styles.logoText}>TrustEats</span>
+        <img src="/assets/trusteats-logo.png" alt="TrustEats" className="h-8 w-auto" />
       </div>
 
       {/* Content */}
@@ -123,7 +131,7 @@ export default function ManufacturerSignUpPage() {
                 onChange={handleFileChange}
                 style={{ display: 'none' }}
               />
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9A9A9A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="17 8 12 3 7 8" />
                 <line x1="12" y1="3" x2="12" y2="15" />
@@ -148,8 +156,9 @@ export default function ManufacturerSignUpPage() {
             </span>
           </label>
 
-          <button style={styles.btnPrimary} onClick={handleSubmit}>
-            Submit
+          {submitError && <p style={{ color: '#ce0000', fontSize: '14px', textAlign: 'center', marginBottom: '12px' }}>{submitError}</p>}
+          <button style={{ ...styles.btnPrimary, opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer' }} onClick={handleSubmit} disabled={submitting}>
+            {submitting ? 'Submitting...' : 'Submit'}
           </button>
         </div>
       </div>
@@ -177,7 +186,7 @@ function Field({
 const styles: Record<string, React.CSSProperties> = {
   page: {
     minHeight: '100vh',
-    background: '#EEF2F5',
+    background: '#f0f8ff',
     fontFamily: "'Inter', sans-serif",
     display: 'flex',
     flexDirection: 'column',
@@ -197,13 +206,8 @@ const styles: Record<string, React.CSSProperties> = {
     zIndex: 2,
     position: 'relative',
   },
-  logoText: {
-    fontSize: '22px',
-    fontWeight: 700,
-    color: '#3F7A46',
-  },
-  content: {
-    padding: '16px 20px 48px',
+    content: {
+        padding: '16px 20px 48px',
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
@@ -211,13 +215,13 @@ const styles: Record<string, React.CSSProperties> = {
   heading: {
     fontSize: '24px',
     fontWeight: 700,
-    color: '#111',
+    color: '#292d32',
     textAlign: 'center',
     marginBottom: '4px',
   },
   subtitle: {
     fontSize: '14px',
-    color: '#444',
+    color: '#444444',
     textAlign: 'center',
     marginBottom: '24px',
   },
@@ -234,18 +238,18 @@ const styles: Record<string, React.CSSProperties> = {
   label: {
     fontSize: '15px',
     fontWeight: 600,
-    color: '#111',
+    color: '#292d32',
     marginBottom: '6px',
   },
   input: {
     height: '52px',
-    background: '#fff',
+    background: '#ffffff',
     border: '1px solid #9A9A9A',
     borderRadius: '8px',
     padding: '0 16px',
     fontSize: '15px',
     fontFamily: "'Inter', sans-serif",
-    color: '#111',
+    color: '#292d32',
     outline: 'none',
     width: '100%',
     boxSizing: 'border-box',
@@ -253,7 +257,7 @@ const styles: Record<string, React.CSSProperties> = {
   dropzone: {
     width: '100%',
     minHeight: '120px',
-    background: '#fff',
+    background: '#ffffff',
     border: '2px dashed #9A9A9A',
     borderRadius: '8px',
     display: 'flex',
@@ -267,7 +271,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   dropzoneText: {
     fontSize: '14px',
-    color: '#9A9A9A',
+    color: '#9CA3AF',
     textAlign: 'center',
   },
   checkLabel: {
@@ -275,7 +279,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     gap: '8px',
     fontSize: '14px',
-    color: '#111',
+    color: '#292d32',
     cursor: 'pointer',
     marginBottom: '24px',
     marginTop: '4px',
@@ -283,20 +287,20 @@ const styles: Record<string, React.CSSProperties> = {
   checkbox: {
     width: '18px',
     height: '18px',
-    accentColor: '#3F7A46',
+    accentColor: '#3c7443',
     cursor: 'pointer',
     flexShrink: 0,
   },
   termsLink: {
-    color: '#3F7A46',
+    color: '#3c7443',
     fontWeight: 600,
     textDecoration: 'underline',
   },
   btnPrimary: {
     width: '100%',
     height: '52px',
-    background: '#3F7A46',
-    color: '#fff',
+    background: '#3c7443',
+    color: '#ffffff',
     fontSize: '17px',
     fontWeight: 700,
     fontFamily: "'Inter', sans-serif",
@@ -312,7 +316,7 @@ const styles: Record<string, React.CSSProperties> = {
 const desktopStyles: Record<string, React.CSSProperties> = {
   page: {
     minHeight: '100vh',
-    background: '#EEF2F5',
+    background: '#f0f8ff',
     fontFamily: "'Inter', sans-serif",
     display: 'flex',
     flexDirection: 'column',
@@ -334,13 +338,8 @@ const desktopStyles: Record<string, React.CSSProperties> = {
     zIndex: 2,
     position: 'relative',
   },
-  logoText: {
-    fontSize: '24px',
-    fontWeight: 700,
-    color: '#3F7A46',
-  },
-  content: {
-    padding: '24px 24px 60px',
+    content: {
+        padding: '24px 24px 60px',
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
@@ -350,13 +349,13 @@ const desktopStyles: Record<string, React.CSSProperties> = {
   heading: {
     fontSize: '30px',
     fontWeight: 700,
-    color: '#111',
+    color: '#292d32',
     textAlign: 'center',
     marginBottom: '6px',
   },
   subtitle: {
     fontSize: '16px',
-    color: '#444',
+    color: '#444444',
     textAlign: 'center',
     marginBottom: '32px',
   },
@@ -378,7 +377,7 @@ const desktopStyles: Record<string, React.CSSProperties> = {
   label: {
     fontSize: '15px',
     fontWeight: 600,
-    color: '#111',
+    color: '#292d32',
     marginBottom: '6px',
   },
 };

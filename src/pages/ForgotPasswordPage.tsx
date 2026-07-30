@@ -1,15 +1,41 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
-
+import { authService } from '../services/auth';
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
+  const [sent, setSent] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.MouseEvent) => {
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
-    navigate(ROUTES.CHECK_YOUR_EMAIL);
+    if (!email.trim()) return;
+    setError("");
+    try {
+      await authService.forgotPassword(email);
+      setSent(true);
+    } catch {
+      setError("Failed to send reset link. Check the email address.");
+    }
   };
+
+  if (sent) {
+    return (
+      <div style={styles.phone}>
+        <img src="/assets/Deco.svg" alt="" style={styles.archImg} />
+        <div style={styles.logoWrap}>
+          <img src="/assets/trusteats-logo.png" alt="TrustEats" className="h-8 w-auto" />
+        </div>
+        <div style={styles.content}>
+          <h1 style={styles.heading}>Check Your Email</h1>
+          <p style={styles.subtitle}>We've sent a password reset link to <strong>{email}</strong>. Please check your inbox.</p>
+          <button style={styles.btnPrimary} onClick={() => navigate(ROUTES.LOGIN)}>Back to Sign In</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.phone}>
@@ -23,20 +49,7 @@ export default function ForgotPasswordPage() {
 
       {/* Logo */}
       <div style={styles.logoWrap}>
-        <svg width="24" height="28" viewBox="0 0 24 28" fill="none">
-          <path
-            d="M12 2L2 7V13C2 19.63 6.35 25.78 12 27C17.65 25.78 22 19.63 22 13V7L12 2Z"
-            fill="#3F7A46"
-          />
-          <path
-            d="M9 14L11 16L15 12"
-            stroke="white"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <span style={styles.logoText}>TrustEats</span>
+        <img src="/assets/trusteats-logo.png" alt="TrustEats" className="h-8 w-auto" />
       </div>
 
       {/* Content */}
@@ -59,6 +72,7 @@ export default function ForgotPasswordPage() {
             />
           </div>
 
+          {error && <p style={{ color: '#ce0000', fontSize: '14px', marginBottom: '12px' }}>{error}</p>}
           <button style={styles.btnPrimary} onClick={handleSubmit}>
             Send Your Reset Link
           </button>
@@ -75,7 +89,7 @@ export default function ForgotPasswordPage() {
 const styles: Record<string, React.CSSProperties> = {
   phone: {
     minHeight: '100vh',
-    background: '#EEF2F5',
+    background: '#f0f8ff',
     fontFamily: "'Inter', sans-serif",
     display: 'flex',
     flexDirection: 'column',
@@ -98,7 +112,7 @@ const styles: Record<string, React.CSSProperties> = {
   logoText: {
     fontSize: '22px',
     fontWeight: 700,
-    color: '#3F7A46',
+    color: '#3c7443',
   },
   content: {
     padding: '24px 20px 48px',
@@ -109,12 +123,12 @@ const styles: Record<string, React.CSSProperties> = {
   heading: {
     fontSize: '24px',
     fontWeight: 700,
-    color: '#111',
+    color: '#292d32',
     marginBottom: '4px',
   },
   subtitle: {
     fontSize: '14px',
-    color: '#444',
+    color: '#444444',
     marginBottom: '24px',
     lineHeight: '1.5',
   },
@@ -131,26 +145,26 @@ const styles: Record<string, React.CSSProperties> = {
   label: {
     fontSize: '15px',
     fontWeight: 600,
-    color: '#111',
+    color: '#292d32',
     marginBottom: '6px',
   },
   input: {
     height: '52px',
-    background: '#fff',
-    border: '1px solid #9A9A9A',
+    background: '#ffffff',
+    border: '1px solid #9CA3AF',
     borderRadius: '8px',
     padding: '0 16px',
     fontSize: '15px',
     fontFamily: "'Inter', sans-serif",
-    color: '#111',
+    color: '#292d32',
     outline: 'none',
     width: '100%',
   },
   btnPrimary: {
     width: '100%',
     height: '52px',
-    background: '#3F7A46',
-    color: '#fff',
+    background: '#3c7443',
+    color: '#ffffff',
     fontSize: '17px',
     fontWeight: 700,
     fontFamily: "'Inter', sans-serif",
@@ -164,7 +178,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   backLink: {
     fontSize: '15px',
-    color: '#3F7A46',
+    color: '#3c7443',
     textDecoration: 'none',
     fontWeight: 600,
     textAlign: 'center',

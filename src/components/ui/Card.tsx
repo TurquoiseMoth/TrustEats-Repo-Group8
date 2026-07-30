@@ -10,7 +10,7 @@ export function Card({ children, className }: CardProps) {
   return (
     <div
       className={twMerge(
-        clsx("rounded-xl border border-gray-200 bg-white p-4 shadow-sm", className),
+        clsx("rounded-3xl border border-primary bg-card p-4 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]", className),
       )}
     >
       {children}

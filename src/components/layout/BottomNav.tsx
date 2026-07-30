@@ -1,39 +1,42 @@
-import { NavLink } from "react-router";
-import { Home, ScanLine, Clock, User } from "lucide-react";
+import { Link, useLocation } from "react-router";
+import { Home, Scan, History, User } from "lucide-react";
+import { ROUTES } from "../../constants";
 
-const tabs = [
-  { label: "Home", to: "/", icon: Home },
-  { label: "Scan", to: "/scan", icon: ScanLine },
-  { label: "History", to: "/history", icon: Clock },
-  { label: "Profile", to: "/profile", icon: User },
+const navItems = [
+  { label: "Home", href: ROUTES.DASHBOARD, icon: Home },
+  { label: "Scan", href: ROUTES.SCAN, icon: Scan },
+  { label: "History", href: ROUTES.HISTORY, icon: History },
+  { label: "Profile", href: ROUTES.PROFILE, icon: User },
 ];
 
-export default function BottomNav() {
+function BottomNav() {
+  const location = useLocation();
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white md:hidden">
-      <div className="flex items-center justify-around h-14">
-        {tabs.map(({ label, to, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === "/"}
-            className="flex flex-col items-center justify-center gap-0.5 w-full h-full text-xs font-medium transition-colors"
+    <nav
+      className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex items-center justify-around py-2 z-40"
+      aria-label="Primary navigation"
+    >
+      {navItems.map((item) => {
+        const isActive = location.pathname === item.href;
+        const Icon = item.icon;
+        return (
+          <Link
+            key={item.href}
+            to={item.href}
+            aria-current={isActive ? "page" : undefined}
+            className={[
+              "flex flex-col items-center gap-1 px-3 py-1 text-xs font-medium",
+              isActive ? "text-primary" : "text-gray-400",
+            ].join(" ")}
           >
-            {({ isActive }) => (
-              <>
-                <Icon
-                  size={20}
-                  strokeWidth={isActive ? 2.5 : 1.8}
-                  className={isActive ? "text-[#3F7A46]" : "text-gray-400"}
-                />
-                <span className={isActive ? "text-[#3F7A46]" : "text-gray-400"}>
-                  {label}
-                </span>
-              </>
-            )}
-          </NavLink>
-        ))}
-      </div>
+            <Icon size={22} aria-hidden="true" />
+            {item.label}
+          </Link>
+        );
+      })}
     </nav>
   );
 }
+
+export default BottomNav;

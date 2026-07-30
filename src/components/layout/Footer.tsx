@@ -1,16 +1,5 @@
 import { useState } from "react";
-import {
-  MessageCircle,
-  Camera,
-  Video,
-  Globe,
-  Ghost,
-  ChevronRight,
-  Shield,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { ChevronRight } from "lucide-react";
 
 // ─── Data ───────────────────────────────────────────────────────────
 interface FooterLink {
@@ -33,19 +22,41 @@ const supportLinks: FooterLink[] = [
   { label: "Terms of Service", href: "/terms" },
 ];
 
-interface SocialIcon {
-  icon: LucideIcon;
-  href: string;
-  label: string;
-}
+// ─── Brand SVG Icons ────────────────────────────────────────────────
 
-const socialIcons: SocialIcon[] = [
-  { icon: Globe, href: "#facebook", label: "Facebook" },
-  { icon: MessageCircle, href: "#whatsapp", label: "WhatsApp" },
-  { icon: Camera, href: "#instagram", label: "Instagram" },
-  { icon: Video, href: "#youtube", label: "YouTube" },
-  { icon: Ghost, href: "#snapchat", label: "Snapchat" },
-];
+const FacebookIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
+
+const WhatsAppIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
+    <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
+  </svg>
+);
+
+const InstagramIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
+
+const YouTubeIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.94 2C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+    <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" />
+  </svg>
+);
+
+const SnapchatIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 11a7 7 0 0 1-3.5 6.1c-.5.3-1 .5-1.5.7-.2.1-.3.3-.3.5 0 .3.2.7.5.9.6.4 1.2.6 1.3 1 .1.5-.5 1-1 1H9c-.5 0-1.1-.5-1-1 .1-.4.7-.6 1.3-1 .3-.2.5-.6.5-.9 0-.2-.1-.4-.3-.5-.5-.2-1-.4-1.5-.7A7 7 0 0 1 5 11V8c0-3.9 3.1-5 7-5s7 1.1 7 5v3z" />
+  </svg>
+);
 
 // ─── Sub-components ─────────────────────────────────────────────────
 
@@ -57,40 +68,19 @@ interface FooterLinkColumnProps {
 function FooterLinkColumn({ title, links }: FooterLinkColumnProps) {
   return (
     <div className="flex flex-col">
-      <h4 className="mb-4 text-[15px] font-bold text-white">{title}</h4>
-      <ul className="flex flex-col gap-2.5">
+      <h4 className="mb-5 text-[16px] font-extrabold text-white">{title}</h4>
+      <ul className="flex flex-col gap-3.5">
         {links.map((link) => (
           <li key={link.label}>
             <a
               href={link.href}
-              className="text-[14px] font-medium text-white/80 transition-colors hover:text-white"
+              className="text-[14px] font-normal text-white/70 transition-colors hover:text-white"
             >
               {link.label}
             </a>
           </li>
         ))}
       </ul>
-    </div>
-  );
-}
-
-interface SocialIconsRowProps {
-  icons: SocialIcon[];
-}
-
-function SocialIconsRow({ icons }: SocialIconsRowProps) {
-  return (
-    <div className="flex items-center gap-4">
-      {icons.map((social) => (
-        <a
-          key={social.label}
-          href={social.href}
-          aria-label={social.label}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-        >
-          <social.icon className="h-4 w-4" />
-        </a>
-      ))}
     </div>
   );
 }
@@ -107,26 +97,39 @@ function Footer() {
     setEmail("");
   };
 
+  const socialIcons = [
+    { icon: FacebookIcon, href: "#facebook", label: "Facebook" },
+    { icon: WhatsAppIcon, href: "#whatsapp", label: "WhatsApp" },
+    { icon: InstagramIcon, href: "#instagram", label: "Instagram" },
+    { icon: YouTubeIcon, href: "#youtube", label: "YouTube" },
+    { icon: SnapchatIcon, href: "#snapchat", label: "Snapchat" },
+  ];
+
   return (
-    <footer className="bg-[#2D5A3D]">
+    <footer className="bg-primary/90">
       {/* ── Top: Brand + Links + Newsletter ─────────────── */}
-      <div className="mx-auto max-w-7xl px-6 pt-14 pb-10">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+      <div className="mx-auto max-w-7xl px-6 pt-16 pb-12 lg:px-10">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
           {/* Brand column */}
-          <div className="flex flex-col gap-4">
-            {/* Logo placeholder */}
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/15">
-              <span className="text-lg font-bold text-white">TE</span>
-            </div>
-
-            <h3 className="text-[22px] font-bold text-white">TrustEats</h3>
-
-            <p className="text-[13px] font-medium leading-relaxed text-white/70">
+          <div className="flex flex-col gap-3">
+            <img src="/assets/trusteats-logo.png" alt="TrustEats" className="h-8 w-auto brightness-0 invert" />
+            <p className="text-[15px] font-semibold text-white">Scan, Verify, Shop with Confidence</p>
+            <p className="text-[14px] font-normal leading-relaxed text-white/60">
               Empowering consumers and manufacturers with transparent,
               trustworthy food verification through QR technology.
             </p>
-
-            <SocialIconsRow icons={socialIcons} />
+            <div className="mt-1 flex items-center gap-3">
+              {socialIcons.map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="flex items-center justify-center text-white/50 transition-colors hover:text-white"
+                >
+                  <Icon />
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Company links */}
@@ -137,33 +140,29 @@ function Footer() {
 
           {/* Newsletter */}
           <div className="flex flex-col">
-            <h4 className="mb-3 text-[15px] font-bold text-white">
+            <h4 className="mb-4 text-[16px] font-extrabold text-white">
               Stay Updated
             </h4>
-            <p className="mb-4 text-[13px] leading-relaxed text-white/70">
+            <p className="mb-5 text-[14px] leading-relaxed text-white/60">
               Subscribe to our newsletter for the latest updates on food
               safety and verification.
             </p>
 
-            <form onSubmit={handleSubmit} className="relative">
+            <form onSubmit={handleSubmit} className="relative w-full max-w-xs">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                className="w-full rounded-xl bg-white py-3 pl-4 pr-12 text-[14px] text-gray-800 placeholder-gray-400 outline-none"
+                className="w-full rounded-2xl bg-white py-3.5 pl-5 pr-14 text-[14px] text-gray-800 placeholder-gray-400 outline-none"
               />
               <button
                 type="submit"
                 aria-label="Subscribe"
-                className={twMerge(
-                  clsx(
-                    "absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#2D5A3D] text-white transition-colors hover:bg-[#3a7250]",
-                  ),
-                )}
+                className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary/90"
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-3.5 w-3.5" />
               </button>
             </form>
           </div>
@@ -171,39 +170,15 @@ function Footer() {
       </div>
 
       {/* ── Divider ─────────────────────────────────── */}
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="h-px w-full bg-white/15" />
+      <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="h-0.5 w-full bg-white/20" />
       </div>
 
       {/* ── Bottom: Copyright ────────────────────────── */}
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 px-6 py-6 sm:flex-row sm:justify-between">
-        <div className="flex items-center gap-2">
-          <Shield className="h-4 w-4 text-[#F59E0B]" />
-          <span className="text-[13px] text-white/60">
-            &copy; {new Date().getFullYear()} TrustEats. All rights reserved.
-          </span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <a
-            href="/privacy"
-            className="text-[13px] text-white/60 transition-colors hover:text-white/80"
-          >
-            Privacy
-          </a>
-          <a
-            href="/terms"
-            className="text-[13px] text-white/60 transition-colors hover:text-white/80"
-          >
-            Terms
-          </a>
-          <a
-            href="/cookies"
-            className="text-[13px] text-white/60 transition-colors hover:text-white/80"
-          >
-            Cookies
-          </a>
-        </div>
+      <div className="mx-auto flex max-w-7xl items-center justify-center px-6 pb-8 pt-6 lg:px-10">
+        <p className="text-center text-[13px] text-white/60">
+          &copy; 2026 TrustEat. All Rights Reserved. | Privacy Policy | Terms of Services
+        </p>
       </div>
     </footer>
   );
