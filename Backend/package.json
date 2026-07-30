@@ -1,5 +1,5 @@
 {
-  "name": "trusteats-backend",
+  "name": "backend",
   "version": "1.0.0",
   "description": "TrustEats — Product Authentication Platform API",
   "main": "app.ts",
