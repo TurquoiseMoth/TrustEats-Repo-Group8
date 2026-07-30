@@ -113,7 +113,7 @@ const seed = async () => {
     },
   ];
 
-  const manufacturers = [];
+  const manufacturers: any[] = [];
 
   for (const m of mfrData) {
     const pw = await hashPassword(m.password);

@@ -11,6 +11,7 @@ export interface IManufacturer extends Document {
   certificateOfRecognitionUrl?: string;
   certificateOfRecognitionPublicId?: string;
   contactPhone: string;
+  contactEmail: string;
   address: string;
   country: string;
   logoUrl?: string;
@@ -68,6 +69,12 @@ const ManufacturerSchema = new Schema<IManufacturer>(
     contactPhone: {
       type: String,
       required: true,
+      trim: true,
+    },
+    contactEmail: {
+      type: String,
+      required: true,
+      lowercase: true,
       trim: true,
     },
     address: {
