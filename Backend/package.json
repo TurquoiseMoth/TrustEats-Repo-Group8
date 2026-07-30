@@ -2,11 +2,11 @@
   "name": "trusteats-backend",
   "version": "1.0.0",
   "description": "TrustEats — Product Authentication Platform API",
-  "main": "dist/app.js",
+  "main": "app.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only --exit-child src/app.ts",
     "build": "tsc",
-    "start": "node dist/app.js",
+    "start": "app.ts",
     "seed": "ts-node-dev --transpile-only --exit-child src/seed/seed.ts"
   },
   "dependencies": {
