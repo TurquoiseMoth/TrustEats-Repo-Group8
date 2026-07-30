@@ -3,42 +3,65 @@ import { Bell, ScanLine, QrCode, Clock, CheckCircle, AlertTriangle, XCircle } fr
 import { useQuery } from "@tanstack/react-query";
 import { ROUTES } from "../constants";
 import { analyticsService } from "../services/analytics";
-import { MOCK_VERIFICATIONS } from "../utils/mockData";
-import type { VerificationRecord } from "../utils/mockData";
+import { verificationService } from "../services/verification";
+import { Spinner } from "../components/ui";
 
-
-const statusIcon: Record<VerificationRecord["result"], typeof CheckCircle> = {
-  Genuine: CheckCircle,
-  Failed: XCircle,
-  Counterfeit: AlertTriangle,
+const statusIcon: Record<string, typeof CheckCircle> = {
+  genuine: CheckCircle,
+  fake: XCircle,
+  suspicious: AlertTriangle,
 };
 
-const statusColor: Record<VerificationRecord["result"], string> = {
-  Genuine: "text-green-600 bg-green-50",
-  Failed: "text-red-600 bg-red-50",
-  Counterfeit: "text-amber-600 bg-amber-50",
+const statusColor: Record<string, string> = {
+  genuine: "text-green-600 bg-green-50",
+  fake: "text-red-600 bg-red-50",
+  suspicious: "text-amber-600 bg-amber-50",
 };
 
 function formatDate(dateStr: string) {
-  const d = new Date(dateStr.replace(" ", "T"));
+  const d = new Date(dateStr);
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
 export default function ConsumerDashboardPage() {
-  const { data: analytics } = useQuery({
+  const { data: analytics, isLoading: loadingAnalytics, error: analyticsError } = useQuery({
     queryKey: ["analytics", "summary"],
     queryFn: () => analyticsService.getSummary(),
     staleTime: 60_000,
     retry: 1,
   });
 
-  const thisMonth = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
-  const monthlyScans = MOCK_VERIFICATIONS.filter((v) => v.scanDate.startsWith("2026-08"));
-  const recentScans = MOCK_VERIFICATIONS.slice(0, 3);
+  const { data: history, isLoading: loadingHistory, error: historyError } = useQuery({
+    queryKey: ["scanHistory", "dashboard"],
+    queryFn: () => verificationService.getHistory(1, 3),
+    staleTime: 30_000,
+    retry: 1,
+  });
 
-  const totalScans = analytics?.totalScans ?? monthlyScans.length;
-  const genuineCount = analytics?.scansByResult.GENUINE ?? monthlyScans.filter((v) => v.result === "Genuine").length;
-  const flaggedCount = (analytics?.scansByResult?.SUSPICIOUS ?? 0) + (analytics?.scansByResult?.FAKE ?? 0) || monthlyScans.filter((v) => v.result !== "Genuine").length;
+  const totalScans = analytics?.totalScans ?? 0;
+  const genuineCount = analytics?.scansByResult?.genuine ?? 0;
+  const flaggedCount = (analytics?.scansByResult?.suspicious ?? 0) + (analytics?.scansByResult?.fake ?? 0);
+  const recentScans = history?.events?.slice(0, 3) ?? [];
+
+  if (loadingAnalytics || loadingHistory) {
+    return (
+      <div className="p-6 max-w-2xl mx-auto flex items-center justify-center min-h-[60vh]">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  if (analyticsError) {
+    return (
+      <div className="p-6 max-w-2xl mx-auto text-center">
+        <p className="text-red-500 text-sm mb-4">Failed to load dashboard data.</p>
+        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-primary text-white rounded-lg text-sm">Retry</button>
+      </div>
+    );
+  }
+
+
+
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
@@ -51,7 +74,7 @@ export default function ConsumerDashboardPage() {
 
       <Link
         to={ROUTES.SCAN}
-        className="flex items-center justify-center gap-3 w-full rounded-2xl bg-[#3c7443] px-6 py-4 text-white font-semibold text-lg shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] hover:opacity-90 transition-opacity mb-8"
+        className="flex items-center justify-center gap-3 w-full rounded-2xl bg-primary px-6 py-4 text-white font-semibold text-lg shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] hover:opacity-90 transition-opacity mb-8"
       >
         <ScanLine size={22} />
         Scan a Product
@@ -59,10 +82,9 @@ export default function ConsumerDashboardPage() {
 
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <QrCode size={18} className="text-[#048340]" />
-          <h2 className="text-base font-semibold text-gray-800">Monthly Summary</h2>
+          <QrCode size={18} className="text-text-secondary" />
+          <h2 className="text-base font-semibold text-gray-800">Summary</h2>
         </div>
-        <p className="text-sm text-gray-500 mb-3">{thisMonth}</p>
         <div className="grid grid-cols-3 gap-3 text-center">
           <div className="rounded-xl bg-green-50 py-3">
             <p className="text-xl font-bold text-green-700">{totalScans}</p>
@@ -83,27 +105,33 @@ export default function ConsumerDashboardPage() {
         <Clock size={16} className="text-gray-500" />
         <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Recent Scans</h2>
       </div>
-      <div className="space-y-3">
-        {recentScans.map((scan) => {
-          const Icon = statusIcon[scan.result];
-          const colorClass = statusColor[scan.result];
-          return (
-            <div key={scan.id} className="flex items-center gap-3 rounded-xl border border-gray-100 bg-white p-4 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
-              <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${colorClass}`}>
-                <Icon size={20} />
+      {historyError ? (
+        <p className="text-sm text-red-400 text-center py-8">Failed to load scan history.</p>
+      ) : recentScans.length === 0 ? (
+        <p className="text-sm text-gray-400 text-center py-8">No recent scans.</p>
+      ) : (
+        <div className="space-y-3">
+          {recentScans.map((scan) => {
+            const Icon = statusIcon[scan.status] ?? CheckCircle;
+            const colorClass = statusColor[scan.status] ?? "text-gray-600 bg-gray-50";
+            return (
+              <div key={scan._id} className="flex items-center gap-3 rounded-xl border border-gray-100 bg-white p-4 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
+                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${colorClass}`}>
+                  <Icon size={20} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-gray-900 truncate">{scan.productName ?? scan.code}</p>
+                  <p className="text-xs text-gray-500">{scan.brand ?? ""}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs font-medium text-gray-700 capitalize">{scan.status}</p>
+                  <p className="text-[11px] text-gray-400">{formatDate(scan.scannedAt)}</p>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate">{scan.product}</p>
-                <p className="text-xs text-gray-500">{scan.manufacturer} · {scan.method}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-xs font-medium text-gray-700">{scan.result}</p>
-                <p className="text-[11px] text-gray-400">{formatDate(scan.scanDate)}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

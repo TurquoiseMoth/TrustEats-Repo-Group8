@@ -41,8 +41,8 @@ export default function ApplicationCard({
     <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
       <div className="flex items-start justify-between">
         <div className="flex gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50">
-            <FileText className="h-5 w-5 text-emerald-700" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+            <FileText className="h-5 w-5 text-primary" />
           </div>
           <div>
             <p className="text-sm font-semibold text-slate-800">
@@ -95,7 +95,7 @@ export default function ApplicationCard({
           <>
             <button
               onClick={() => onApprove(id)}
-              className="flex-1 rounded-lg bg-emerald-800 py-2.5 text-sm font-semibold text-white hover:bg-emerald-900"
+              className="flex-1 rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary/90"
             >
               Approve
             </button>
@@ -112,7 +112,7 @@ export default function ApplicationCard({
           <>
             <button
               disabled
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-emerald-100 py-2.5 text-sm font-semibold text-emerald-800"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary/10 py-2.5 text-sm font-semibold text-primary"
             >
               <CheckCircle2 className="h-4 w-4" />
               Approved
@@ -129,7 +129,7 @@ export default function ApplicationCard({
         {!isNew && status === "rejected" && (
           <button
             onClick={() => onApprove(id)}
-            className="flex-1 rounded-lg border border-emerald-300 py-2.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50"
+            className="flex-1 rounded-lg border border-primary/60 py-2.5 text-sm font-semibold text-primary hover:bg-primary/5"
           >
             Re-approve
           </button>

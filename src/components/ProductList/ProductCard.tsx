@@ -44,11 +44,11 @@ export function ProductCard({ product, onGenerateQr, onRemove }: ProductCardProp
         <span
           className={[
             "inline-flex items-center gap-1.5 shrink-0 px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap",
-            isExpired ? "bg-red-50 text-red-700" : "bg-green-50 text-[#2F6844]",
+            isExpired ? "bg-red-50 text-red-700" : "bg-green-50 text-primary",
           ].join(" ")}
         >
           <span
-            className={["w-1.5 h-1.5 rounded-full", isExpired ? "bg-red-600" : "bg-[#2F6844]"].join(" ")}
+            className={["w-1.5 h-1.5 rounded-full", isExpired ? "bg-red-600" : "bg-primary"].join(" ")}
             aria-hidden="true"
           />
           {isExpired ? "Expired" : "Active"}
@@ -67,7 +67,7 @@ export function ProductCard({ product, onGenerateQr, onRemove }: ProductCardProp
               type="button"
               onClick={() => setConfirmingRemove(false)}
               disabled={isRemoving}
-              className="px-3 py-2 rounded-md border border-gray-300 bg-white text-sm font-semibold text-gray-700 disabled:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844]"
+              className="px-3 py-2 rounded-md border border-gray-300 bg-white text-sm font-semibold text-gray-700 disabled:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             >
               Cancel
             </button>
@@ -75,7 +75,7 @@ export function ProductCard({ product, onGenerateQr, onRemove }: ProductCardProp
               type="button"
               onClick={handleConfirmRemove}
               disabled={isRemoving}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-red-600 text-sm font-semibold text-white disabled:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844]"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-red-600 text-sm font-semibold text-white disabled:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             >
               {isRemoving && <Spinner />}
               {isRemoving ? "Removing…" : "Yes, remove"}
@@ -89,7 +89,7 @@ export function ProductCard({ product, onGenerateQr, onRemove }: ProductCardProp
             onClick={handleGenerate}
             disabled={isGenerating}
             aria-label={`Generate QR code for ${product.name}`}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#2F6844] text-white text-sm font-semibold hover:bg-[#265436] disabled:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844] focus-visible:outline-offset-2"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 disabled:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           >
             {isGenerating && <Spinner />}
             {isGenerating ? "Generating…" : "Generate QR Code"}
@@ -98,7 +98,7 @@ export function ProductCard({ product, onGenerateQr, onRemove }: ProductCardProp
             type="button"
             onClick={() => setConfirmingRemove(true)}
             aria-label={`Remove ${product.name}`}
-            className="flex-1 px-4 py-2.5 rounded-lg border-[1.5px] border-red-600 bg-white text-red-600 text-sm font-semibold hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844] focus-visible:outline-offset-2"
+            className="flex-1 px-4 py-2.5 rounded-lg border-[1.5px] border-red-600 bg-white text-red-600 text-sm font-semibold hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           >
             Remove
           </button>

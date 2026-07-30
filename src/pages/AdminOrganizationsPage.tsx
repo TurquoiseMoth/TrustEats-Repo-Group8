@@ -2,7 +2,7 @@ import { ROUTES } from "../constants";
 import OrganizationsTable from "../components/admin/OrganizationsTable";
 import type { Organization } from "../types/organization.types";
 
-const MOCK_ORGANIZATIONS: Organization[] = [
+const PLACEHOLDER_ORGANIZATIONS: Organization[] = [
   { id: "APP-5522", name: "Sahel Frozen Foods", approvedDate: "17 Jul, 2026", productCount: 0 },
   { id: "APP-5523", name: "Naija Crunch Foods Ltd", approvedDate: "15 Jul, 2026", productCount: 10 },
   { id: "APP-5524", name: "AquaPure Table Water", approvedDate: "12 Jul, 2026", productCount: 3 },
@@ -31,13 +31,13 @@ const MOCK_ORGANIZATIONS: Organization[] = [
 export default function AdminOrganizationsPage() {
   return (
     <div>
-      <div className="hidden md:block bg-[#7a9b82] px-8 py-6">
+      <div className="hidden md:block bg-secondary px-8 py-6">
         <h1 className="text-2xl font-bold text-white">Registered Organizations</h1>
       </div>
 
       <div className="px-5 md:px-8 py-6 max-w-[1400px] mx-auto">
         <OrganizationsTable
-          organizations={MOCK_ORGANIZATIONS}
+          organizations={PLACEHOLDER_ORGANIZATIONS}
           viewAllHrefFor={(org) => `${ROUTES.ADMIN_ORGANIZATIONS}/${org.id}`}
         />
       </div>

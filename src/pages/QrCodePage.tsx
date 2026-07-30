@@ -51,10 +51,10 @@ const product = {
 function CornerBrackets() {
   return (
     <>
-      <div className="absolute left-0 top-0 h-6 w-6 border-l-2 border-t-2 border-[#3F7A46] rounded-tl" />
-      <div className="absolute right-0 top-0 h-6 w-6 border-r-2 border-t-2 border-[#3F7A46] rounded-tr" />
-      <div className="absolute bottom-0 left-0 h-6 w-6 border-l-2 border-b-2 border-[#3F7A46] rounded-bl" />
-      <div className="absolute bottom-0 right-0 h-6 w-6 border-r-2 border-b-2 border-[#3F7A46] rounded-br" />
+      <div className="absolute left-0 top-0 h-6 w-6 border-l-2 border-t-2 border-primary rounded-tl" />
+      <div className="absolute right-0 top-0 h-6 w-6 border-r-2 border-t-2 border-primary rounded-tr" />
+      <div className="absolute bottom-0 left-0 h-6 w-6 border-l-2 border-b-2 border-primary rounded-bl" />
+      <div className="absolute bottom-0 right-0 h-6 w-6 border-r-2 border-b-2 border-primary rounded-br" />
     </>
   );
 }
@@ -89,7 +89,7 @@ function ProductDetailsCard({ product }: { product: ProductData }) {
       {rows.map((row, i) => (
         <div
           key={row.label}
-          className={`flex items-center justify-between px-5 py-3.5 ${i % 2 === 1 ? "bg-[#F4F7F9]" : "bg-white"}`}
+          className={`flex items-center justify-between px-5 py-3.5 ${i % 2 === 1 ? "bg-background" : "bg-white"}`}
         >
           <span className="text-sm text-gray-400">{row.label}</span>
           <span className="text-sm font-bold text-gray-900">{row.value}</span>
@@ -103,16 +103,16 @@ function ActionGroup() {
   return (
     <div className="flex flex-col gap-3">
       <div className="grid grid-cols-2 gap-4">
-        <button className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[#3F7A46] text-sm font-semibold text-white transition-colors hover:bg-[#2E6B3E]">
+        <button className="flex h-12 items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-white transition-colors hover:bg-primary/90">
           <Download className="h-4 w-4" />
           Download
         </button>
-        <button className="flex h-12 items-center justify-center gap-2 rounded-xl border border-[#3F7A46] text-sm font-semibold text-[#3F7A46] transition-colors hover:bg-[#F0FDF4]">
+        <button className="flex h-12 items-center justify-center gap-2 rounded-xl border border-primary text-sm font-semibold text-primary transition-colors hover:bg-primary/5">
           <Share2 className="h-4 w-4" />
           Share
         </button>
       </div>
-      <button className="flex h-12 items-center justify-center gap-2 rounded-xl border border-[#3F7A46] text-sm font-semibold text-[#3F7A46] transition-colors hover:bg-[#F0FDF4]">
+      <button className="flex h-12 items-center justify-center gap-2 rounded-xl border border-primary text-sm font-semibold text-primary transition-colors hover:bg-primary/5">
         <Printer className="h-4 w-4" />
         Print
       </button>
@@ -175,7 +175,7 @@ function QrCodePage() {
         </div>
         <button
           type="button"
-          className="flex-shrink-0 rounded-lg border border-[#3F7A46] px-4 py-2 text-xs font-semibold text-[#3F7A46] transition-colors hover:bg-[#F0FDF4]"
+          className="flex-shrink-0 rounded-lg border border-primary px-4 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary/5"
         >
           Change Product
         </button>
@@ -191,7 +191,7 @@ function QrCodePage() {
           placeholder="XXXXXXXXXXXX"
           value={batchNumber}
           onChange={(e) => setBatchNumber(e.target.value)}
-          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-[#3F7A46] focus:ring-1 focus:ring-[#3F7A46]"
+          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
         />
       </div>
 
@@ -205,7 +205,7 @@ function QrCodePage() {
           placeholder="eg. 1000"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
-          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-[#3F7A46] focus:ring-1 focus:ring-[#3F7A46]"
+          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
         />
       </div>
 
@@ -219,7 +219,7 @@ function QrCodePage() {
           placeholder="DD/MM/YY"
           value={manufacturingDate}
           onChange={(e) => setManufacturingDate(e.target.value)}
-          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-[#3F7A46] focus:ring-1 focus:ring-[#3F7A46]"
+          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
         />
       </div>
 
@@ -233,13 +233,13 @@ function QrCodePage() {
           placeholder="DD/MM/YY"
           value={expiryDate}
           onChange={(e) => setExpiryDate(e.target.value)}
-          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-[#3F7A46] focus:ring-1 focus:ring-[#3F7A46]"
+          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
         />
       </div>
 
       <button
         type="submit"
-        className="flex h-12 w-full items-center justify-center rounded-xl bg-[#3F7A46] text-sm font-semibold text-white transition-colors hover:bg-[#2E6B3E]"
+        className="flex h-12 w-full items-center justify-center rounded-xl bg-primary text-sm font-semibold text-white transition-colors hover:bg-primary/90"
       >
         Generate QR Code
       </button>
@@ -248,8 +248,8 @@ function QrCodePage() {
 
   if (!isDesktop) {
     return (
-      <div className="flex min-h-screen flex-col bg-[#EEF2F5]">
-        <header className="sticky top-0 z-40 flex h-12 items-center bg-[#3F7A46] px-4">
+      <div className="flex min-h-screen flex-col bg-background">
+        <header className="sticky top-0 z-40 flex h-12 items-center bg-primary px-4">
           <button onClick={() => navigate(-1)} className="text-white">
             <ArrowLeft className="h-5 w-5" />
           </button>
@@ -273,11 +273,11 @@ function QrCodePage() {
                 <Icon
                   size={20}
                   strokeWidth={active ? 2.5 : 1.8}
-                  className={active ? "text-[#3F7A46]" : "text-gray-400"}
+                  className={active ? "text-primary" : "text-gray-400"}
                 />
                 <span
                   className={`text-xs font-medium ${
-                    active ? "text-[#3F7A46]" : "text-gray-400"
+                    active ? "text-primary" : "text-gray-400"
                   }`}
                 >
                   {label}
@@ -291,11 +291,11 @@ function QrCodePage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#EEF2F5]">
+    <div className="flex min-h-screen bg-background">
       <aside className="fixed left-0 top-0 z-40 flex h-screen w-60 flex-col border-r border-gray-200 bg-white">
         <div className="flex items-center gap-2 px-5 py-5">
-          <ShieldCheck className="h-7 w-7 text-[#3F7A46]" />
-          <span className="text-lg font-bold text-[#3F7A46]">TrustEats</span>
+          <ShieldCheck className="h-7 w-7 text-primary" />
+          <span className="text-lg font-bold text-primary">TrustEats</span>
         </div>
 
         <nav className="flex flex-1 flex-col gap-1 px-3">
@@ -305,7 +305,7 @@ function QrCodePage() {
               to={href}
               className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
                 active
-                  ? "bg-[#3F7A46] text-white"
+                  ? "bg-primary text-white"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
             >
@@ -327,7 +327,7 @@ function QrCodePage() {
       </aside>
 
       <div className="ml-60 flex flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-14 items-center bg-[#689F78] px-8">
+        <header className="sticky top-0 z-30 flex h-14 items-center bg-secondary px-8">
           <h1 className="text-lg font-bold text-white">
             {submitSuccess ? "QR Code Generated" : "Generate QR Code"}
           </h1>

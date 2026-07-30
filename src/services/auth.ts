@@ -1,54 +1,31 @@
 import apiClient from "./api";
-import type { AuthResponse, LoginRequest, RegisterRequest, ApiResponse } from "../types";
-
-function storeAuth(data: AuthResponse) {
-  if (data.token) {
-    localStorage.setItem("auth_token", data.token);
-  }
-  if (data.manufacturer) {
-    localStorage.setItem("auth_user", JSON.stringify(data.manufacturer));
-  }
-}
-
-function clearAuth() {
-  localStorage.removeItem("auth_token");
-  localStorage.removeItem("auth_user");
-}
+import type { User, LoginRequest, RegisterRequest, RegisterResponse, ApiResponse } from "../types";
 
 export const authService = {
   login: async (data: LoginRequest) => {
-    const res = await apiClient.post<ApiResponse<AuthResponse>>("/auth/login", data);
-    const result = res.data.data!;
-    storeAuth(result);
-    return result;
+    const res = await apiClient.post<ApiResponse<{ user: User }>>("/api/v1/auth/login", data);
+    return res.data.data!.user;
   },
 
   register: async (data: RegisterRequest) => {
-    const res = await apiClient.post<ApiResponse<AuthResponse>>("/auth/register", data);
-    const result = res.data.data!;
-    storeAuth(result);
-    return result;
+    const res = await apiClient.post<ApiResponse<RegisterResponse>>("/api/v1/auth/register", data);
+    return res.data.data!;
   },
 
-  logout: () => {
-    clearAuth();
+  logout: async () => {
+    await apiClient.post("/api/v1/auth/logout");
   },
 
   getCurrentUser: async () => {
-    const res = await apiClient.get<ApiResponse<AuthResponse>>("/auth/me");
-    const result = res.data.data!;
-    storeAuth(result);
-    return result;
+    const res = await apiClient.get<ApiResponse<{ user: User }>>("/api/v1/auth/me");
+    return res.data.data!.user;
   },
 
-  getStoredUser: () => {
-    try {
-      const raw = localStorage.getItem("auth_user");
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
+  forgotPassword: async (email: string) => {
+    await apiClient.post<ApiResponse<null>>("/api/v1/auth/forgot-password", { email });
   },
 
-  getStoredToken: () => localStorage.getItem("auth_token"),
+  resetPassword: async (data: { token: string; userId: string; newPassword: string; confirmPassword: string }) => {
+    await apiClient.post<ApiResponse<null>>("/api/v1/auth/reset-password", data);
+  },
 };

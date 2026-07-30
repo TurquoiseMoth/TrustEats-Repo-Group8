@@ -1,11 +1,14 @@
-export interface Manufacturer {
-  id: string;
-  name: string;
+export interface User {
+  _id: string;
+  id?: string;
   email: string;
-  role?: string;
-  isVerified?: boolean;
-  apiKey?: string;
+  role: "consumer" | "manufacturer" | "admin";
+  firstName: string;
+  lastName: string;
+  isActive?: boolean;
   createdAt?: string;
+  updatedAt?: string;
+  lastLoginAt?: string;
 }
 
 export interface LoginRequest {
@@ -14,19 +17,16 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  name: string;
-  email: string;
-  password: string;
-}
-
-export interface AuthResponse {
-  manufacturer: Manufacturer;
-  token?: string;
-}
-
-export interface SignUpFormData {
   fullName: string;
   email: string;
   password: string;
   confirmPassword: string;
+  role: "consumer" | "manufacturer";
 }
+
+export interface RegisterResponse {
+  userId: string;
+  role: string;
+}
+
+

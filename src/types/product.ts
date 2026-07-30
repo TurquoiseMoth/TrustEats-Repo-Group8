@@ -1,25 +1,35 @@
 export interface Product {
-  id: string;
+  _id: string;
+  id?: string;
+  manufacturerId?: string;
   name: string;
+  brand?: string;
   description?: string;
+  ingredients?: string;
+  storageInfo?: string;
+  countryOfOrigin?: string;
   category?: string;
   imageUrl?: string;
-  batchNumber?: string;
-  manufactureDate?: string;
-  expiryDate?: string;
-  _count?: {
-    verificationCodes: number;
-  };
+  isActive?: boolean;
   createdAt?: string;
 }
 
-export interface VerificationCode {
-  id: string;
-  code: string;
-  unitSerial: string;
-  status: string; // ACTIVE, REVOKED, etc.
-  qrCodeUrl: string;
-  maxExpectedScans: number;
+export interface Batch {
+  _id: string;
   productId: string;
-  createdAt: string;
+  batchNumber: string;
+  manufacturingDate: string;
+  expiryDate: string;
+  quantity: number;
+  status: "active" | "recalled" | "expired";
+  createdAt?: string;
+}
+
+export interface CreateBatchPayload {
+  productId: string;
+  batchNumber: string;
+  manufacturingDate: string;
+  expiryDate: string;
+  quantity: number;
+  codeQuantity: number;
 }

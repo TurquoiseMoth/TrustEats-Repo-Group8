@@ -1,20 +1,21 @@
+export type VerificationStatus = "genuine" | "suspicious" | "fake";
+
 export interface VerificationResult {
-  status: "GENUINE" | "SUSPICIOUS" | "FAKE";
-  reason: string;
-  product: {
-    id: string;
+  status: VerificationStatus;
+  message: string;
+  scannedAt: string;
+  product?: {
     name: string;
-    description: string;
-    category: string;
-    imageUrl: string;
+    brand: string;
+  } | null;
+  batch?: {
     batchNumber: string;
-    manufactureDate: string;
-    expiryDate: string;
-    manufacturer: {
-      name: string;
-      isVerified: boolean;
-    };
-    verificationCode: string;
+    status: string;
+    expiryDate?: string;
+  } | null;
+  manufacturer?: {
+    companyName: string;
+    country: string;
   } | null;
   scanStats?: {
     scansInWindow: number;
@@ -25,9 +26,23 @@ export interface VerificationResult {
 
 export interface VerificationRequest {
   code: string;
-  latitude?: number;
-  longitude?: number;
   city?: string;
   country?: string;
-  deviceId?: string;
+}
+
+export interface ScanEvent {
+  _id: string;
+  code: string;
+  status: VerificationStatus;
+  message: string;
+  scannedAt: string;
+  productName?: string;
+  brand?: string;
+}
+
+export interface ScanHistoryResponse {
+  events: ScanEvent[];
+  total: number;
+  page: number;
+  pages: number;
 }

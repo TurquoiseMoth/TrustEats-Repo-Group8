@@ -27,7 +27,7 @@ function BottomNav() {
             aria-current={isActive ? "page" : undefined}
             className={[
               "flex flex-col items-center gap-1 px-3 py-1 text-xs font-medium",
-              isActive ? "text-[#2F6844]" : "text-gray-400",
+              isActive ? "text-primary" : "text-gray-400",
             ].join(" ")}
           >
             <Icon size={22} aria-hidden="true" />

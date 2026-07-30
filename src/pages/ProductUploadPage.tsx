@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { ROUTES } from "../constants";
 import { useMediaQuery } from "../hooks/useMediaQuery";
+import { productService } from "../services/products";
 
 const sidebarLinks = [
   { label: "Dashboard", href: ROUTES.DASHBOARD, icon: LayoutDashboard },
@@ -42,6 +43,7 @@ function ProductUploadPage() {
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const isNafdacValid = /^\d{2}-\d{4,}$/.test(nafdacNo);
 
@@ -97,10 +99,20 @@ function ProductUploadPage() {
     setNafdacNo(formatNafdac(e.target.value));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid) return;
-    setSubmitSuccess(true);
+    setSubmitError("");
+    try {
+      await productService.create({
+        name: productName,
+        nafdacRegNo: nafdacNo,
+        images: files,
+      });
+      setSubmitSuccess(true);
+    } catch {
+      setSubmitError("Failed to upload product. Please try again.");
+    }
   };
 
   /* ── Success View ──────────────────────────────── */
@@ -108,10 +120,10 @@ function ProductUploadPage() {
     <div className="flex flex-col items-center text-center">
       {/* Confetti + Checkmark Badge */}
       <div className="relative mb-6">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#E8F5E9]">
-          <CheckCircle2 className="h-12 w-12 text-[#3c7443]" />
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+          <CheckCircle2 className="h-12 w-12 text-primary" />
         </div>
-        <PartyPopper className="absolute -top-2 -right-2 h-8 w-8 text-[#FFC107]" />
+        <PartyPopper className="absolute -top-2 -right-2 h-8 w-8 text-warning" />
       </div>
 
       {/* Headline */}
@@ -120,7 +132,7 @@ function ProductUploadPage() {
       </h2>
       <p className="mt-2 text-sm text-gray-500">
         Your product has been verified against NAFDAC registration{" "}
-        <span className="font-semibold text-[#3c7443]">{nafdacNo}</span>.
+        <span className="font-semibold text-primary">{nafdacNo}</span>.
       </p>
 
       {/* Product Summary Card */}
@@ -138,7 +150,7 @@ function ProductUploadPage() {
             <p className="text-xs text-gray-500">
               NAFDAC: <span className="font-medium text-gray-700">{nafdacNo}</span>
             </p>
-            <span className="mt-1 inline-flex w-fit items-center rounded-full bg-[#E8F5E9] px-2.5 py-0.5 text-xs font-semibold text-[#3c7443]">
+            <span className="mt-1 inline-flex w-fit items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
               Uploaded
             </span>
           </div>
@@ -154,13 +166,13 @@ function ProductUploadPage() {
       <div className="mt-6 flex w-full max-w-sm flex-col gap-3">
         <Link
           to={ROUTES.SCAN}
-          className="flex h-12 items-center justify-center rounded-xl bg-[#3c7443] text-sm font-semibold text-white transition-colors hover:bg-[#2E6B3E]"
+          className="flex h-12 items-center justify-center rounded-xl bg-primary text-sm font-semibold text-white transition-colors hover:bg-primary/90"
         >
           Generate QR Code
         </Link>
         <Link
           to={ROUTES.DASHBOARD}
-          className="flex h-12 items-center justify-center rounded-xl border-2 border-[#3c7443] text-sm font-semibold text-[#3c7443] transition-colors hover:bg-[#F0FDF4]"
+          className="flex h-12 items-center justify-center rounded-xl border-2 border-primary text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
         >
           View Product List
         </Link>
@@ -171,8 +183,11 @@ function ProductUploadPage() {
   /* ── Form View ──────────────────────────────────── */
   const formContent = (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      {submitError && (
+        <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{submitError}</div>
+      )}
       {/* Instructional Banner */}
-      <div className="rounded-xl bg-[#3c7443] px-5 py-4">
+      <div className="rounded-xl bg-primary px-5 py-4">
         <p className="text-sm leading-relaxed text-white">
           To upload your product, enter the NAFDAC Registration Number and upload
           a clear image of your product or its packaging.
@@ -190,7 +205,7 @@ function ProductUploadPage() {
           placeholder="Enter product name"
           value={productName}
           onChange={(e) => setProductName(e.target.value)}
-          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-[#3c7443] focus:ring-1 focus:ring-[#3c7443]"
+          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
         />
       </div>
 
@@ -207,16 +222,16 @@ function ProductUploadPage() {
             value={nafdacNo}
             onChange={handleNafdacChange}
             maxLength={9}
-            className={`h-12 w-full rounded-lg border bg-white px-4 pr-10 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:ring-1 focus:ring-[#3c7443] ${
+            className={`h-12 w-full rounded-lg border bg-white px-4 pr-10 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:ring-1 focus:ring-primary ${
               nafdacNo.length > 0
                 ? isNafdacValid
-                  ? "border-[#3c7443]"
+                  ? "border-primary"
                   : "border-red-400 focus:border-red-500 focus:ring-red-500"
-                : "border-gray-300 focus:border-[#3c7443]"
+                : "border-gray-300 focus:border-primary"
             }`}
           />
           {nafdacNo.length > 0 && isNafdacValid && (
-            <CheckCircle2 className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#3c7443]" />
+            <CheckCircle2 className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-primary" />
           )}
         </div>
         <p className="text-xs text-gray-500">Strict alphanumeric format: XX-XXXX</p>
@@ -261,11 +276,11 @@ function ProductUploadPage() {
           onDrop={handleDrop}
           className={`relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 py-8 transition-colors ${
             isDragging
-              ? "border-[#3c7443] bg-[#F0FDF4]"
-              : "border-[#3c7443]/40 bg-[#F8FDF8]"
+              ? "border-primary bg-primary/5"
+              : "border-primary/40 bg-primary/5"
           }`}
         >
-          <ImageIcon className="mb-3 h-10 w-10 text-[#3c7443]/50" />
+          <ImageIcon className="mb-3 h-10 w-10 text-primary/50" />
           <p className="text-sm font-medium text-gray-700">Add photo</p>
           <p className="mt-1 text-xs text-gray-500">JPG, PNG up to 5MB each</p>
           <p className="mt-1 text-xs text-gray-400">
@@ -288,7 +303,7 @@ function ProductUploadPage() {
           disabled={!isValid}
           className={`flex h-12 flex-1 items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
             isValid
-              ? "bg-[#3c7443] text-white hover:bg-[#2E6B3E]"
+              ? "bg-primary text-white hover:bg-primary/90"
               : "cursor-not-allowed bg-gray-200 text-white"
           }`}
         >
@@ -296,7 +311,7 @@ function ProductUploadPage() {
         </button>
         <Link
           to={ROUTES.DASHBOARD}
-          className="flex h-12 flex-1 items-center justify-center rounded-xl border-2 border-[#3c7443] text-sm font-semibold text-[#3c7443] transition-colors hover:bg-[#F0FDF4]"
+          className="flex h-12 flex-1 items-center justify-center rounded-xl border-2 border-primary text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
         >
           View Product List
         </Link>
@@ -309,7 +324,7 @@ function ProductUploadPage() {
     return (
       <div className="flex min-h-screen flex-col bg-gray-50">
         {/* Mobile Header */}
-        <header className="sticky top-0 z-40 flex h-12 items-center bg-[#3c7443] px-4">
+        <header className="sticky top-0 z-40 flex h-12 items-center bg-primary px-4">
           <button onClick={() => navigate(-1)} className="text-white">
             <ArrowLeft className="h-5 w-5" />
           </button>
@@ -335,11 +350,11 @@ function ProductUploadPage() {
                 <Icon
                   size={20}
                   strokeWidth={active ? 2.5 : 1.8}
-                  className={active ? "text-[#3c7443]" : "text-gray-400"}
+                  className={active ? "text-primary" : "text-gray-400"}
                 />
                 <span
                   className={`text-xs font-medium ${
-                    active ? "text-[#3c7443]" : "text-gray-400"
+                    active ? "text-primary" : "text-gray-400"
                   }`}
                 >
                   {label}
@@ -359,8 +374,8 @@ function ProductUploadPage() {
       <aside className="fixed left-0 top-0 z-40 flex h-screen w-60 flex-col border-r border-gray-200 bg-white">
         {/* Brand */}
         <div className="flex items-center gap-2 px-5 py-5">
-          <ShieldCheck className="h-7 w-7 text-[#3c7443]" />
-          <span className="text-lg font-bold text-[#3c7443]">TrustEats</span>
+          <ShieldCheck className="h-7 w-7 text-primary" />
+          <span className="text-lg font-bold text-primary">TrustEats</span>
         </div>
 
         {/* Nav Links */}
@@ -371,7 +386,7 @@ function ProductUploadPage() {
               to={href}
               className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
                 active
-                  ? "bg-[#3c7443] text-white"
+                  ? "bg-primary text-white"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
             >
@@ -396,7 +411,7 @@ function ProductUploadPage() {
       {/* Main Content */}
       <div className="ml-60 flex flex-1 flex-col">
         {/* Header */}
-        <header className="sticky top-0 z-30 flex h-14 items-center bg-[#689F78] px-8">
+        <header className="sticky top-0 z-30 flex h-14 items-center bg-secondary px-8">
           <h1 className="text-lg font-bold text-white">Upload Product</h1>
         </header>
 

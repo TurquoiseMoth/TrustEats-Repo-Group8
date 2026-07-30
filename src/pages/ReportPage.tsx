@@ -1,27 +1,18 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { ChevronLeft, ChevronDown, Upload, X } from 'lucide-react';
-
-const ISSUE_OPTIONS = [
-    'Fake Product',
-    'Expired Product',
-    'Wrong Packaging',
-    'Missing Verification Code',
-    'Damaged Packaging',
-    'Suspicious Label',
-    'Other',
-];
+import { ChevronLeft, Upload, X } from 'lucide-react';
+import { ROUTES } from '../constants';
+import { reportService } from '../services/reports';
 
 export default function ReportPage() {
     const navigate = useNavigate();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const [productName, setProductName] = useState('');
-    const [companyBrand, setCompanyBrand] = useState('');
-    const [issues, setIssues] = useState('');
-    const [details, setDetails] = useState('');
+    const [code, setCode] = useState('');
+    const [comment, setComment] = useState('');
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState("");
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
@@ -30,9 +21,23 @@ export default function ReportPage() {
         }
     }
 
-    function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-
+        if (!code.trim() || !comment.trim()) return;
+        setSubmitting(true);
+        setSubmitError("");
+        try {
+            await reportService.submit({
+                code,
+                comment,
+                images: uploadedFile ?? undefined,
+            });
+            navigate(ROUTES.HISTORY);
+        } catch {
+            setSubmitError("Failed to submit report. Please try again.");
+        } finally {
+            setSubmitting(false);
+        }
     }
 
     return (
@@ -46,103 +51,42 @@ export default function ReportPage() {
             </div>
 
             <form onSubmit={handleSubmit} style={styles.form}>
-                {/* Product Name */}
-                <div style={styles.fieldGroup}>
-                    <label style={styles.label}>Product name</label>
-                    <input
-                        type="text"
-                        placeholder="Input details"
-                        value={productName}
-                        onChange={(e) => setProductName(e.target.value)}
-                        style={styles.input}
-                    />
-                </div>
-
-                {/* Company / Brand */}
-                <div style={styles.fieldGroup}>
-                    <label style={styles.label}>Company/Brand</label>
-                    <input
-                        type="text"
-                        placeholder="Input details"
-                        value={companyBrand}
-                        onChange={(e) => setCompanyBrand(e.target.value)}
-                        style={styles.input}
-                    />
-                </div>
-
-                {/* Issues Dropdown */}
-                <div style={styles.fieldGroup}>
-                    <label style={styles.label}>Issues</label>
-                    <div style={{ position: 'relative' }}>
-                        <button
-                            type="button"
-                            style={{
-                                ...styles.input,
-                                textAlign: 'left',
-                                cursor: 'pointer',
-                                color: issues ? '#292d32' : '#999',
-                            }}
-                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                        >
-                            {issues || 'Input details'}
-                            <ChevronDown
-                                size={18}
-                                style={{
-                                    position: 'absolute',
-                                    right: 14,
-                                    top: '50%',
-                                    transform: 'translateY(-50%)',
-                                    color: '#999',
-                                    pointerEvents: 'none',
-                                }}
-                            />
-                        </button>
-                        {isDropdownOpen && (
-                            <div style={styles.dropdown}>
-                                {ISSUE_OPTIONS.map((opt) => (
-                                    <button
-                                        key={opt}
-                                        type="button"
-                                        style={{
-                                            ...styles.dropdownItem,
-                                            background: issues === opt ? '#F0F7F1' : 'transparent',
-                                            color: issues === opt ? '#3c7443' : '#333',
-                                        }}
-                                        onClick={() => {
-                                            setIssues(opt);
-                                            setIsDropdownOpen(false);
-                                        }}
-                                    >
-                                        {opt}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Provide More Details */}
+                {/* Verification Code */}
                 <div style={styles.fieldGroup}>
                     <label style={styles.label}>
-                        Provide more details <span style={{ color: '#D32F2F' }}>*</span>
+                        Verification Code <span style={{ color: '#ce0000' }}>*</span>
+                    </label>
+                    <input
+                        type="text"
+                        placeholder="Enter the product's verification code"
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                        style={styles.input}
+                    />
+                </div>
+
+                {/* Comment */}
+                <div style={styles.fieldGroup}>
+                    <label style={styles.label}>
+                        Comment <span style={{ color: '#ce0000' }}>*</span>
                     </label>
                     <div style={{ position: 'relative' }}>
                         <textarea
                             placeholder="Describe the issue in detail..."
-                            value={details}
+                            value={comment}
                             onChange={(e) => {
-                                if (e.target.value.length <= 500) setDetails(e.target.value);
+                                if (e.target.value.length <= 500) setComment(e.target.value);
                             }}
                             style={styles.textarea}
                             rows={5}
                         />
-                        <span style={styles.charCount}>{details.length}/500</span>
+                        <span style={styles.charCount}>{comment.length}/500</span>
                     </div>
                 </div>
 
-                {/* Upload Evidence */}
+                {/* Images */}
                 <div style={styles.fieldGroup}>
-                    <label style={styles.label}>Upload Evidence</label>
+                    <label style={styles.label}>Images</label>
                     <p style={styles.helperText}>Add photo of the product, packaging or any other evidence.</p>
 
                     {uploadedFile ? (
@@ -183,9 +127,10 @@ export default function ReportPage() {
                     />
                 </div>
 
+                {submitError && <p style={{     color: '#ce0000', fontSize: '14px', margin: 0 }}>{submitError}</p>}
                 {/* Submit */}
-                <button type="submit" style={styles.submitBtn}>
-                    Submit
+                <button type="submit" style={{ ...styles.submitBtn, opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer' }} disabled={submitting}>
+                    {submitting ? 'Submitting...' : 'Submit'}
                 </button>
             </form>
         </div>
@@ -206,11 +151,6 @@ const styles: Record<string, React.CSSProperties> = {
         justifyContent: 'flex-start',
         gap: '8px',
         padding: '16px 16px 0',
-    },
-    headerLeft: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
     },
     backBtn: {
         background: 'none',
@@ -257,30 +197,6 @@ const styles: Record<string, React.CSSProperties> = {
         boxSizing: 'border-box' as const,
         position: 'relative' as const,
     },
-    dropdown: {
-        position: 'absolute',
-        top: '100%',
-        left: 0,
-        right: 0,
-        marginTop: '4px',
-        background: '#fff',
-        border: '1.5px solid #D1D5DB',
-        borderRadius: '10px',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-        zIndex: 20,
-        overflow: 'hidden',
-    },
-    dropdownItem: {
-        display: 'block',
-        width: '100%',
-        padding: '12px 16px',
-        background: 'transparent',
-        border: 'none',
-        fontSize: '14px',
-        fontFamily: "'Inter', sans-serif",
-        textAlign: 'left',
-        cursor: 'pointer',
-    },
     textarea: {
         width: '100%',
         padding: '14px 16px',
@@ -304,7 +220,7 @@ const styles: Record<string, React.CSSProperties> = {
     },
     helperText: {
         fontSize: '13px',
-        color: '#888',
+        color: '#9CA3AF',
         margin: 0,
     },
     uploadBox: {
@@ -381,7 +297,6 @@ const styles: Record<string, React.CSSProperties> = {
         fontFamily: "'Inter', sans-serif",
         border: 'none',
         borderRadius: '10px',
-        cursor: 'pointer',
         marginTop: '12px',
     },
 };

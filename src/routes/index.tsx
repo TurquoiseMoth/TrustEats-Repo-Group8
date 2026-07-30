@@ -57,10 +57,6 @@ export function AppRoutes() {
       <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmailPage />} />
       <Route path={ROUTES.ADMIN_LOGIN} element={<AdminSignInPage />} />
       <Route path={ROUTES.MANUFACTURER_DASHBOARD} element={<ManufacturerDashboardPage />} />
-      <Route path={ROUTES.MANUFACTURER_ORGANIZATIONS} element={<ManufacturerDashboardPage />} />
-      <Route path={ROUTES.MANUFACTURER_APPLICATIONS} element={<ManufacturerDashboardPage />} />
-      <Route path={ROUTES.MANUFACTURER_CONSUMER_REPORTS} element={<ManufacturerDashboardPage />} />
-      <Route path={ROUTES.MANUFACTURER_PROMOTION_TIPS} element={<ManufacturerDashboardPage />} />
       <Route path={ROUTES.MANUFACTURER_NOTIFICATIONS} element={<ManufacturerNotificationPage />} />
       <Route path={ROUTES.QR_CODE} element={<QrCodePage />} />
       <Route path={ROUTES.RESULT} element={<ResultPage />} />

@@ -32,7 +32,7 @@ export function QrPreviewModal({ product, onClose }: QrPreviewModalProps) {
           ref={closeBtnRef}
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-3.5 right-3.5 w-7 h-7 rounded-full bg-gray-100 text-gray-700 text-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844]"
+          className="absolute top-3.5 right-3.5 w-7 h-7 rounded-full bg-gray-100 text-gray-700 text-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
         >
           ✕
         </button>
@@ -51,14 +51,14 @@ export function QrPreviewModal({ product, onClose }: QrPreviewModalProps) {
         <div className="flex gap-2.5">
           <button
             type="button"
-            className="flex-1 px-4 py-2.5 rounded-lg border-[1.5px] border-[#2F6844] bg-white text-[#2F6844] text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844] focus-visible:outline-offset-2"
+            className="flex-1 px-4 py-2.5 rounded-lg border-[1.5px] border-primary bg-white text-primary text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           >
             Download
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 px-4 py-2.5 rounded-lg bg-[#2F6844] text-white text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844] focus-visible:outline-offset-2"
+            className="flex-1 px-4 py-2.5 rounded-lg bg-primary text-white text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           >
             Done
           </button>

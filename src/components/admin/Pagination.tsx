@@ -21,7 +21,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="Previous page"
-        className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-300 text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844]"
+        className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-300 text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
         <ChevronLeft size={16} />
       </button>
@@ -34,9 +34,9 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
           aria-label={`Go to page ${page}`}
           aria-current={page === currentPage ? "page" : undefined}
           className={[
-            "w-9 h-9 flex items-center justify-center rounded-lg border text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844]",
+            "w-9 h-9 flex items-center justify-center rounded-lg border text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary",
             page === currentPage
-              ? "bg-[#2F6844] border-[#2F6844] text-white"
+              ? "bg-primary border-primary text-white"
               : "border-gray-300 text-gray-700 hover:bg-gray-50",
           ].join(" ")}
         >
@@ -49,7 +49,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="Next page"
-        className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-300 text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844]"
+        className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-300 text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
         <ChevronRight size={16} />
       </button>

@@ -106,7 +106,7 @@ function Footer() {
   ];
 
   return (
-    <footer className="bg-[#2D5A3D]">
+    <footer className="bg-primary/90">
       {/* ── Top: Brand + Links + Newsletter ─────────────── */}
       <div className="mx-auto max-w-7xl px-6 pt-16 pb-12 lg:px-10">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
@@ -160,7 +160,7 @@ function Footer() {
               <button
                 type="submit"
                 aria-label="Subscribe"
-                className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#2D5A3D] text-white transition-colors hover:bg-[#3a7250]"
+                className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary/90"
               >
                 <ChevronRight className="h-3.5 w-3.5" />
               </button>

@@ -16,9 +16,9 @@ function Sidebar() {
   return (
     <aside className="hidden md:flex md:flex-col md:w-64 md:shrink-0 md:h-screen md:sticky md:top-0 border-r border-gray-200 bg-white px-5 py-6">
       <div className="flex items-center gap-2 px-2 mb-10">
-        <ShieldCheck className="text-[#2F6844]" size={26} aria-hidden="true" />
+        <ShieldCheck className="text-primary" size={26} aria-hidden="true" />
         <span className="text-lg font-bold">
-          Trust<span className="text-[#2F6844]">Eats</span>
+          Trust<span className="text-primary">Eats</span>
         </span>
       </div>
 
@@ -35,7 +35,7 @@ function Sidebar() {
                   className={[
                     "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-[#2F6844] text-white"
+                      ? "bg-primary text-white"
                       : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
                   ].join(" ")}
                 >
@@ -50,7 +50,7 @@ function Sidebar() {
 
       <Link
         to={ROUTES.SETTINGS}
-        className="flex items-center gap-2 justify-center px-4 py-2.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844] focus-visible:outline-offset-2"
+        className="flex items-center gap-2 justify-center px-4 py-2.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
       >
         <Settings size={16} aria-hidden="true" />
         Setting
