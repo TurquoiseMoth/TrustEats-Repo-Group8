@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only --exit-child src/app.ts",
     "build": "tsc",
-    "start": "app.ts",
+    "start": "node dist/app.js",
     "seed": "ts-node-dev --transpile-only --exit-child src/seed/seed.ts"
   },
   "dependencies": {
