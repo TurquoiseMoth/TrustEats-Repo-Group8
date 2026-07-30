@@ -26,12 +26,12 @@ const features = [
 
 export function WhyTrustEatSection() {
   return (
-    <section className="mt-16 flex flex-col items-center md:mt-24">
-      <h2 className="text-[28px] font-bold leading-tight text-[#2F3437]">
-        Why <span className="text-brand-base">TrustEat</span>
+    <section className="mx-auto mt-16 flex w-full max-w-7xl flex-col items-center px-6 md:mt-24 lg:px-10">
+      <h2 className="text-[28px] font-bold leading-tight text-[#292d32]">
+        Why <span className="text-brand-base">TrustEats</span>
       </h2>
 
-      <div className="mt-10 grid w-full max-w-[1100px] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-10 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {features.map((feature) => (
           <FeatureCard
             key={feature.title}

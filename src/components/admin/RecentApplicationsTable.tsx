@@ -9,7 +9,7 @@ interface RecentApplicationsTableProps {
 
 function RecentApplicationsTable({ applications }: RecentApplicationsTableProps) {
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm">
+    <div className="bg-white rounded-2xl p-6 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
       <div className="flex items-center justify-between mb-5">
         <h3 className="text-lg font-bold text-gray-900">Recent Applications</h3>
         <Link

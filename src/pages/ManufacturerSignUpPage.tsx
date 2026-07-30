@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-
 export default function ManufacturerSignUpPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -46,20 +45,7 @@ export default function ManufacturerSignUpPage() {
 
       {/* Logo */}
       <div style={isDesktop ? desktopStyles.logoWrap : styles.logoWrap}>
-        <svg width="24" height="28" viewBox="0 0 24 28" fill="none">
-          <path
-            d="M12 2L2 7V13C2 19.63 6.35 25.78 12 27C17.65 25.78 22 19.63 22 13V7L12 2Z"
-            fill="#3F7A46"
-          />
-          <path
-            d="M9 14L11 16L15 12"
-            stroke="white"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <span style={isDesktop ? desktopStyles.logoText : styles.logoText}>TrustEats</span>
+        <img src="/assets/trusteats-logo.png" alt="TrustEats" className="h-8 w-auto" />
       </div>
 
       {/* Content */}
@@ -203,7 +189,7 @@ const styles: Record<string, React.CSSProperties> = {
   logoText: {
     fontSize: '22px',
     fontWeight: 700,
-    color: '#3F7A46',
+    color: '#3c7443',
   },
   content: {
     padding: '16px 20px 48px',
@@ -214,7 +200,7 @@ const styles: Record<string, React.CSSProperties> = {
   heading: {
     fontSize: '24px',
     fontWeight: 700,
-    color: '#111',
+    color: '#292d32',
     textAlign: 'center',
     marginBottom: '4px',
   },
@@ -237,7 +223,7 @@ const styles: Record<string, React.CSSProperties> = {
   label: {
     fontSize: '15px',
     fontWeight: 600,
-    color: '#111',
+    color: '#292d32',
     marginBottom: '6px',
   },
   input: {
@@ -248,7 +234,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '0 16px',
     fontSize: '15px',
     fontFamily: "'Inter', sans-serif",
-    color: '#111',
+    color: '#292d32',
     outline: 'none',
     width: '100%',
     boxSizing: 'border-box',
@@ -278,7 +264,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     gap: '8px',
     fontSize: '14px',
-    color: '#111',
+    color: '#292d32',
     cursor: 'pointer',
     marginBottom: '24px',
     marginTop: '4px',
@@ -286,19 +272,19 @@ const styles: Record<string, React.CSSProperties> = {
   checkbox: {
     width: '18px',
     height: '18px',
-    accentColor: '#3F7A46',
+    accentColor: '#3c7443',
     cursor: 'pointer',
     flexShrink: 0,
   },
   termsLink: {
-    color: '#3F7A46',
+    color: '#3c7443',
     fontWeight: 600,
     textDecoration: 'underline',
   },
   btnPrimary: {
     width: '100%',
     height: '52px',
-    background: '#3F7A46',
+    background: '#3c7443',
     color: '#fff',
     fontSize: '17px',
     fontWeight: 700,
@@ -340,7 +326,7 @@ const desktopStyles: Record<string, React.CSSProperties> = {
   logoText: {
     fontSize: '24px',
     fontWeight: 700,
-    color: '#3F7A46',
+    color: '#3c7443',
   },
   content: {
     padding: '24px 24px 60px',
@@ -353,7 +339,7 @@ const desktopStyles: Record<string, React.CSSProperties> = {
   heading: {
     fontSize: '30px',
     fontWeight: 700,
-    color: '#111',
+    color: '#292d32',
     textAlign: 'center',
     marginBottom: '6px',
   },
@@ -381,7 +367,7 @@ const desktopStyles: Record<string, React.CSSProperties> = {
   label: {
     fontSize: '15px',
     fontWeight: 600,
-    color: '#111',
+    color: '#292d32',
     marginBottom: '6px',
   },
 };

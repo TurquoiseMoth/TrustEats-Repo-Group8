@@ -1,8 +1,11 @@
 import { Link } from "react-router";
 import { Bell, ScanLine, QrCode, Clock, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { ROUTES } from "../constants";
+import { analyticsService } from "../services/analytics";
 import { MOCK_VERIFICATIONS } from "../utils/mockData";
 import type { VerificationRecord } from "../utils/mockData";
+
 
 const statusIcon: Record<VerificationRecord["result"], typeof CheckCircle> = {
   Genuine: CheckCircle,
@@ -22,9 +25,20 @@ function formatDate(dateStr: string) {
 }
 
 export default function ConsumerDashboardPage() {
-  const thisMonth = "August 2026";
+  const { data: analytics } = useQuery({
+    queryKey: ["analytics", "summary"],
+    queryFn: () => analyticsService.getSummary(),
+    staleTime: 60_000,
+    retry: 1,
+  });
+
+  const thisMonth = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
   const monthlyScans = MOCK_VERIFICATIONS.filter((v) => v.scanDate.startsWith("2026-08"));
   const recentScans = MOCK_VERIFICATIONS.slice(0, 3);
+
+  const totalScans = analytics?.totalScans ?? monthlyScans.length;
+  const genuineCount = analytics?.scansByResult.GENUINE ?? monthlyScans.filter((v) => v.result === "Genuine").length;
+  const flaggedCount = (analytics?.scansByResult?.SUSPICIOUS ?? 0) + (analytics?.scansByResult?.FAKE ?? 0) || monthlyScans.filter((v) => v.result !== "Genuine").length;
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
@@ -37,29 +51,29 @@ export default function ConsumerDashboardPage() {
 
       <Link
         to={ROUTES.SCAN}
-        className="flex items-center justify-center gap-3 w-full rounded-2xl bg-[#14833B] px-6 py-4 text-white font-semibold text-lg shadow-md hover:opacity-90 transition-opacity mb-8"
+        className="flex items-center justify-center gap-3 w-full rounded-2xl bg-[#3c7443] px-6 py-4 text-white font-semibold text-lg shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] hover:opacity-90 transition-opacity mb-8"
       >
         <ScanLine size={22} />
         Scan a Product
       </Link>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm mb-6">
+      <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <QrCode size={18} className="text-[#14833B]" />
+          <QrCode size={18} className="text-[#048340]" />
           <h2 className="text-base font-semibold text-gray-800">Monthly Summary</h2>
         </div>
         <p className="text-sm text-gray-500 mb-3">{thisMonth}</p>
         <div className="grid grid-cols-3 gap-3 text-center">
           <div className="rounded-xl bg-green-50 py-3">
-            <p className="text-xl font-bold text-green-700">{monthlyScans.length}</p>
+            <p className="text-xl font-bold text-green-700">{totalScans}</p>
             <p className="text-xs text-green-600 font-medium">Total Scans</p>
           </div>
           <div className="rounded-xl bg-blue-50 py-3">
-            <p className="text-xl font-bold text-blue-700">{monthlyScans.filter((v) => v.result === "Genuine").length}</p>
+            <p className="text-xl font-bold text-blue-700">{genuineCount}</p>
             <p className="text-xs text-blue-600 font-medium">Genuine</p>
           </div>
           <div className="rounded-xl bg-amber-50 py-3">
-            <p className="text-xl font-bold text-amber-700">{monthlyScans.filter((v) => v.result !== "Genuine").length}</p>
+            <p className="text-xl font-bold text-amber-700">{flaggedCount}</p>
             <p className="text-xs text-amber-600 font-medium">Flagged</p>
           </div>
         </div>
@@ -74,7 +88,7 @@ export default function ConsumerDashboardPage() {
           const Icon = statusIcon[scan.result];
           const colorClass = statusColor[scan.result];
           return (
-            <div key={scan.id} className="flex items-center gap-3 rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+            <div key={scan.id} className="flex items-center gap-3 rounded-xl border border-gray-100 bg-white p-4 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
               <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${colorClass}`}>
                 <Icon size={20} />
               </div>

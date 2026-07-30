@@ -54,10 +54,10 @@ export default function ScanPage() {
               fps={10}
             />
             {/* Corner brackets overlay */}
-            <div style={{ ...styles.bracket, top: 20, left: 20, borderTop: '3px solid #3F7A46', borderLeft: '3px solid #3F7A46' }} />
-            <div style={{ ...styles.bracket, top: 20, right: 20, borderTop: '3px solid #3F7A46', borderRight: '3px solid #3F7A46' }} />
-            <div style={{ ...styles.bracket, bottom: 20, left: 20, borderBottom: '3px solid #3F7A46', borderLeft: '3px solid #3F7A46' }} />
-            <div style={{ ...styles.bracket, bottom: 20, right: 20, borderBottom: '3px solid #3F7A46', borderRight: '3px solid #3F7A46' }} />
+            <div style={{ ...styles.bracket, top: 20, left: 20, borderTop: '3px solid #3c7443', borderLeft: '3px solid #3c7443' }} />
+            <div style={{ ...styles.bracket, top: 20, right: 20, borderTop: '3px solid #3c7443', borderRight: '3px solid #3c7443' }} />
+            <div style={{ ...styles.bracket, bottom: 20, left: 20, borderBottom: '3px solid #3c7443', borderLeft: '3px solid #3c7443' }} />
+            <div style={{ ...styles.bracket, bottom: 20, right: 20, borderBottom: '3px solid #3c7443', borderRight: '3px solid #3c7443' }} />
             <div style={styles.scanLine} />
           </div>
         )}
@@ -141,7 +141,7 @@ const styles: Record<string, React.CSSProperties> = {
     background: 'none',
     border: 'none',
     fontSize: '26px',
-    color: '#111',
+    color: '#292d32',
     cursor: 'pointer',
     lineHeight: 1,
     padding: '0',
@@ -149,7 +149,7 @@ const styles: Record<string, React.CSSProperties> = {
   headerTitle: {
     fontSize: '17px',
     fontWeight: 700,
-    color: '#111',
+    color: '#292d32',
   },
   cameraSection: {
     display: 'flex',
@@ -177,7 +177,7 @@ const styles: Record<string, React.CSSProperties> = {
     position: 'absolute',
     width: '60%',
     height: '2px',
-    background: '#3F7A46',
+    background: '#3c7443',
     opacity: 0.9,
     zIndex: 10,
     top: '50%',
@@ -204,7 +204,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: '40px',
     height: '40px',
     border: '3px solid #333',
-    borderTop: '3px solid #3F7A46',
+    borderTop: '3px solid #3c7443',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
   },
@@ -241,7 +241,7 @@ const styles: Record<string, React.CSSProperties> = {
   retryBtn: {
     marginTop: '8px',
     padding: '10px 24px',
-    background: '#3F7A46',
+    background: '#3c7443',
     color: '#fff',
     border: 'none',
     borderRadius: '8px',
@@ -271,7 +271,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     padding: '14px 16px',
     background: '#1a1a1a',
-    border: '1.5px solid #3F7A46',
+    border: '1.5px solid #3c7443',
     borderRadius: '8px',
     color: '#fff',
     fontSize: '16px',
@@ -282,7 +282,7 @@ const styles: Record<string, React.CSSProperties> = {
   manualSubmitBtn: {
     width: '100%',
     padding: '14px',
-    background: '#3F7A46',
+    background: '#3c7443',
     color: '#fff',
     border: 'none',
     borderRadius: '8px',
@@ -307,11 +307,11 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     height: '52px',
     background: '#ffffff',
-    color: '#3F7A46',
+    color: '#3c7443',
     fontSize: '15px',
     fontWeight: 600,
     fontFamily: "'Inter', sans-serif",
-    border: '1.5px solid #3F7A46',
+    border: '1.5px solid #3c7443',
     borderRadius: '8px',
     cursor: 'pointer',
   },

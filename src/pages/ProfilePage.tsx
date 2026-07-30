@@ -188,7 +188,7 @@ const styles: Record<string, CSSProperties> = {
     background: 'none',
     border: 'none',
     fontSize: '26px',
-    color: '#111',
+    color: '#292d32',
     cursor: 'pointer',
     lineHeight: 1,
     padding: '0',
@@ -196,7 +196,7 @@ const styles: Record<string, CSSProperties> = {
   headerTitle: {
     fontSize: '18px',
     fontWeight: 700,
-    color: '#111',
+    color: '#292d32',
   },
   avatarSection: {
     display: 'flex',
@@ -233,7 +233,7 @@ const styles: Record<string, CSSProperties> = {
   avatarName: {
     fontSize: '16px',
     fontWeight: 700,
-    color: '#111',
+    color: '#292d32',
     margin: '0 0 4px',
   },
   avatarEmail: {
@@ -256,7 +256,7 @@ const styles: Record<string, CSSProperties> = {
   cardTitle: {
     fontSize: '14px',
     fontWeight: 700,
-    color: '#111',
+    color: '#292d32',
     margin: '0 0 12px',
     paddingBottom: '10px',
     borderBottom: '1px solid #F0F0F0',
@@ -270,7 +270,7 @@ const styles: Record<string, CSSProperties> = {
   accountLabel: {
     fontSize: '13px',
     fontWeight: 600,
-    color: '#111',
+    color: '#292d32',
     margin: '0 0 2px',
   },
   accountValue: {
@@ -306,7 +306,7 @@ const styles: Record<string, CSSProperties> = {
   notifLabel: {
     fontSize: '13px',
     fontWeight: 600,
-    color: '#111',
+    color: '#292d32',
     margin: '0 0 2px',
   },
   notifSub: {

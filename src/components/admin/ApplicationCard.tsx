@@ -38,7 +38,7 @@ export default function ApplicationCard({
   const { id, companyName, appId, status, date, time, isNew } = application;
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
       <div className="flex items-start justify-between">
         <div className="flex gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50">

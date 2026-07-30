@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { ArrowLeft, ZoomIn, X } from "lucide-react";
 import certificateImg from "../assets/images/certificate.png";
 
@@ -32,10 +32,6 @@ function InfoField({ label, value }: { label: string; value: string }) {
 }
 
 export default function AdminApplicationDetailPage() {
-  const { id } = useParams();
-  
-  // TODO: remove this log when actually fetching data with `id`
-  console.log("Viewing application id:", id);
   
   const navigate = useNavigate();
   const [zoomed, setZoomed] = useState(false);

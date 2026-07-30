@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
-
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
@@ -23,20 +22,7 @@ export default function ForgotPasswordPage() {
 
       {/* Logo */}
       <div style={styles.logoWrap}>
-        <svg width="24" height="28" viewBox="0 0 24 28" fill="none">
-          <path
-            d="M12 2L2 7V13C2 19.63 6.35 25.78 12 27C17.65 25.78 22 19.63 22 13V7L12 2Z"
-            fill="#3F7A46"
-          />
-          <path
-            d="M9 14L11 16L15 12"
-            stroke="white"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <span style={styles.logoText}>TrustEats</span>
+        <img src="/assets/trusteats-logo.png" alt="TrustEats" className="h-8 w-auto" />
       </div>
 
       {/* Content */}
@@ -98,7 +84,7 @@ const styles: Record<string, React.CSSProperties> = {
   logoText: {
     fontSize: '22px',
     fontWeight: 700,
-    color: '#3F7A46',
+    color: '#3c7443',
   },
   content: {
     padding: '24px 20px 48px',
@@ -109,7 +95,7 @@ const styles: Record<string, React.CSSProperties> = {
   heading: {
     fontSize: '24px',
     fontWeight: 700,
-    color: '#111',
+    color: '#292d32',
     marginBottom: '4px',
   },
   subtitle: {
@@ -131,7 +117,7 @@ const styles: Record<string, React.CSSProperties> = {
   label: {
     fontSize: '15px',
     fontWeight: 600,
-    color: '#111',
+    color: '#292d32',
     marginBottom: '6px',
   },
   input: {
@@ -142,14 +128,14 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '0 16px',
     fontSize: '15px',
     fontFamily: "'Inter', sans-serif",
-    color: '#111',
+    color: '#292d32',
     outline: 'none',
     width: '100%',
   },
   btnPrimary: {
     width: '100%',
     height: '52px',
-    background: '#3F7A46',
+    background: '#3c7443',
     color: '#fff',
     fontSize: '17px',
     fontWeight: 700,
@@ -164,7 +150,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   backLink: {
     fontSize: '15px',
-    color: '#3F7A46',
+    color: '#3c7443',
     textDecoration: 'none',
     fontWeight: 600,
     textAlign: 'center',

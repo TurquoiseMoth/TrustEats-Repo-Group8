@@ -101,7 +101,7 @@ const styles: Record<string, React.CSSProperties> = {
     background: "none",
     border: "none",
     fontSize: "26px",
-    color: "#111",
+    color: "#292d32",
     cursor: "pointer",
     lineHeight: 1,
     padding: "0",
@@ -110,7 +110,7 @@ const styles: Record<string, React.CSSProperties> = {
   headerTitle: {
     fontSize: "17px",
     fontWeight: 700,
-    color: "#111",
+    color: "#292d32",
   },
   content: {
     flex: 1,
@@ -136,7 +136,7 @@ const styles: Record<string, React.CSSProperties> = {
   codeValue: {
     fontSize: "28px",
     fontWeight: 700,
-    color: "#111",
+    color: "#292d32",
     letterSpacing: "2px",
     margin: 0,
     textAlign: "center",
@@ -145,7 +145,7 @@ const styles: Record<string, React.CSSProperties> = {
   btn: {
     width: "100%",
     padding: "14px",
-    background: "#3F7A46",
+    background: "#3c7443",
     color: "#fff",
     border: "none",
     borderRadius: "8px",
@@ -157,7 +157,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: "40px",
     height: "40px",
     border: "3px solid #eee",
-    borderTop: "3px solid #3F7A46",
+    borderTop: "3px solid #3c7443",
     borderRadius: "50%",
     animation: "spin 1s linear infinite",
   },
@@ -182,7 +182,7 @@ const styles: Record<string, React.CSSProperties> = {
   errorTitle: {
     fontSize: "16px",
     fontWeight: 700,
-    color: "#111",
+    color: "#292d32",
     margin: 0,
   },
   errorText: {

@@ -20,7 +20,7 @@ export default function VerifyEmailPage() {
   if (!email) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#eef4fc", fontFamily: "'Inter', sans-serif", padding: "24px" }}>
-        <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#111", marginBottom: "8px" }}>Verify Your Email</h1>
+        <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#292d32", marginBottom: "8px" }}>Verify Your Email</h1>
         <p style={{ fontSize: "15px", color: "#666", textAlign: "center" }}>
           No email provided. Please sign up first.
         </p>

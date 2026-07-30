@@ -34,7 +34,7 @@ export function ProductCard({ product, onGenerateQr, onRemove }: ProductCardProp
   };
 
   return (
-    <li className="list-none bg-white rounded-2xl p-4 md:p-6 shadow-sm">
+    <li className="list-none bg-white rounded-2xl p-4 md:p-6 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
       <div className="flex items-start md:items-center gap-3 mb-4">
         <img src={product.imageUrl} alt="" aria-hidden="true" className="w-12 h-12 rounded-lg object-cover bg-gray-100 shrink-0" />
         <div className="flex-1 min-w-0">

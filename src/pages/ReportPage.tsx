@@ -32,7 +32,7 @@ export default function ReportPage() {
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        console.log({ productName, companyBrand, issues, details, uploadedFile });
+
     }
 
     return (
@@ -80,7 +80,7 @@ export default function ReportPage() {
                                 ...styles.input,
                                 textAlign: 'left',
                                 cursor: 'pointer',
-                                color: issues ? '#111' : '#999',
+                                color: issues ? '#292d32' : '#999',
                             }}
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         >
@@ -106,7 +106,7 @@ export default function ReportPage() {
                                         style={{
                                             ...styles.dropdownItem,
                                             background: issues === opt ? '#F0F7F1' : 'transparent',
-                                            color: issues === opt ? '#3F7A46' : '#333',
+                                            color: issues === opt ? '#3c7443' : '#333',
                                         }}
                                         onClick={() => {
                                             setIssues(opt);
@@ -167,7 +167,7 @@ export default function ReportPage() {
                         >
                             <div style={styles.uploadInner}>
                                 <div style={styles.uploadIconCircle}>
-                                    <Upload size={20} color="#3F7A46" />
+                                    <Upload size={20} color="#3c7443" />
                                 </div>
                                 <p style={styles.uploadText}>Add photo</p>
                                 <p style={styles.uploadHint}>JPG, PNG up to 5MB</p>
@@ -219,12 +219,12 @@ const styles: Record<string, React.CSSProperties> = {
         padding: 0,
         display: 'flex',
         alignItems: 'center',
-        color: '#111',
+        color: '#292d32',
     },
     headerTitle: {
         fontSize: '20px',
         fontWeight: 700,
-        color: '#111',
+        color: '#292d32',
         margin: 0,
     },
     form: {
@@ -241,7 +241,7 @@ const styles: Record<string, React.CSSProperties> = {
     label: {
         fontSize: '14px',
         fontWeight: 600,
-        color: '#111',
+        color: '#292d32',
         margin: 0,
     },
     input: {
@@ -252,7 +252,7 @@ const styles: Record<string, React.CSSProperties> = {
         borderRadius: '10px',
         fontSize: '15px',
         fontFamily: "'Inter', sans-serif",
-        color: '#111',
+        color: '#292d32',
         outline: 'none',
         boxSizing: 'border-box' as const,
         position: 'relative' as const,
@@ -289,7 +289,7 @@ const styles: Record<string, React.CSSProperties> = {
         borderRadius: '10px',
         fontSize: '15px',
         fontFamily: "'Inter', sans-serif",
-        color: '#111',
+        color: '#292d32',
         outline: 'none',
         resize: 'none',
         boxSizing: 'border-box' as const,
@@ -334,7 +334,7 @@ const styles: Record<string, React.CSSProperties> = {
     uploadText: {
         fontSize: '14px',
         fontWeight: 600,
-        color: '#3F7A46',
+        color: '#3c7443',
         margin: 0,
     },
     uploadHint: {
@@ -374,7 +374,7 @@ const styles: Record<string, React.CSSProperties> = {
     submitBtn: {
         width: '100%',
         height: '52px',
-        background: '#3F7A46',
+        background: '#3c7443',
         color: '#fff',
         fontSize: '16px',
         fontWeight: 700,

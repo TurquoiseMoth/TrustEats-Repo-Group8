@@ -42,7 +42,7 @@ function AdminMobileNav() {
 
       {isOpen && (
         <nav
-          className="absolute top-full left-0 right-0 bg-white shadow-lg px-3 py-3"
+          className="absolute top-full left-0 right-0 bg-white shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] px-3 py-3"
           aria-label="Admin navigation"
         >
           <ul className="flex flex-col gap-1">

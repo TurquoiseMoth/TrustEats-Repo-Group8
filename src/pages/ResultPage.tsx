@@ -166,7 +166,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 700,
   },
   errorTitle: {
-    color: '#111',
+    color: '#292d32',
     fontSize: '16px',
     fontWeight: 700,
     margin: 0,
@@ -181,7 +181,7 @@ const styles: Record<string, React.CSSProperties> = {
   retryBtn: {
     marginTop: '8px',
     padding: '10px 24px',
-    background: '#3F7A46',
+    background: '#3c7443',
     color: '#fff',
     border: 'none',
     borderRadius: '8px',
@@ -230,7 +230,7 @@ const styles: Record<string, React.CSSProperties> = {
   cardTitle: {
     fontSize: '16px',
     fontWeight: 700,
-    color: '#111',
+    color: '#292d32',
     marginBottom: '16px',
     paddingBottom: '12px',
     borderBottom: '1px solid #F0F0F0',
@@ -252,7 +252,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   rowValue: {
     fontSize: '14px',
-    color: '#111',
+    color: '#292d32',
     fontWeight: 600,
     textAlign: 'right',
     flex: 1,
@@ -267,7 +267,7 @@ const styles: Record<string, React.CSSProperties> = {
   statsTitle: {
     fontSize: '14px',
     fontWeight: 700,
-    color: '#111',
+    color: '#292d32',
     marginBottom: '12px',
     margin: '0 0 12px 0',
   },
@@ -284,7 +284,7 @@ const styles: Record<string, React.CSSProperties> = {
   statValue: {
     fontSize: '18px',
     fontWeight: 700,
-    color: '#3F7A46',
+    color: '#3c7443',
   },
   statLabel: {
     fontSize: '12px',
@@ -298,7 +298,7 @@ const styles: Record<string, React.CSSProperties> = {
   btnPrimary: {
     flex: 1,
     height: '52px',
-    background: '#3F7A46',
+    background: '#3c7443',
     color: '#fff',
     fontSize: '15px',
     fontWeight: 700,
@@ -311,18 +311,18 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     height: '52px',
     background: '#ffffff',
-    color: '#3F7A46',
+    color: '#3c7443',
     fontSize: '15px',
     fontWeight: 700,
     fontFamily: "'Inter', sans-serif",
-    border: '1.5px solid #3F7A46',
+    border: '1.5px solid #3c7443',
     borderRadius: '8px',
     cursor: 'pointer',
   },
   dashLink: {
     background: 'none',
     border: 'none',
-    color: '#3F7A46',
+    color: '#3c7443',
     fontSize: '14px',
     fontWeight: 500,
     cursor: 'pointer',

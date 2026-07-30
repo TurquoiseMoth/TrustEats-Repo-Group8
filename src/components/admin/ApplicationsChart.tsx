@@ -15,7 +15,7 @@ interface ApplicationsChartProps {
 
 function ApplicationsChart({ data }: ApplicationsChartProps) {
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm">
+    <div className="bg-white rounded-2xl p-6 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
       <h3 className="text-base font-bold text-gray-900 mb-0.5">Applications Overview</h3>
       <p className="text-sm text-gray-500 mb-5">Submitted vs. approved over the last 7 months</p>
 

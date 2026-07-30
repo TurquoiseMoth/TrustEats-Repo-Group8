@@ -46,10 +46,10 @@ function DashboardPlaceholder() {
           <Link
             key={href}
             to={href}
-            className="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+            className="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] transition-shadow hover:shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]"
           >
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F0F7F1]">
-              <Icon className="h-6 w-6 text-[#3F7A46]" />
+              <Icon className="h-6 w-6 text-[#3c7443]" />
             </div>
             <div className="flex-1">
               <p className="text-sm font-semibold text-gray-900">{label}</p>
@@ -69,7 +69,7 @@ function ManufacturerDashboardPage() {
   if (!isDesktop) {
     return (
       <div className="flex min-h-screen flex-col bg-[#EEF2F5]">
-        <header className="sticky top-0 z-40 flex h-12 items-center bg-[#3F7A46] px-4">
+        <header className="sticky top-0 z-40 flex h-12 items-center bg-[#3c7443] px-4">
           <button onClick={() => window.history.back()} className="text-white">
             <ArrowLeft className="h-5 w-5" />
           </button>
@@ -90,9 +90,9 @@ function ManufacturerDashboardPage() {
               <QrCode size={20} strokeWidth={1.8} />
               <span className="text-xs font-medium">QR Code</span>
             </Link>
-            <Link to={ROUTES.MANUFACTURER_DASHBOARD} className="flex w-full flex-col items-center justify-center gap-0.5 text-[#3F7A46]">
+            <Link to={ROUTES.MANUFACTURER_DASHBOARD} className="flex w-full flex-col items-center justify-center gap-0.5 text-[#3c7443]">
               <LayoutDashboard size={20} strokeWidth={2.5} />
-              <span className="text-xs font-medium text-[#3F7A46]">Dashboard</span>
+              <span className="text-xs font-medium text-[#3c7443]">Dashboard</span>
             </Link>
             <Link to={ROUTES.SETTINGS} className="flex w-full flex-col items-center justify-center gap-0.5 text-gray-400">
               <Settings size={20} strokeWidth={1.8} />
@@ -108,8 +108,8 @@ function ManufacturerDashboardPage() {
     <div className="flex min-h-screen bg-[#EEF2F5]">
       <aside className="fixed left-0 top-0 z-40 flex h-screen w-60 flex-col border-r border-gray-200 bg-white">
         <div className="flex items-center gap-2 px-5 py-5">
-          <ShieldCheck className="h-7 w-7 text-[#3F7A46]" />
-          <span className="text-lg font-bold text-[#3F7A46]">TrustEats</span>
+          <ShieldCheck className="h-7 w-7 text-[#3c7443]" />
+          <span className="text-lg font-bold text-[#3c7443]">TrustEats</span>
         </div>
 
         <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3">

@@ -1,9 +1,11 @@
 import type { LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { Card } from "./Card";
 
 interface RoleCardProps {
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  customIcon?: ReactNode;
   title: string;
   description: string;
   accentColor: string;
@@ -18,6 +20,7 @@ interface RoleCardProps {
 
 export function RoleCard({
   icon: Icon,
+  customIcon,
   title,
   description,
   accentColor,
@@ -31,12 +34,16 @@ export function RoleCard({
 }: RoleCardProps) {
   return (
     <Card
-      className={`relative flex flex-col items-center rounded-[28px] border-0 px-10 pt-14 pb-8 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] ${backgroundColor}`}
+      className={`relative flex flex-col items-center rounded-[28px] border-0 px-10 pt-14 pb-8 text-center shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] ${backgroundColor}`}
     >
       <div
         className={`absolute -top-6 flex h-[68px] w-[68px] items-center justify-center rounded-full border-[4px] border-white ${buttonBgColor}`}
       >
-        <Icon className="h-7 w-7 text-white" />
+        {customIcon ? (
+          <div className="flex h-7 w-7 items-center justify-center">{customIcon}</div>
+        ) : Icon ? (
+          <Icon className="h-7 w-7 text-white" />
+        ) : null}
       </div>
 
       <h3 className={`mb-3 text-[22px] font-bold ${accentColor}`}>{title}</h3>
