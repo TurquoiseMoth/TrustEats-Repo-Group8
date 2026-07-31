@@ -1,14 +1,21 @@
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  type ReactNode,
+} from "react";
 import { authService } from "../services/auth";
-import type { User } from "../types";
+import type { Manufacturer, RegisterRequest } from "../types";
 
 interface AuthContextValue {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (data: { fullName: string; email: string; password: string; confirmPassword: string; role: "consumer" | "manufacturer" }) => Promise<void>;
-  logout: () => Promise<void>;
+  register: (data: RegisterRequest) => Promise<void>;
+  logout: () => void;
   refreshUser: () => Promise<void>;
 }
 
@@ -21,7 +28,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAuthenticated = !!user;
 
   useEffect(() => {
-    authService.getCurrentUser()
+    authService
+      .getCurrentUser()
       .then(setUser)
       .catch(() => setUser(null))
       .finally(() => setIsLoading(false));
@@ -32,8 +40,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(user);
   }, []);
 
-  const register = useCallback(async (data: { fullName: string; email: string; password: string; confirmPassword: string; role: "consumer" | "manufacturer" }) => {
-    await authService.register(data);
+  const register = useCallback(async (data: RegisterRequest) => {
+    const result = await authService.register(data);
+    setUser((result as any).manufacturer);
+    setToken((result as any).token ?? null);
   }, []);
 
   const logout = useCallback(async () => {
@@ -58,7 +68,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, login, register, logout, refreshUser }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated,
+        isLoading,
+        login,
+        register,
+        logout,
+        refreshUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -99,19 +99,27 @@ function ProductUploadPage() {
     setNafdacNo(formatNafdac(e.target.value));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!isValid) return;
-    setSubmitError("");
+
+    // Build FormData for upload
+    const form = new FormData();
+    form.append("name", productName);
+    form.append("nafdacNumber", nafdacNo);
+    files.forEach((f) => form.append("images", f, f.name));
+
     try {
-      await productService.create({
-        name: productName,
-        nafdacRegNo: nafdacNo,
-        images: files,
-      });
+      // Use productService.create to send FormData
+      const { productService } = await import("../services/products");
+      await productService.create(form);
+      // Show success toast
+      window.dispatchEvent(new CustomEvent("trusteats:notify", { detail: { type: "success", message: "Product uploaded successfully" } }));
       setSubmitSuccess(true);
-    } catch {
-      setSubmitError("Failed to upload product. Please try again.");
+    } catch (err: any) {
+      console.error("product upload failed", err);
+      // show a toast via the global event so user sees the error
+      window.dispatchEvent(new CustomEvent("trusteats:notify", { detail: { type: "error", message: err?.message ?? "Upload failed" } }));
     }
   };
 
