@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  /* Design System Colors */
+  --color-primary: #3c7443;
+  --color-secondary: #7da282;
+  --color-background: #f0f8ff;
+  --color-card: #ffffff;
+  --color-text-main: #292d32;
+  --color-text-primary: #3c7443;
+  --color-text-secondary: #048340;
+  --color-success: #3c7443;
+  --color-warning: #eb9134;
+  --color-danger: #ce0000;
+  --color-border: #3c7443;
+
+  /* Deprecated — kept for backward compat, use above tokens instead */
+  --color-brand-base: #3c7443;
+  --color-brand-nav: #7da282;
+  --color-brand-icons: #048340;
+
+  /* Spacing */
+  --spacing-nav: 0.5rem 1rem 0.5rem 1rem;
+
+  /* Font */
+  --font-family-body: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', sans-serif;
+  --text-size-heading: 2.25rem;
+}
+
+@layer base {
+  body {
+    color: var(--color-text-main, #292d32);
+    background-color: var(--color-background, #f0f8ff);
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
