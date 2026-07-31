@@ -4,7 +4,6 @@ import { ROUTES } from '../constants';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 import { manufacturerService } from '../services/manufacturers';
 import { BackButton } from '../components/ui/BackButton';
-import logo from '../assets/logo.png';
 export default function ManufacturerSignUpPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
