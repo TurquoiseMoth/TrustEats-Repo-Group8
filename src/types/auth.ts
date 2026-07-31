@@ -24,13 +24,13 @@ export interface RegisterRequest {
   email: string;
   password: string;
   confirmPassword?: string;
-  role?: 'consumer' | 'manufacturer';
+  role?: "consumer" | "manufacturer";
   // whether the user accepted terms — sent for audit/compliance, optional
   termsAccepted?: boolean;
 }
 
 export interface AuthResponse {
-  manufacturer: Manufacturer;
+  manufacturer?: User;
   token?: string;
 }
 
@@ -46,5 +46,3 @@ export interface RegisterResponse {
   userId: string;
   role: string;
 }
-
-
