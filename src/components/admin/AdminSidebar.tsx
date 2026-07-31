@@ -10,7 +10,7 @@ import {
 import { ROUTES } from "../../constants";
 import { DEFAULT_UNREAD_COUNT } from "../../constants/notifications";
 import { NotificationBell } from "../ui/NotificationBell";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/Logo.png";
 
 const navItems = [
   { label: "Dashboard (Admin)", href: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },

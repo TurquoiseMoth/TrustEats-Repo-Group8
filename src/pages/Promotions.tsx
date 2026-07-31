@@ -3,7 +3,7 @@ import { useState } from "react";
 import { HiOutlineHome, HiOutlineBuildingOffice2, HiOutlineDocumentText, HiOutlineClipboardDocumentCheck,
   HiOutlineMegaphone, HiOutlineBell, HiOutlineCloudArrowUp, HiOutlineCalendarDays, HiOutlineClock, HiOutlineUserGroup, } from "react-icons/hi2";
 
-import logo from "../assets/logo.png";
+import logo from "../assets/Logo.png";
 
 export default function Promotions() {
   const [pushNotification, setPushNotification] = useState(true);

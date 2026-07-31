@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import { ROUTES } from '../constants';
 import { BackButton } from '../components/ui/BackButton';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-import logo from '../assets/logo.png';
+import logo from '../assets/Logo.png';
 export default function CheckYourEmailPage() {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   return (

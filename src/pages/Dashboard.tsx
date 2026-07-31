@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { ROUTES } from "../constants";
-import logo from "../assets/logo.png";
+import logo from "../assets/Logo.png";
 import phone from "../assets/phone.png";
 import pepper from "../assets/pepper.png";
 

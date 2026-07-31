@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/Logo.png";
 
 // ─── Data ───────────────────────────────────────────────────────────
 interface FooterLink {

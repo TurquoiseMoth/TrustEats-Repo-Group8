@@ -4,7 +4,7 @@ import { ROUTES } from '../constants';
 import { authService } from '../services/auth';
 import { BackButton } from '../components/ui/BackButton';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-import logo from '../assets/logo.png';
+import logo from '../assets/Logo.png';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');

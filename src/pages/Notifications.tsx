@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { HiOutlineHome, HiOutlineBuildingOffice2, HiOutlineDocumentText, HiOutlineClipboardDocumentCheck, HiOutlineMegaphone, HiOutlineBell, HiOutlineUser, HiOutlineCheckCircle, HiOutlineXCircle, HiOutlineDocument, HiOutlineEnvelopeOpen,HiChevronLeft, HiChevronRight, } from "react-icons/hi2";
 
-import logo from "../assets/logo.png";
+import logo from "../assets/Logo.png";
 
 const initialNotifications = [
   {

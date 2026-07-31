@@ -2,7 +2,7 @@
 import { HiOutlineHome, HiOutlineBuildingOffice2, HiOutlineDocumentText, HiOutlineClipboardDocumentCheck, HiOutlineMegaphone, HiOutlineBell, } from "react-icons/hi2"; // Alternatively use react-icons/hi or lucide-react
 import { BsThreeDotsVertical } from "react-icons/bs";
 
-import logo from "../assets/logo.png";
+import logo from "../assets/Logo.png";
 import pepperPaste from "../assets/pepperPaste.png";
 import tomatoSauce from "../assets/tomatoSauce.png";
 import farmMilk from "../assets/farmMilk.png";

@@ -2,7 +2,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router";
 import { ROUTES } from "../../constants";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/Logo.png";
 
 const navItems = [
   { label: "Home", href: ROUTES.HOME },
