@@ -27,7 +27,7 @@ const features = [
 export function WhyTrustEatSection() {
   return (
     <section className="mx-auto mt-16 flex w-full max-w-7xl flex-col items-center px-6 md:mt-24 lg:px-10">
-      <h2 className="text-[28px] font-bold leading-tight text-[#292d32]">
+      <h2 className="text-[28px] font-bold leading-tight text-text-main">
         Why <span className="text-brand-base">TrustEats</span>
       </h2>
 

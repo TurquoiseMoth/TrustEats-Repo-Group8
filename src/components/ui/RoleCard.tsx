@@ -48,7 +48,7 @@ export function RoleCard({
 
       <h3 className={`mb-3 text-[22px] font-bold ${accentColor}`}>{title}</h3>
 
-      <p className="mb-8 max-w-[260px] text-[14px] font-medium leading-relaxed text-[#9CA3AF]">
+      <p className="mb-8 max-w-[260px] text-[14px] font-medium leading-relaxed text-gray-400">
         {description}
       </p>
 
@@ -67,7 +67,7 @@ export function RoleCard({
         </button>
       )}
 
-      <p className="text-[13px] text-[#9CA3AF]">
+      <p className="text-[13px] text-gray-400">
         {loginPrefix}{" "}
         {loginHref ? (
           <Link to={loginHref} className={`cursor-pointer font-semibold ${accentColor}`}>

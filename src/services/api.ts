@@ -19,7 +19,12 @@ const apiClient = axios.create({
 
 // Attach auth token when present (keeps compatibility with token-based flows)
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("auth_token");
+  // Prefer an explicit client-side token when available (localStorage).
+  // For development, allow an env fallback token: VITE_DEV_AUTH_TOKEN (useful for local API that doesn't use cookies).
+  const tokenFromStorage = localStorage.getItem("auth_token");
+  const devToken = (import.meta.env as any)?.VITE_DEV_AUTH_TOKEN as string | undefined;
+  const token = tokenFromStorage || (import.meta.env.DEV ? devToken : undefined);
+
   if (token) {
     const headers = { ...(config.headers as Record<string, string> | undefined), Authorization: `Bearer ${token}` };
     // assign back in a way compatible with axios types
@@ -27,6 +32,8 @@ apiClient.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// NOTE: If you set VITE_DEV_AUTH_TOKEN in .env for local debugging, restart the dev server so Vite picks it up.
 
 // Refresh handling: on 401 try to refresh session once and retry queued requests.
 type QueueItem = { resolve: (value?: unknown) => void; reject: (err?: unknown) => void; config: AxiosRequestConfig };
@@ -144,6 +151,17 @@ apiClient.interceptors.response.use(
       message,
       details: (error.response?.data as any)?.details,
     };
+
+    if (error.response?.status === 401 && !error.config?._retry) {
+      try {
+        error.config._retry = true;
+        await apiClient.post("/auth/refresh");
+        return apiClient(error.config);
+      } catch {
+        return Promise.reject(apiError);
+      }
+    }
+
     return Promise.reject(apiError);
   },
 );

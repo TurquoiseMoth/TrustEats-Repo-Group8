@@ -33,7 +33,7 @@ export default function AdminSignInPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#eef4fc] flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <LeafPattern />
 
       <div className="flex-1 flex items-start justify-center px-5 md:px-6 pb-10">
@@ -66,7 +66,7 @@ export default function AdminSignInPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isSubmitting}
-                  className="w-full px-4 py-3 md:py-3.5 rounded-lg border border-gray-300 text-sm md:text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2F6844] disabled:opacity-60"
+                  className="w-full px-4 py-3 md:py-3.5 rounded-lg border border-gray-300 text-sm md:text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60"
                 />
               </div>
 
@@ -83,13 +83,13 @@ export default function AdminSignInPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={isSubmitting}
-                    className="w-full px-4 py-3 md:py-3.5 pr-11 rounded-lg border border-gray-300 text-sm md:text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2F6844] disabled:opacity-60"
+                    className="w-full px-4 py-3 md:py-3.5 pr-11 rounded-lg border border-gray-300 text-sm md:text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844] rounded"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary rounded"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -100,7 +100,7 @@ export default function AdminSignInPage() {
                 <label className="flex items-center gap-2 text-sm md:text-base text-gray-700 cursor-pointer">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 rounded border-gray-300 text-[#2F6844] focus:ring-[#2F6844]"
+                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
                   />
                   Remember me
                 </label>
@@ -112,7 +112,7 @@ export default function AdminSignInPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 py-3.5 md:py-4 rounded-lg bg-[#2F6844] text-white text-base md:text-lg font-semibold hover:bg-[#265436] disabled:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2F6844] mb-3"
+                className="w-full flex items-center justify-center gap-2 py-3.5 md:py-4 rounded-lg bg-primary text-white text-base md:text-lg font-semibold hover:bg-primary/85 disabled:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary mb-3"
               >
                 {isSubmitting && (
                   <span
@@ -127,7 +127,7 @@ export default function AdminSignInPage() {
                 type="button"
                 onClick={() => navigate(ROUTES.REGISTER)}
                 disabled={isSubmitting}
-                className="w-full py-3.5 md:py-4 rounded-lg border-[1.5px] border-[#2F6844] text-[#2F6844] text-base md:text-lg font-semibold hover:bg-green-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2F6844] disabled:opacity-50"
+                className="w-full py-3.5 md:py-4 rounded-lg border-[1.5px] border-primary text-primary text-base md:text-lg font-semibold hover:bg-primary/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50"
               >
                 Sign Up
               </button>

@@ -4,7 +4,7 @@ import BottomNav from "./BottomNav";
 
 function DashboardLayout() {
   return (
-    <div className="flex min-h-screen bg-[#eef4fc]">
+    <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 pb-16 md:pb-0">
         <Outlet />

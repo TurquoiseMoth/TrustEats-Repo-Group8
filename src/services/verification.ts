@@ -7,12 +7,10 @@ import { MOCK_VERIFICATIONS } from "../utils/mockData";
 const USE_MOCK = import.meta.env.VITE_API_BASE_URL ? false : true;
 
 export const verificationService = {
-  verifyCode: (code: string): Promise<VerificationResult> => {
-    if (USE_MOCK) return mockVerificationService.verifyCode(code);
-    return apiClient
+  verifyCode: (code: string) =>
+    apiClient
       .get<ApiResponse<VerificationResult>>(`/verify/${code}`)
-      .then((res) => res.data.data!);
-  },
+      .then((res) => res.data.data!),
 
   verifyCodeWithContext: (data: VerificationRequest): Promise<VerificationResult> => {
     if (USE_MOCK) return mockVerificationService.verifyCode(data.code);

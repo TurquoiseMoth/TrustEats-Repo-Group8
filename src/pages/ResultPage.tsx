@@ -47,19 +47,20 @@ export default function ResultPage() {
     );
   }
 
-  const isFake = verification.status === 'FAKE';
+  const isFake = verification.status === 'fake';
   const product = verification.product;
+  const manufacturer = verification.manufacturer;
+  const batch = verification.batch;
 
   const bannerBg = isFake ? '#FDEAEA' : '#FFF8E1';
   const bannerBorder = isFake ? '#F5C6C6' : '#FFE082';
-  const bannerIconBg = isFake ? '#D32F2F' : '#F9A825';
+  const bannerIconBg = isFake ? '#ce0000' : '#F9A825';
   const bannerTitleColor = isFake ? '#B71C1C' : '#F57F17';
   const bannerTitle = isFake ? 'Product Not Verified' : 'Suspicious Product';
-  const bannerSub = verification.reason;
+  const bannerSub = verification.message;
 
   return (
     <div style={styles.page}>
-      {/* Status banner */}
       <div style={{ ...styles.banner, background: bannerBg, border: `1px solid ${bannerBorder}` }}>
         <div style={{ ...styles.bannerIcon, background: bannerIconBg }}>!</div>
         <div>
@@ -68,24 +69,21 @@ export default function ResultPage() {
         </div>
       </div>
 
-      {/* Product card */}
       <div style={styles.card}>
         <h2 style={styles.cardTitle}>Product Details</h2>
 
         {product ? (
           <>
             <Row label="Product Name" value={product.name} />
-            <Row label="NAFDAC Number" value={product.verificationCode} />
-            <Row label="Manufactured Date" value={product.manufactureDate} />
-            <Row label="Expiry Date" value={product.expiryDate} />
-            <Row label="Company / Brand" value={product.manufacturer.name} last />
+            <Row label="Brand" value={product.brand} />
+            <Row label="Batch Number" value={batch?.batchNumber ?? 'N/A'} />
+            <Row label="Company" value={manufacturer?.companyName ?? 'N/A'} last />
           </>
         ) : (
           <Row label="Verification Code" value={code ?? 'N/A'} last />
         )}
       </div>
 
-      {/* Scan stats (if suspicious) */}
       {verification.scanStats && (
         <div style={styles.statsCard}>
           <h3 style={styles.statsTitle}>Scan Activity</h3>
@@ -106,7 +104,6 @@ export default function ResultPage() {
         </div>
       )}
 
-      {/* Actions */}
       <div style={styles.actions}>
         <button style={styles.btnPrimary} onClick={() => navigate(ROUTES.SCAN)}>
           Return to Scan
@@ -150,15 +147,15 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '16px',
   },
   statusText: {
-    color: '#888',
+    color: '#9CA3AF',
     fontSize: '14px',
   },
   errorIcon: {
     width: '48px',
     height: '48px',
     borderRadius: '50%',
-    background: '#D32F2F',
-    color: '#fff',
+    background: '#ce0000',
+    color: '#ffffff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -172,7 +169,7 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
   },
   errorText: {
-    color: '#888',
+    color: '#9CA3AF',
     fontSize: '13px',
     textAlign: 'center',
     maxWidth: '280px',
@@ -182,7 +179,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: '8px',
     padding: '10px 24px',
     background: '#3c7443',
-    color: '#fff',
+    color: '#ffffff',
     border: 'none',
     borderRadius: '8px',
     fontSize: '14px',
@@ -201,7 +198,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: '36px',
     height: '36px',
     borderRadius: '50%',
-    color: '#fff',
+    color: '#ffffff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -217,7 +214,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   bannerSub: {
     fontSize: '13px',
-    color: '#555',
+    color: '#555555',
     margin: 0,
   },
   card: {
@@ -233,7 +230,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#292d32',
     marginBottom: '16px',
     paddingBottom: '12px',
-    borderBottom: '1px solid #F0F0F0',
+    borderBottom: '1px solid #E5E7EB',
   },
   row: {
     display: 'flex',
@@ -247,7 +244,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   rowLabel: {
     fontSize: '14px',
-    color: '#666',
+    color: '#666666',
     flex: 1,
   },
   rowValue: {
@@ -288,7 +285,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   statLabel: {
     fontSize: '12px',
-    color: '#888',
+    color: '#9CA3AF',
   },
   actions: {
     display: 'flex',
@@ -299,7 +296,7 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     height: '52px',
     background: '#3c7443',
-    color: '#fff',
+    color: '#ffffff',
     fontSize: '15px',
     fontWeight: 700,
     fontFamily: "'Inter', sans-serif",

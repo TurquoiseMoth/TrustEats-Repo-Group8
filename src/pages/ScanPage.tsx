@@ -17,7 +17,7 @@ export default function ScanPage() {
     setScanState('verifying');
     try {
       const result: VerificationResult = await verificationService.verifyCode(code);
-      if (result.status === 'GENUINE') {
+      if (result.status === 'genuine') {
         navigate(ROUTES.VERIFY.replace(':code', code), { state: { result } });
       } else {
         navigate(ROUTES.RESULT.replace(':code', code), { state: { result } });
@@ -135,7 +135,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '8px',
     padding: '16px 20px',
     background: '#ffffff',
-    borderBottom: '1px solid #F0F0F0',
+    borderBottom: '1px solid #E5E7EB',
   },
   backBtn: {
     background: 'none',
@@ -185,7 +185,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   cameraHint: {
     fontSize: '13px',
-    color: '#888',
+    color: '#9CA3AF',
     marginTop: '16px',
     textAlign: 'center',
   },
@@ -203,21 +203,21 @@ const styles: Record<string, React.CSSProperties> = {
   spinner: {
     width: '40px',
     height: '40px',
-    border: '3px solid #333',
+    border: '3px solid #333333',
     borderTop: '3px solid #3c7443',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
   },
   statusText: {
-    color: '#ccc',
+    color: '#cccccc',
     fontSize: '14px',
   },
   errorIcon: {
     width: '48px',
     height: '48px',
     borderRadius: '50%',
-    background: '#D32F2F',
-    color: '#fff',
+    background: '#ce0000',
+    color: '#ffffff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -226,13 +226,13 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
   },
   errorTitle: {
-    color: '#fff',
+    color: '#ffffff',
     fontSize: '16px',
     fontWeight: 700,
     margin: 0,
   },
   errorText: {
-    color: '#aaa',
+    color: '#aaaaaa',
     fontSize: '13px',
     textAlign: 'center',
     maxWidth: '280px',
@@ -242,7 +242,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: '8px',
     padding: '10px 24px',
     background: '#3c7443',
-    color: '#fff',
+    color: '#ffffff',
     border: 'none',
     borderRadius: '8px',
     fontSize: '14px',
@@ -250,13 +250,13 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
   },
   manualTitle: {
-    color: '#fff',
+    color: '#ffffff',
     fontSize: '17px',
     fontWeight: 700,
     margin: 0,
   },
   manualHint: {
-    color: '#888',
+    color: '#9CA3AF',
     fontSize: '13px',
     margin: 0,
   },
@@ -273,7 +273,7 @@ const styles: Record<string, React.CSSProperties> = {
     background: '#1a1a1a',
     border: '1.5px solid #3c7443',
     borderRadius: '8px',
-    color: '#fff',
+    color: '#ffffff',
     fontSize: '16px',
     fontFamily: "'Inter', sans-serif",
     outline: 'none',
@@ -283,7 +283,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     padding: '14px',
     background: '#3c7443',
-    color: '#fff',
+    color: '#ffffff',
     border: 'none',
     borderRadius: '8px',
     fontSize: '15px',
@@ -296,11 +296,11 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     alignItems: 'center',
     gap: '14px',
-    borderTop: '1px solid #F0F0F0',
+    borderTop: '1px solid #E5E7EB',
   },
   orText: {
     fontSize: '13px',
-    color: '#888',
+    color: '#9CA3AF',
     margin: 0,
   },
   manualBtn: {

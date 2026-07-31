@@ -14,7 +14,7 @@ function RecentApplicationsTable({ applications }: RecentApplicationsTableProps)
         <h3 className="text-lg font-bold text-gray-900">Recent Applications</h3>
         <Link
           to={ROUTES.ADMIN_APPLICATIONS}
-          className="text-sm font-semibold text-emerald-700 hover:text-emerald-800 hover:underline underline-offset-2"
+          className="text-sm font-semibold text-primary hover:text-primary/80 hover:underline underline-offset-2"
         >
           View All
         </Link>

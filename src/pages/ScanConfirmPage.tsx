@@ -17,7 +17,7 @@ export default function ScanConfirmPage() {
   const verify = useCallback(async (c: string) => {
     try {
       const result: VerificationResult = await verificationService.verifyCode(c);
-      if (result.status === "GENUINE") {
+      if (result.status === "genuine") {
         navigate(ROUTES.VERIFY.replace(":code", c), { state: { result } });
       } else {
         navigate(ROUTES.RESULT.replace(":code", c), { state: { result } });
@@ -95,7 +95,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: "8px",
     padding: "16px 20px",
     background: "#ffffff",
-    borderBottom: "1px solid #F0F0F0",
+    borderBottom: "1px solid #E5E7EB",
   },
   backBtn: {
     background: "none",
@@ -130,7 +130,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   codeLabel: {
     fontSize: "14px",
-    color: "#888",
+    color: "#9CA3AF",
     margin: 0,
   },
   codeValue: {
@@ -146,7 +146,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: "100%",
     padding: "14px",
     background: "#3c7443",
-    color: "#fff",
+    color: "#ffffff",
     border: "none",
     borderRadius: "8px",
     fontSize: "15px",
@@ -156,22 +156,22 @@ const styles: Record<string, React.CSSProperties> = {
   spinner: {
     width: "40px",
     height: "40px",
-    border: "3px solid #eee",
+    border: "3px solid #eeeeee",
     borderTop: "3px solid #3c7443",
     borderRadius: "50%",
     animation: "spin 1s linear infinite",
   },
   statusText: {
     fontSize: "14px",
-    color: "#666",
+    color: "#6B7280",
     margin: 0,
   },
   errorIcon: {
     width: "48px",
     height: "48px",
     borderRadius: "50%",
-    background: "#D32F2F",
-    color: "#fff",
+    background: "#ce0000",
+    color: "#ffffff",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -187,18 +187,18 @@ const styles: Record<string, React.CSSProperties> = {
   },
   errorText: {
     fontSize: "13px",
-    color: "#888",
+    color: "#9CA3AF",
     textAlign: "center",
     margin: 0,
   },
   reportLink: {
     marginTop: "32px",
     fontSize: "14px",
-    color: "#D32F2F",
+    color: "#ce0000",
     textDecoration: "none",
     fontWeight: 600,
     padding: "12px 24px",
-    border: "1.5px solid #D32F2F",
+    border: "1.5px solid #ce0000",
     borderRadius: "8px",
     cursor: "pointer",
     transition: "background 0.2s",

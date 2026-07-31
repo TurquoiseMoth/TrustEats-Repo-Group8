@@ -82,7 +82,7 @@ export default function ForgotPasswordPage() {
 const styles: Record<string, React.CSSProperties> = {
   phone: {
     minHeight: '100vh',
-    background: '#EEF2F5',
+    background: '#f0f8ff',
     fontFamily: "'Inter', sans-serif",
     display: 'flex',
     flexDirection: 'column',
@@ -121,7 +121,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   subtitle: {
     fontSize: '14px',
-    color: '#444',
+    color: '#444444',
     marginBottom: '24px',
     lineHeight: '1.5',
   },
@@ -143,8 +143,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   input: {
     height: '52px',
-    background: '#fff',
-    border: '1px solid #9A9A9A',
+    background: '#ffffff',
+    border: '1px solid #9CA3AF',
     borderRadius: '8px',
     padding: '0 16px',
     fontSize: '15px',
@@ -157,7 +157,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     height: '52px',
     background: '#3c7443',
-    color: '#fff',
+    color: '#ffffff',
     fontSize: '17px',
     fontWeight: 700,
     fontFamily: "'Inter', sans-serif",

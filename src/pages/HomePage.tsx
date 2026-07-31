@@ -38,24 +38,24 @@ function HomePage() {
                 <div className="mx-auto flex max-w-7xl flex-col items-center gap-10 px-6 pt-5 pb-14 md:flex-row md:items-center md:justify-between md:gap-16 md:pt-8 md:pb-20 lg:px-10 lg:pt-12 lg:pb-24">
                     {/* Left column — text content */}
                     <div className="flex min-w-0 flex-1 flex-col">
-                        <h1 className="text-4xl font-bold leading-[1.1] text-[#292d32] sm:text-[42px] md:text-[46px] lg:text-[52px]">
+                        <h1 className="text-4xl font-bold leading-[1.1] text-text-main sm:text-[42px] md:text-[46px] lg:text-[52px]">
                             Verify Every Product.<br />
-                            <span className="text-[#3c7443]">Trust Every Bite.</span>
+                            <span className="text-primary">Trust Every Bite.</span>
                         </h1>
 
-                        <p className="mt-6 max-w-md text-base leading-relaxed text-[#6B7280] md:mt-7 md:text-lg">
+                        <p className="mt-6 max-w-md text-base leading-relaxed text-gray-500 md:mt-7 md:text-lg">
                             TrustEats helps you verify the authenticity of food products in seconds using a simple QR scan.
                         </p>
 
                         <div className="mt-8 flex flex-col gap-3 sm:flex-row md:mt-9 md:gap-4">
                             <Link to={ROUTES.SCAN}>
-                                <Button className="rounded-2xl bg-[#3c7443] px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 md:px-8 md:py-3.5 md:text-[15px]">
+                                <Button className="rounded-2xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 md:px-8 md:py-3.5 md:text-[15px]">
                                     Scan a Product
                                     <ArrowRight className="ml-2 inline h-4 w-4" />
                                 </Button>
                             </Link>
                             <Link to={ROUTES.SCAN}>
-                                <Button className="rounded-2xl border border-[#E5E7EB] bg-white px-6 py-3 text-sm font-semibold text-[#292d32] transition-colors hover:bg-gray-50 md:px-8 md:py-3.5 md:text-[15px]">
+                                <Button className="rounded-2xl border border-gray-200 bg-white px-6 py-3 text-sm font-semibold text-text-main transition-colors hover:bg-gray-50 md:px-8 md:py-3.5 md:text-[15px]">
                                     Verify with NAFDAC NO.
                                 </Button>
                             </Link>
@@ -68,8 +68,8 @@ function HomePage() {
                                     key={feature.label}
                                     className="flex flex-col items-center rounded-2xl bg-white px-3 py-4 text-center shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] md:rounded-3xl md:px-5 md:py-7 md:shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]"
                                 >
-                                    <feature.icon className="h-6 w-6 text-[#048340] md:h-8 md:w-8" />
-                                    <p className="mt-2 text-xs font-semibold leading-snug text-[#292d32] md:mt-3 md:text-sm lg:text-[15px]">
+                                    <feature.icon className="h-6 w-6 text-text-secondary md:h-8 md:w-8" />
+                                    <p className="mt-2 text-xs font-semibold leading-snug text-text-main md:mt-3 md:text-sm lg:text-[15px]">
                                         {feature.label}
                                     </p>
                                 </div>
@@ -90,58 +90,58 @@ function HomePage() {
 
             {/* ── How TrustEats Works ──────────────────── */}
             <div className="relative mx-auto mt-16 w-full max-w-7xl px-6 md:mt-24 lg:px-10">
-                <div className="absolute left-1/2 top-0 z-20 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 bg-[#f0f8ff] px-5">
-                    <span className="h-0.5 w-8 bg-[#9AA8B4]" />
-                    <h2 className="whitespace-nowrap text-[22px] font-bold text-[#292d32] md:text-[26px]">
-                        How <span className="text-[#3c7443]">TrustEats</span> Works
+                <div className="absolute left-1/2 top-0 z-20 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 bg-background px-5">
+                    <span className="h-0.5 w-8 bg-gray-400" />
+                    <h2 className="whitespace-nowrap text-[22px] font-bold text-text-main md:text-[26px]">
+                        How <span className="text-primary">TrustEats</span> Works
                     </h2>
                 </div>
 
-                <div className="w-full rounded-[30px] border-[1.5px] border-[#A9B8C5] px-6 pt-20 pb-14 lg:px-10">
+                <div className="w-full rounded-[30px] border-[1.5px] border-gray-400 px-6 pt-20 pb-14 lg:px-10">
                     <div className="grid grid-cols-1 justify-items-center gap-12 sm:grid-cols-2 md:grid-cols-2 md:gap-x-20 md:gap-y-16 lg:grid-cols-4">
                         <div className="flex w-50 flex-col items-center text-center">
-                            <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-[#CFE9E3]">
-                                <PackagePlus className="h-7 w-7 text-[#048340]" />
+                            <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
+                                <PackagePlus className="h-7 w-7 text-text-secondary" />
                             </div>
-                            <p className="mb-2.5 text-[16px] font-medium text-[#292d32]">1.</p>
+                            <p className="mb-2.5 text-[16px] font-medium text-text-main">1.</p>
                             <div className="h-15">
-                                <p className="text-[17px] font-medium leading-[1.35] text-[#292d32]">
+                                <p className="text-[17px] font-medium leading-[1.35] text-text-main">
                                     Manufacturer<br />Register Product &<br />Batch
                                 </p>
                             </div>
                         </div>
 
                         <div className="flex w-50 flex-col items-center text-center">
-                            <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-[#CFE9E3]">
-                                <QrCode className="h-7 w-7 text-[#048340]" />
+                            <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
+                                <QrCode className="h-7 w-7 text-text-secondary" />
                             </div>
-                            <p className="mb-2.5 text-[16px] font-medium text-[#292d32]">2.</p>
+                            <p className="mb-2.5 text-[16px] font-medium text-text-main">2.</p>
                             <div className="h-15">
-                                <p className="text-[17px] font-medium leading-[1.35] text-[#292d32]">
+                                <p className="text-[17px] font-medium leading-[1.35] text-text-main">
                                     Unique QR Code<br />Generated for Each<br />Batch
                                 </p>
                             </div>
                         </div>
 
                         <div className="flex w-50 flex-col items-center text-center">
-                            <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-[#CFE9E3]">
-                                <ScanLine className="h-7 w-7 text-[#048340]" />
+                            <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
+                                <ScanLine className="h-7 w-7 text-text-secondary" />
                             </div>
-                            <p className="mb-2.5 text-[16px] font-medium text-[#292d32]">3.</p>
+                            <p className="mb-2.5 text-[16px] font-medium text-text-main">3.</p>
                             <div className="h-15">
-                                <p className="text-[17px] font-medium leading-[1.35] text-[#292d32]">
+                                <p className="text-[17px] font-medium leading-[1.35] text-text-main">
                                     Consumer Scans QR<br />Code on Product
                                 </p>
                             </div>
                         </div>
 
                         <div className="flex w-50 flex-col items-center text-center">
-                            <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-[#CFE9E3]">
-                                <BadgeCheck className="h-7 w-7 text-[#048340]" />
+                            <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
+                                <BadgeCheck className="h-7 w-7 text-text-secondary" />
                             </div>
-                            <p className="mb-2.5 text-[16px] font-medium text-[#292d32]">4.</p>
+                            <p className="mb-2.5 text-[16px] font-medium text-text-main">4.</p>
                             <div className="h-15">
-                                <p className="text-[17px] font-medium leading-[1.35] text-[#292d32]">
+                                <p className="text-[17px] font-medium leading-[1.35] text-text-main">
                                     Get Instant Verification<br />Result
                                 </p>
                             </div>
@@ -152,10 +152,10 @@ function HomePage() {
 
             {/* ── Be A TrustEats Member ────────────────── */}
             <div className="mx-auto mt-16 flex w-full max-w-7xl flex-col items-center px-6 md:mt-24 lg:px-10">
-                <h2 className="text-[28px] font-bold leading-tight text-[#292d32]">
+                <h2 className="text-[28px] font-bold leading-tight text-text-main">
                     Be A <span className="text-brand-base">TrustEats</span> Member
                 </h2>
-                <p className="mt-4 text-[15px] font-medium text-[#9CA3AF]">
+                <p className="mt-4 text-[15px] font-medium text-gray-400">
                     Choose your role to get started
                 </p>
 
@@ -164,9 +164,9 @@ function HomePage() {
                         customIcon={<ConsumerIcon />}
                         title="I'm a Consumer"
                         description="Scan QR codes on products and verify authenticity instantly"
-                        accentColor="text-[#3c7443]"
-                        backgroundColor="bg-[#F0FDF4]"
-                        buttonBgColor="bg-[#3c7443]"
+                        accentColor="text-primary"
+                        backgroundColor="bg-primary/5"
+                        buttonBgColor="bg-primary"
                         buttonText="Register as a User →"
                         buttonHref={ROUTES.REGISTER}
                         loginPrefix="Already have an account?"
@@ -191,14 +191,14 @@ function HomePage() {
 
             {/* ── About Us ─────────────────────────────── */}
             <div id="about" className="mx-auto mt-16 w-full max-w-7xl px-6 md:mt-24 lg:px-10">
-            <Card className="border border-[#E5E7EB] bg-[#F8FAFC] rounded-4xl pt-12 pb-14 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
+            <Card className="border border-gray-200 bg-gray-50 rounded-4xl pt-12 pb-14 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
                     <div className="order-1">
-                        <h2 className="text-[28px] font-bold leading-tight text-[#292d32]">
+                        <h2 className="text-[28px] font-bold leading-tight text-text-main">
                             About <span className="text-brand-base">Us</span>
                         </h2>
 
-                        <p className="mt-5 max-w-130 text-[16px] font-medium leading-[1.7] text-[#6B7280]">
+                        <p className="mt-5 max-w-130 text-[16px] font-medium leading-[1.7] text-gray-500">
                             TrustEats is a digital platform dedicated to building trust in food supply chain. We empower manufacturers to increase product transparency and enable consumers to make informed, and safe choices.
                         </p>
 
@@ -210,14 +210,14 @@ function HomePage() {
                                 "Building a safer food ecosystem",
                             ].map((point) => (
                                 <div key={point} className="flex items-start gap-3">
-                                    <CheckCheckIcon className="mt-0.5 h-5 w-5 shrink-0 text-[#048340]" />
-                                    <p className="text-[15px] font-medium text-[#292d32]">{point}</p>
+                                    <CheckCheckIcon className="mt-0.5 h-5 w-5 shrink-0 text-text-secondary" />
+                                    <p className="text-[15px] font-medium text-text-main">{point}</p>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="order-2 w-full overflow-hidden rounded-2xl border border-[#E5E7EB]">
+                    <div className="order-2 w-full overflow-hidden rounded-2xl border border-gray-200">
                         <img
                             src="/assets/happyfamily.png"
                             alt="Happy family trusting verified food products"

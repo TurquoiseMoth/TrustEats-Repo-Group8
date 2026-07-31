@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:13px;color:var(--content-color-primary,#212121);background:transparent;padding:0 12px 24px}
+.page{max-width:900px;margin:0 auto}
+/* header */
+.doc-header{padding:16px 0 12px;border-bottom:2px solid var(--border-color-default,#e0e0e0);margin-bottom:14px}
+.doc-header h1{font-size:22px;font-weight:800;letter-spacing:-.3px}
+.doc-header p{font-size:12px;color:var(--content-color-secondary,#616161);margin-top:3px}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.meta-pill{font-size:11px;padding:2px 9px;border-radius:10px;border:1px solid var(--border-color-default,#e0e0e0);background:var(--background-color-secondary,#f5f5f5)}
+.base-url-box{background:var(--background-color-secondary,#f5f5f5);border:1px solid var(--border-color-default,#e0e0e0);border-radius:5px;padding:8px 12px;font-family:monospace;font-size:12px;margin-bottom:14px}
+.base-url-box span{font-family:sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--content-color-secondary,#616161);margin-right:8px;letter-spacing:.5px}
+/* toc */
+.toc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.toc-btn{font-size:11px;font-weight:600;padding:4px 12px;border-radius:12px;border:1px solid var(--border-color-default,#e0e0e0);background:var(--background-color-secondary,#f5f5f5);cursor:pointer;color:var(--content-color-primary,#212121)}
+.toc-btn:hover{background:var(--background-color-tertiary,#ebebeb)}
+/* section */
+.section{margin-bottom:22px}
+.section-header{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--content-color-secondary,#616161);padding:5px 0 5px;border-bottom:1px solid var(--border-color-default,#e0e0e0);margin-bottom:8px}
+/* endpoint card */
+.card{border:1px solid var(--border-color-default,#e0e0e0);border-radius:6px;margin-bottom:8px;overflow:hidden}
+.card-head{display:flex;align-items:center;gap:8px;padding:9px 12px;cursor:pointer;background:var(--background-color-primary,#fff)}
+.card-head:hover{background:var(--background-color-secondary,#f5f5f5)}
+.method{font-family:monospace;font-size:11px;font-weight:800;padding:2px 7px;border-radius:3px;min-width:50px;text-align:center;flex-shrink:0}
+.GET   {background:#e3f2fd;color:#1565c0}
+.POST  {background:#e8f5e9;color:#2e7d32}
+.PUT   {background:#fff8e1;color:#f57f17}
+.PATCH {background:#fce4ec;color:#880e4f}
+.DELETE{background:#fbe9e7;color:#bf360c}
+.ep-name{font-weight:700;font-size:13px;flex:1}
+.ep-url{font-family:monospace;font-size:11px;color:var(--content-color-secondary,#616161);margin-left:4px}
+.badges{display:flex;gap:4px;flex-shrink:0}
+.badge{font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600}
+.b-auth{background:#fff3e0;color:#e65100;border:1px solid #ffcc80}
+.b-admin{background:#f3e5f5;color:#6a1b9a;border:1px solid #ce93d8}
+.b-open{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}
+.chevron{font-size:11px;color:var(--content-color-tertiary,#9e9e9e);flex-shrink:0;transition:transform .2s}
+.chevron.open{transform:rotate(180deg)}
+/* body */
+.card-body{display:none;border-top:1px solid var(--border-color-default,#e0e0e0);padding:12px}
+.card-body.open{display:block}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border-color-default,#e0e0e0);margin-bottom:10px}
+.tab{font-size:11px;font-weight:600;padding:5px 12px;cursor:pointer;border-bottom:2px solid transparent;color:var(--content-color-secondary,#616161)}
+.tab.active{border-bottom-color:var(--content-color-brand,#ff6c37);color:var(--content-color-brand,#ff6c37)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--content-color-secondary,#616161);margin-bottom:4px;margin-top:8px}
+.label:first-child{margin-top:0}
+pre{background:var(--background-color-secondary,#f5f5f5);border:1px solid var(--border-color-default,#e0e0e0);border-radius:4px;padding:8px 10px;font-family:monospace;font-size:11px;white-space:pre-wrap;word-break:break-all;line-height:1.5;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{text-align:left;padding:4px 8px;background:var(--background-color-secondary,#f5f5f5);border:1px solid var(--border-color-default,#e0e0e0);font-weight:700;color:var(--content-color-secondary,#616161)}
+td{padding:4px 8px;border:1px solid var(--border-color-default,#e0e0e0);font-family:monospace;vertical-align:top}
+.status-pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px}
+.s2xx{background:#e8f5e9;color:#2e7d32}
+.s4xx{background:#fbe9e7;color:#bf360c}
+.s5xx{background:#fce4ec;color:#880e4f}
+.scroll-wrap{overflow-y:auto;max-height:calc(100vh - 20px)}
+.form-row{display:flex;gap:6px;margin-bottom:3px;font-size:11px}
+.form-key{font-family:monospace;font-weight:700;min-width:160px;color:var(--content-color-primary,#212121)}
+.form-val{font-family:monospace;color:var(--content-color-secondary,#616161)}
+.form-type{font-size:10px;padding:1px 5px;border-radius:3px;background:#e3f2fd;color:#1565c0;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="scroll-wrap">
+<div class="page">
+
+<div class="doc-header">
+  <h1>TruthEats API</h1>
+  <p>Food product authenticity &amp; verification platform — full developer reference</p>
+  <div class="meta-row">
+    <span class="meta-pill">v1</span>
+    <span class="meta-pill">37 endpoints</span>
+    <span class="meta-pill">6 modules</span>
+    <span class="meta-pill">Dev / localhost</span>
+    <span class="meta-pill">Cookie-based JWT auth</span>
+  </div>
+</div>
+
+<div class="base-url-box"><span>Base URL</span>http://localhost:5000/api/v1 &nbsp;·&nbsp; <span>Var</span>{{baseUrl}}</div>
+
+<div class="toc">
+  <span class="toc-btn">Auth</span>
+  <span class="toc-btn">Manufacturers</span>
+  <span class="toc-btn">Products</span>
+  <span class="toc-btn">Batches &amp; Codes</span>
+  <span class="toc-btn">Verification</span>
+  <span class="toc-btn">Reports</span>
+  <span class="toc-btn">Analysis</span>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ AUTH -->
+<div class="section" id="s-auth">
+<div class="section-header">Auth</div>
+
+<!-- health -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">Health Check</span>
+    <span class="ep-url">http://localhost:5000/health</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">No request body or headers required.</div>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Headers</div>
+      <table><tr><th>Key</th><th>Value</th></tr>
+        <tr><td>Content-Type</td><td>application/json; charset=utf-8</td></tr>
+        <tr><td>Access-Control-Allow-Origin</td><td>http://localhost:3000</td></tr>
+        <tr><td>Access-Control-Allow-Credentials</td><td>true</td></tr>
+      </table>
+      <div class="label">Body</div>
+      <pre>{"status":"ok","service":"TrustEats API","db":"connected"}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- register consumer -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Register (Consumer)</span>
+    <span class="ep-url">{{baseUrl}}/auth/register</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON</div>
+      <pre>{
+  "fullName": "Test Consumer",
+  "email": "consumer1@trusteats.ng",
+  "password": "Consumer@1234",
+  "confirmPassword": "Consumer@1234",
+  "role": "consumer"
+}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">201 Created</span>
+      <div class="label">Headers</div>
+      <table><tr><th>Key</th><th>Value</th></tr>
+        <tr><td>Content-Type</td><td>application/json; charset=utf-8</td></tr>
+        <tr><td>RateLimit-Policy</td><td>5;w=900</td></tr>
+        <tr><td>RateLimit-Limit</td><td>5</td></tr>
+        <tr><td>RateLimit-Remaining</td><td>4</td></tr>
+        <tr><td>RateLimit-Reset</td><td>900</td></tr>
+        <tr><td>Access-Control-Allow-Origin</td><td>http://localhost:3000</td></tr>
+        <tr><td>Access-Control-Allow-Credentials</td><td>true</td></tr>
+      </table>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "message": "Account created successfully",
+  "data": {
+    "userId": "6a64742d6080a5758fef7e58",
+    "role": "consumer"
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- login consumer -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Login</span>
+    <span class="ep-url">{{baseUrl}}/auth/login</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON</div>
+      <pre>{
+  "email": "consumer1@trusteats.ng",
+  "password": "NewPass@5678"
+}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Headers</div>
+      <table><tr><th>Key</th><th>Value</th></tr>
+        <tr><td>Content-Type</td><td>application/json; charset=utf-8</td></tr>
+        <tr><td>Set-Cookie</td><td>accessToken=eyJ...; HttpOnly; SameSite=Strict</td></tr>
+        <tr><td>Set-Cookie</td><td>refreshToken=eyJ...; HttpOnly; SameSite=Strict</td></tr>
+        <tr><td>RateLimit-Policy</td><td>5;w=0</td></tr>
+        <tr><td>Access-Control-Allow-Origin</td><td>http://localhost:3000</td></tr>
+        <tr><td>Access-Control-Allow-Credentials</td><td>true</td></tr>
+      </table>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": "6a64742d6080a5758fef7e58",
+      "email": "consumer1@trusteats.ng",
+      "role": "consumer",
+      "firstName": "Test",
+      "lastName": "Consumer"
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- get user -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">Get Current User</span>
+    <span class="ep-url">{{baseUrl}}/auth/me</span>
+    <span class="badges"><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Auth: accessToken cookie (HttpOnly, set on login)</div>
+      <div class="label">No request body.</div>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "user": {
+      "_id": "6a64742d6080a5758fef7e58",
+      "email": "consumer1@trusteats.ng",
+      "role": "consumer",
+      "firstName": "Test",
+      "lastName": "Consumer",
+      "isActive": true,
+      "createdAt": "2026-07-25T08:30:37.299Z",
+      "updatedAt": "2026-07-25T08:31:46.450Z",
+      "lastLoginAt": "2026-07-25T08:31:46.449Z"
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- refresh token -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Refresh Token</span>
+    <span class="ep-url">{{baseUrl}}/auth/refresh</span>
+    <span class="badges"><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Auth: refreshToken cookie (HttpOnly). No body required.</div>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Headers</div>
+      <table><tr><th>Key</th><th>Value</th></tr>
+        <tr><td>Set-Cookie</td><td>accessToken=eyJ...; HttpOnly; SameSite=Strict</td></tr>
+        <tr><td>Set-Cookie</td><td>refreshToken=eyJ...; HttpOnly; SameSite=Strict</td></tr>
+      </table>
+      <div class="label">Body</div>
+      <pre>{"success": true, "message": "Token refreshed"}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- forgot password -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Forgot Password</span>
+    <span class="ep-url">{{baseUrl}}/auth/forgot-password</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON</div>
+      <pre>{"email": "consumer1@trusteats.ng"}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Headers</div>
+      <table><tr><th>Key</th><th>Value</th></tr>
+        <tr><td>RateLimit-Policy</td><td>3;w=3600</td></tr>
+        <tr><td>RateLimit-Limit</td><td>3</td></tr>
+        <tr><td>RateLimit-Remaining</td><td>2</td></tr>
+        <tr><td>RateLimit-Reset</td><td>3600</td></tr>
+      </table>
+      <div class="label">Body</div>
+      <pre>{"success": true, "message": "If an account with that email exists, a reset link has been sent."}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- reset password -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Reset Password</span>
+    <span class="ep-url">{{baseUrl}}/auth/reset-password</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON</div>
+      <pre>{
+  "token": "ed801afe900138e0f0839c55401dcad32aa6657af3731f3077399e39ecd7dd0a",
+  "userId": "6a64742d6080a5758fef7e58",
+  "newPassword": "NewPass@5678",
+  "confirmPassword": "NewPass@5678"
+}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Headers (cookies cleared)</div>
+      <table><tr><th>Key</th><th>Value</th></tr>
+        <tr><td>Set-Cookie</td><td>accessToken=; Expires=Thu, 01 Jan 1970 00:00:00 GMT</td></tr>
+        <tr><td>Set-Cookie</td><td>refreshToken=; Expires=Thu, 01 Jan 1970 00:00:00 GMT</td></tr>
+      </table>
+      <div class="label">Body</div>
+      <pre>{"success": true, "message": "Password reset successfully. Please log in again."}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- logout -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Logout</span>
+    <span class="ep-url">{{baseUrl}}/auth/logout</span>
+    <span class="badges"><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req"><div class="label">No body. Sends accessToken cookie.</div></div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Headers (cookies cleared)</div>
+      <table><tr><th>Key</th><th>Value</th></tr>
+        <tr><td>Set-Cookie</td><td>accessToken=; Expires=Thu, 01 Jan 1970 00:00:00 GMT</td></tr>
+        <tr><td>Set-Cookie</td><td>refreshToken=; Expires=Thu, 01 Jan 1970 00:00:00 GMT</td></tr>
+      </table>
+      <div class="label">Body</div>
+      <pre>{"success": true, "message": "Logged out successfully"}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- admin login -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Admin Login</span>
+    <span class="ep-url">{{baseUrl}}/auth/login</span>
+    <span class="badges"><span class="badge b-admin">Admin</span><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON</div>
+      <pre>{"email": "admin@trusteats.ng", "password": "Admin@4321"}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": "6a58f44c2ace1da3eae6e7dd",
+      "email": "admin@trusteats.ng",
+      "role": "admin",
+      "firstName": "Super",
+      "lastName": "Admin"
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ MANUFACTURERS -->
+<div class="section" id="s-mfr">
+<div class="section-header">Manufacturers</div>
+
+<!-- reg manufacturer -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Register Manufacturer Account</span>
+    <span class="ep-url">{{baseUrl}}/auth/register</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON</div>
+      <pre>{
+  "fullName": "New Manufacturer",
+  "email": "newmfr1@trusteats.ng",
+  "password": "Manufacturer@1234",
+  "confirmPassword": "Manufacturer@1234",
+  "role": "manufacturer"
+}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">201 Created</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "message": "Account created successfully",
+  "data": {"userId": "6a6483b95b1dd7b741a5b5db", "role": "manufacturer"}
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- login manufacturer -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Login Manufacturer</span>
+    <span class="ep-url">{{baseUrl}}/auth/login</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON</div>
+      <pre>{"email": "newmfr1@trusteats.ng", "password": "Manufacturer@1234"}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": "6a6483b95b1dd7b741a5b5db",
+      "email": "newmfr1@trusteats.ng",
+      "role": "manufacturer",
+      "firstName": "New",
+      "lastName": "Manufacturer"
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- manufacturer register profile -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Submit Manufacturer Profile</span>
+    <span class="ep-url">{{baseUrl}}/manufacturers/register</span>
+    <span class="badges"><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — multipart/form-data</div>
+      <div class="form-row"><span class="form-key">companyName</span><span class="form-val">New Foods Limited</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">napamsEmail</span><span class="form-val">info@newfoods.ng</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">cacNumber</span><span class="form-val">RC-2024-1122334</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">contactPhone</span><span class="form-val">+2348011223345</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">address</span><span class="form-val">5 Adeola Odeku Street, Victoria Island, Enugu</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">country</span><span class="form-val">Nigeria</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">nafdacCofRNumber</span><span class="form-val">NAFDAC/CoR/2024/002</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">termsAccepted</span><span class="form-val">true</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">certificateOfRecognition</span><span class="form-val">certificate.pdf</span><span class="form-type">file</span></div>
+      <div class="form-row"><span class="form-key">logo</span><span class="form-val">logo.png</span><span class="form-type">file</span></div>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">201 Created</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "message": "Manufacturer profile submitted successfully for review. An admin will review and approve your account.",
+  "data": {
+    "manufacturer": {
+      "userId": "6a6483b95b1dd7b741a5b5db",
+      "companyName": "New Foods Limited",
+      "napamsEmail": "info@newfoods.ng",
+      "cacNumber": "RC-2024-1122334",
+      "nafdacCofRNumber": "NAFDAC/CoR/2024/002",
+      "certificateOfRecognitionUrl": "https://res.cloudinary.com/...",
+      "contactPhone": "+2348011223345",
+      "address": "5 Adeola Odeku Street, Victoria Island, Enugu",
+      "country": "Nigeria",
+      "logoUrl": "https://res.cloudinary.com/...",
+      "termsAcceptedAt": "2026-07-25T09:38:18.577Z",
+      "status": "pending",
+      "_id": "6a64840a5b1dd7b741a5b5e2",
+      "createdAt": "2026-07-25T09:38:18.578Z"
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- get profile -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">Get Manufacturer Profile</span>
+    <span class="ep-url">{{baseUrl}}/manufacturers/me</span>
+    <span class="badges"><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req"><div class="label">No body. Requires manufacturer cookie session.</div></div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "manufacturer": {
+      "_id": "6a64840a5b1dd7b741a5b5e2",
+      "userId": "6a6483b95b1dd7b741a5b5db",
+      "companyName": "New Foods Limited",
+      "napamsEmail": "info@newfoods.ng",
+      "cacNumber": "RC-2024-1122334",
+      "nafdacCofRNumber": "NAFDAC/CoR/2024/002",
+      "certificateOfRecognitionUrl": "https://res.cloudinary.com/...",
+      "contactPhone": "+2348011223345",
+      "address": "5 Adeola Odeku Street, Victoria Island, Enugu",
+      "country": "Nigeria",
+      "logoUrl": "https://res.cloudinary.com/...",
+      "status": "pending",
+      "createdAt": "2026-07-25T09:38:18.578Z"
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- admin pending requests -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">Admin — Pending Manufacturer Requests</span>
+    <span class="ep-url">{{baseUrl}}/admin/manufacturers/pending</span>
+    <span class="badges"><span class="badge b-admin">Admin</span><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req"><div class="label">No body. Requires admin cookie session.</div></div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "manufacturers": [
+      {
+        "_id": "6a64840a5b1dd7b741a5b5e2",
+        "userId": {
+          "_id": "6a6483b95b1dd7b741a5b5db",
+          "email": "newmfr1@trusteats.ng",
+          "firstName": "New",
+          "lastName": "Manufacturer"
+        },
+        "companyName": "New Foods Limited",
+        "status": "pending"
+      }
+    ]
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- admin approve -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method PATCH">PATCH</span>
+    <span class="ep-name">Admin — Approve Manufacturer</span>
+    <span class="ep-url">{{baseUrl}}/admin/manufacturers/:id/approve</span>
+    <span class="badges"><span class="badge b-admin">Admin</span><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Path Param</div>
+      <pre>:id = 6a64840a5b1dd7b741a5b5e2  (manufacturer profile _id)</pre>
+      <div class="label">No body required.</div>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "message": "Manufacturer approved",
+  "data": {
+    "manufacturer": {
+      "_id": "6a64840a5b1dd7b741a5b5e2",
+      "status": "approved",
+      "approvedBy": "6a58f44c2ace1da3eae6e7dd",
+      "approvedAt": "2026-07-25T09:39:18.407Z"
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- admin suspend -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method PATCH">PATCH</span>
+    <span class="ep-name">Admin — Suspend Manufacturer</span>
+    <span class="ep-url">{{baseUrl}}/admin/manufacturers/:id/suspend</span>
+    <span class="badges"><span class="badge b-admin">Admin</span><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON</div>
+      <pre>{"reason": "Fraudulent CAC number provided during registration"}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{"success": true, "message": "Manufacturer suspended"}</pre>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ PRODUCTS -->
+<div class="section" id="s-products">
+<div class="section-header">Products</div>
+
+<!-- create product -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Create Product</span>
+    <span class="ep-url">{{baseUrl}}/products</span>
+    <span class="badges"><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — multipart/form-data</div>
+      <div class="form-row"><span class="form-key">name</span><span class="form-val">Golden Honey 500g</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">brand</span><span class="form-val">GoldenBee</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">description</span><span class="form-val">Pure raw honey extracted cold from Nigerian beehives</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">category</span><span class="form-val">food</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">ingredients</span><span class="form-val">100% raw honey</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">storageInfo</span><span class="form-val">Store in a cool dry place away from sunlight</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">countryOfOrigin</span><span class="form-val">Nigeria</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">image</span><span class="form-val">product.png</span><span class="form-type">file</span></div>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">201 Created</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "message": "Product created",
+  "data": {
+    "product": {
+      "_id": "6a64856a5b1dd7b741a5b5f2",
+      "manufacturerId": "6a64840a5b1dd7b741a5b5e2",
+      "name": "Golden Honey 500g",
+      "brand": "GoldenBee",
+      "description": "Pure raw honey extracted cold from Nigerian beehives",
+      "ingredients": "100% raw honey",
+      "storageInfo": "Store in a cool dry place away from sunlight",
+      "countryOfOrigin": "Nigeria",
+      "imageUrl": "https://res.cloudinary.com/...",
+      "category": "food",
+      "isActive": true,
+      "createdAt": "2026-07-25T09:44:10.038Z"
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- get products -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">Get All Products</span>
+    <span class="ep-url">{{baseUrl}}/products?page=1&amp;limit=20</span>
+    <span class="badges"><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Query Params</div>
+      <table><tr><th>Param</th><th>Value</th></tr>
+        <tr><td>page</td><td>1</td></tr>
+        <tr><td>limit</td><td>20</td></tr>
+      </table>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "products": [{"_id": "6a64856a5b1dd7b741a5b5f2", "name": "Golden Honey 500g", "brand": "GoldenBee", ...}],
+    "total": 1,
+    "page": 1,
+    "pages": 1
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- get 1 product -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">Get Single Product</span>
+    <span class="ep-url">{{baseUrl}}/products/:id</span>
+    <span class="badges"><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Path Param</div>
+      <pre>:id = 6a64856a5b1dd7b741a5b5f2</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "product": {
+      "_id": "6a64856a5b1dd7b741a5b5f2",
+      "name": "Golden Honey 500g",
+      "brand": "GoldenBee",
+      "description": "Pure raw honey extracted cold from Nigerian beehives",
+      "ingredients": "100% raw honey",
+      "storageInfo": "Store in a cool dry place away from sunlight",
+      "countryOfOrigin": "Nigeria",
+      "category": "food",
+      "isActive": true
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- update product -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method PATCH">PATCH</span>
+    <span class="ep-name">Update Product</span>
+    <span class="ep-url">{{baseUrl}}/products/:id</span>
+    <span class="badges"><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — multipart/form-data (send only fields to update)</div>
+      <div class="form-row"><span class="form-key">description</span><span class="form-val">Updated: Pure raw honey, triple-filtered</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">storageInfo</span><span class="form-val">Keep sealed and store below 25°C</span><span class="form-type">text</span></div>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "message": "Product updated",
+  "data": {
+    "product": {
+      "_id": "6a64856a5b1dd7b741a5b5f2",
+      "description": "Updated: Pure raw honey, triple-filtered",
+      "storageInfo": "Keep sealed and store below 25°C"
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ BATCHES -->
+<div class="section" id="s-batches">
+<div class="section-header">Batches &amp; Codes</div>
+
+<!-- create batch -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Create Batch</span>
+    <span class="ep-url">{{baseUrl}}/batches</span>
+    <span class="badges"><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON</div>
+      <pre>{
+  "productId": "6a64856a5b1dd7b741a5b5f2",
+  "batchNumber": "GH-2026-001",
+  "manufacturingDate": "2026-01-15",
+  "expiryDate": "2028-01-15",
+  "quantity": 500,
+  "codeQuantity": 3
+}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">201 Created</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "message": "Batch created",
+  "data": {
+    "batch": {
+      "_id": "6a6488045b1dd7b741a5b604",
+      "productId": "6a64856a5b1dd7b741a5b5f2",
+      "batchNumber": "GH-2026-001",
+      "manufacturingDate": "2026-01-15T00:00:00.000Z",
+      "expiryDate": "2028-01-15T00:00:00.000Z",
+      "quantity": 500,
+      "status": "active"
+    },
+    "generatedCodes": [
+      {"code": "3523722f-bf17-4a06-b2c7-d0077f49f2a8", "qrCodeUrl": "..."},
+      {"code": "1e4e92b0-ef38-4eda-a882-bd98484ed06f", "qrCodeUrl": "..."},
+      {"code": "cee35eb8-2982-4bac-a1a9-14b6bdd954db", "qrCodeUrl": "..."}
+    ]
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- get batches -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">Get Batches</span>
+    <span class="ep-url">{{baseUrl}}/batches?productId=:productId</span>
+    <span class="badges"><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Query Params</div>
+      <table><tr><th>Param</th><th>Value</th></tr>
+        <tr><td>productId</td><td>6a64856a5b1dd7b741a5b5f2</td></tr>
+      </table>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "batches": [
+      {
+        "_id": "6a6488045b1dd7b741a5b604",
+        "productId": {"_id": "6a64856a5b1dd7b741a5b5f2", "name": "Golden Honey 500g", "brand": "GoldenBee"},
+        "batchNumber": "GH-2026-001",
+        "manufacturingDate": "2026-01-15T00:00:00.000Z",
+        "expiryDate": "2028-01-15T00:00:00.000Z",
+        "quantity": 500,
+        "status": "active"
+      }
+    ]
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- admin recall batch -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method PATCH">PATCH</span>
+    <span class="ep-name">Admin — Recall Batch</span>
+    <span class="ep-url">{{baseUrl}}/admin/batches/:id/recall</span>
+    <span class="badges"><span class="badge b-admin">Admin</span><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON</div>
+      <pre>{"reason": "Contamination detected during quality inspection — do not consume"}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{"success": true, "message": "Batch recalled — all codes will now return Fake"}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- deactivate code -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method PATCH">PATCH</span>
+    <span class="ep-name">Admin — Deactivate Verification Code</span>
+    <span class="ep-url">{{baseUrl}}/admin/codes/:id/deactivate</span>
+    <span class="badges"><span class="badge b-admin">Admin</span><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Path Param</div>
+      <pre>:id = 6a58f4662ace1da3eae6e822  (verification code _id)</pre>
+      <div class="label">No body required.</div>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{"success": true, "message": "Verification code deactivated"}</pre>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ VERIFICATION -->
+<div class="section" id="s-verify">
+<div class="section-header">Verification — No Auth Required</div>
+
+<!-- app scan genuine -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">App Scan — Genuine</span>
+    <span class="ep-url">{{baseUrl}}/verify</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON</div>
+      <pre>{"code": "3523722f-bf17-4a06-b2c7-d0077f49f2a8", "city": "Lagos", "country": "Nigeria"}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Headers</div>
+      <table><tr><th>Key</th><th>Value</th></tr>
+        <tr><td>RateLimit-Policy</td><td>10;w=60</td></tr>
+        <tr><td>RateLimit-Limit</td><td>10</td></tr>
+        <tr><td>RateLimit-Remaining</td><td>9</td></tr>
+      </table>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "status": "genuine",
+    "message": "This product is genuine and has passed all verification checks.",
+    "scannedAt": "2026-07-25T10:03:57.765Z",
+    "scanStats": {"scansInWindow": 1, "distinctLocationsInWindow": 1, "windowHours": 24},
+    "product": {"name": "Golden Honey 500g", "brand": "GoldenBee"},
+    "batch": {"batchNumber": "GH-2026-001", "status": "active"},
+    "manufacturer": {"companyName": "New Foods Limited", "country": "Nigeria"}
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- fake scan -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">App Scan — Fake / Unknown Code</span>
+    <span class="ep-url">{{baseUrl}}/verify</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON (unregistered code)</div>
+      <pre>{"code": "3523722f-bf17-4a06-b2c7-d0077f49f2b4"}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "status": "fake",
+    "message": "This product could not be verified. It may be counterfeit.",
+    "scannedAt": "2026-07-25T10:05:44.800Z"
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- suspicious scan -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">App Scan — Suspicious / Expired</span>
+    <span class="ep-url">{{baseUrl}}/verify</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON (expired batch code)</div>
+      <pre>{"code": "323419a0-238b-45c9-b221-4a71d620f0fe"}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "status": "suspicious",
+    "message": "This product batch is expired or flagged for review. Use caution.",
+    "scannedAt": "2026-07-25T10:14:13.619Z",
+    "product": {"name": "Our Full Cream Milk", "brand": "Our"},
+    "batch": {"batchNumber": "PKM-2022-OLD", "expiryDate": "2023-01-01T00:00:00.000Z", "status": "expired"},
+    "manufacturer": {"companyName": "Lagos Dairies Ltd", "country": "Nigeria"}
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- app scan after recall -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">App Scan — After Batch Recall</span>
+    <span class="ep-url">{{baseUrl}}/verify</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON (same genuine code, batch now recalled)</div>
+      <pre>{"code": "3523722f-bf17-4a06-b2c7-d0077f49f2a8", "city": "Lagos", "country": "Nigeria"}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "status": "fake",
+    "message": "This product batch has been recalled. Do not consume.",
+    "scannedAt": "2026-07-25T10:30:42.362Z",
+    "scanStats": {"scansInWindow": 3, "distinctLocationsInWindow": 1, "windowHours": 24},
+    "product": {"name": "Golden Honey 500g", "brand": "GoldenBee"},
+    "batch": {"batchNumber": "GH-2026-001", "status": "recalled"},
+    "manufacturer": {"companyName": "New Foods Limited", "country": "Nigeria"}
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- QR code scan genuine -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">QR Code Scan — Genuine</span>
+    <span class="ep-url">{{baseUrl}}/verify/:code</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Path Param</div>
+      <pre>:code = 3523722f-bf17-4a06-b2c7-d0077f49f2a8</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "status": "genuine",
+    "message": "This product is genuine and has passed all verification checks.",
+    "scannedAt": "2026-07-25T10:16:23.847Z",
+    "scanStats": {"scansInWindow": 2, "distinctLocationsInWindow": 1, "windowHours": 24},
+    "product": {"name": "Golden Honey 500g", "brand": "GoldenBee"},
+    "batch": {"batchNumber": "GH-2026-001", "status": "active"},
+    "manufacturer": {"companyName": "New Foods Limited", "country": "Nigeria"}
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- QR scan fake -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">QR Code Scan — Fake</span>
+    <span class="ep-url">{{baseUrl}}/verify/:code</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Path Param (unregistered code)</div>
+      <pre>:code = 3523722f-bf17-4a06-b2c7-d0077f49f2b4</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "status": "fake",
+    "message": "This product could not be verified. It may be counterfeit.",
+    "scannedAt": "2026-07-25T10:17:12.680Z"
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- scan history -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">Scan History</span>
+    <span class="ep-url">{{baseUrl}}/verify/history</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req"><div class="label">No body or params required.</div></div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Headers</div>
+      <table><tr><th>Key</th><th>Value</th></tr>
+        <tr><td>Cache-Control</td><td>no-store, no-cache, must-revalidate, proxy-revalidate</td></tr>
+      </table>
+      <div class="label">Body</div>
+      <pre>{"success": true, "data": {"events": [], "total": 0, "page": 1, "pages": 0}}</pre>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ REPORTS -->
+<div class="section" id="s-reports">
+<div class="section-header">Reports</div>
+
+<!-- submit report -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method POST">POST</span>
+    <span class="ep-name">Submit Report</span>
+    <span class="ep-url">{{baseUrl}}/reports</span>
+    <span class="badges"><span class="badge b-open">Public</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — multipart/form-data</div>
+      <div class="form-row"><span class="form-key">code</span><span class="form-val">3523722f-bf17-4a06-b2c7-d0077f49f2a8</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">comment</span><span class="form-val">Product packaging looks slightly different from usual</span><span class="form-type">text</span></div>
+      <div class="form-row"><span class="form-key">images</span><span class="form-val">photo.png</span><span class="form-type">file</span></div>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">201 Created</span>
+      <div class="label">Headers</div>
+      <table><tr><th>Key</th><th>Value</th></tr>
+        <tr><td>RateLimit-Policy</td><td>5;w=3600</td></tr>
+        <tr><td>RateLimit-Limit</td><td>5</td></tr>
+        <tr><td>RateLimit-Remaining</td><td>3</td></tr>
+      </table>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "message": "Report submitted. Our team will review it.",
+  "data": {"reportId": "6a648e5ae5342330e30bb90e"}
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- get my reports -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">Get My Reports</span>
+    <span class="ep-url">{{baseUrl}}/reports/my</span>
+    <span class="badges"><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req"><div class="label">No body. Requires user cookie session.</div></div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{"success": true, "data": {"reports": []}}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- admin pending reports -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">Admin — Pending Reports</span>
+    <span class="ep-url">{{baseUrl}}/admin/reports/pending</span>
+    <span class="badges"><span class="badge b-admin">Admin</span><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req"><div class="label">No body. Requires admin cookie session.</div></div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "reports": [
+      {
+        "_id": "6a648e5ae5342330e30bb90e",
+        "code": "3523722f-bf17-4a06-b2c7-d0077f49f2a8",
+        "productId": {"_id": "6a64856a5b1dd7b741a5b5f2", "name": "Golden Honey 500g", "brand": "GoldenBee"},
+        "comment": "Product packaging looks slightly different from usual",
+        "status": "pending",
+        "reportedAt": "2026-07-25T10:22:18.979Z"
+      }
+    ]
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- admin review report -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method PATCH">PATCH</span>
+    <span class="ep-name">Admin — Review Report</span>
+    <span class="ep-url">{{baseUrl}}/admin/reports/:id/review</span>
+    <span class="badges"><span class="badge b-admin">Admin</span><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Body — raw JSON</div>
+      <pre>{
+  "status": "resolved",
+  "reviewNotes": "Investigated — packaging change confirmed by manufacturer. Not counterfeit."
+}</pre>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "message": "Report updated",
+  "data": {
+    "report": {
+      "_id": "6a648e5ae5342330e30bb90e",
+      "status": "resolved",
+      "reviewedBy": "6a58f44c2ace1da3eae6e7dd",
+      "reviewedAt": "2026-07-25T10:25:35.709Z",
+      "reviewNotes": "Investigated — packaging change confirmed by manufacturer. Not counterfeit."
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ ANALYSIS -->
+<div class="section" id="s-analysis">
+<div class="section-header">Analysis</div>
+
+<!-- summary -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">Analytics Summary</span>
+    <span class="ep-url">{{baseUrl}}/analytics/summary</span>
+    <span class="badges"><span class="badge b-admin">Admin</span><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">No body. Requires admin cookie session.</div>
+      <div class="label">Note: Cache-Control: no-store is set on this endpoint.</div>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "totalProducts": 1,
+    "totalCodesIssued": 3,
+    "totalScans": 3,
+    "scansByResult": {"genuine": 2, "suspicious": 0, "fake": 1},
+    "recentFlags": [
+      {
+        "id": "6a649052e5342330e30bb922",
+        "scannedAt": "2026-07-25T10:30:42.362Z",
+        "result": "fake",
+        "location": {"country": "Nigeria", "city": "Lagos"},
+        "product": {"name": "Golden Honey 500g", "brand": "GoldenBee"},
+        "code": "3523722f-bf17-4a06-b2c7-d0077f49f2a8"
+      }
+    ]
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- audit log -->
+<div class="card">
+  <div class="card-head" onclick="toggle(this)">
+    <span class="method GET">GET</span>
+    <span class="ep-name">Audit Log</span>
+    <span class="ep-url">{{baseUrl}}/admin/audit-logs?page=1&amp;limit=50&amp;action=...</span>
+    <span class="badges"><span class="badge b-admin">Admin</span><span class="badge b-auth">Cookie Auth</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'req')">Request</div>
+      <div class="tab" onclick="switchTab(this,'res')">Response</div>
+    </div>
+    <div class="tab-pane active" data-tab="req">
+      <div class="label">Query Params</div>
+      <table><tr><th>Param</th><th>Value</th></tr>
+        <tr><td>page</td><td>1</td></tr>
+        <tr><td>limit</td><td>50</td></tr>
+        <tr><td>action (optional filter)</td><td>manufacturer.approved, batch.recalled, etc.</td></tr>
+      </table>
+    </div>
+    <div class="tab-pane" data-tab="res">
+      <div class="label">Status</div><span class="status-pill s2xx">200 OK</span>
+      <div class="label">Body</div>
+      <pre>{
+  "success": true,
+  "data": {
+    "logs": [
+      {"action": "verification_code.deactivated", "performedByRole": "admin", "timestamp": "2026-07-25T10:34:25.080Z"},
+      {"action": "batch.recalled",                "performedByRole": "admin", "timestamp": "2026-07-25T10:28:42.715Z"},
+      {"action": "report.reviewed",               "performedByRole": "admin", "timestamp": "2026-07-25T10:25:35.951Z"},
+      {"action": "verification_code.generated",   "performedByRole": "manufacturer", "timestamp": "2026-07-25T09:55:23.320Z"},
+      {"action": "batch.created",                 "performedByRole": "manufacturer", "timestamp": "2026-07-25T09:55:16.394Z"},
+      {"action": "product.updated",               "performedByRole": "manufacturer", "timestamp": "2026-07-25T09:52:08.449Z"},
+      {"action": "product.created",               "performedByRole": "manufacturer", "timestamp": "2026-07-25T09:44:10.238Z"},
+      {"action": "manufacturer.approved",         "performedByRole": "admin", "timestamp": "2026-07-25T09:39:18.756Z"},
+      {"action": "manufacturer.suspended",        "performedByRole": "admin", "timestamp": "2026-07-25T09:32:59.572Z"},
+      {"action": "manufacturer.approved",         "performedByRole": "admin", "timestamp": "2026-07-25T09:31:29.025Z"}
+    ],
+    "total": 10,
+    "page": 1,
+    "pages": 1
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+</div>
+
+</div><!-- /page -->
+</div><!-- /scroll-wrap -->
+
+<script>
+function toggle(head){
+  const body=head.nextElementSibling;
+  const chev=head.querySelector('.chevron');
+  const open=body.classList.toggle('open');
+  chev.classList.toggle('open',open);
+}
+function switchTab(tab,name){
+  const card=tab.closest('.card-body');
+  card.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  card.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  tab.classList.add('active');
+  card.querySelector(`.tab-pane[data-tab="${name}"]`).classList.add('active');
+}
+</script>
+</body>
+</html>

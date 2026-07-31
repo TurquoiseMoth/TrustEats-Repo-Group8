@@ -3,9 +3,9 @@ export interface AnalyticsSummary {
   totalCodesIssued: number;
   totalScans: number;
   scansByResult: {
-    GENUINE: number;
-    SUSPICIOUS: number;
-    FAKE: number;
+    genuine: number;
+    suspicious: number;
+    fake: number;
   };
   recentFlags: RecentFlag[];
 }
@@ -13,13 +13,14 @@ export interface AnalyticsSummary {
 export interface RecentFlag {
   id: string;
   scannedAt: string;
-  resultStatus: "GENUINE" | "SUSPICIOUS" | "FAKE";
-  reasonCode: string;
-  city?: string;
-  country?: string;
+  result: "genuine" | "suspicious" | "fake";
+  location?: {
+    country?: string;
+    city?: string;
+  };
   product?: {
-    id: string;
     name: string;
+    brand: string;
   } | null;
   code: string;
 }

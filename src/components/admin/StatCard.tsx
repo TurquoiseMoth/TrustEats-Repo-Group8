@@ -12,8 +12,8 @@ function StatCard({ label, value, description, icon: Icon }: StatCardProps) {
     <div className="bg-white rounded-2xl p-6 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
       <div className="flex items-center justify-between mb-5">
         <h3 className="text-base font-bold text-gray-900">{label}</h3>
-        <div className="w-9 h-9 rounded-lg bg-green-50 flex items-center justify-center">
-          <Icon size={18} className="text-[#2F6844]" aria-hidden="true" />
+        <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+          <Icon size={18} className="text-primary" aria-hidden="true" />
         </div>
       </div>
       <p className="text-3xl font-bold text-gray-900 mb-1">{value}</p>

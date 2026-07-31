@@ -15,7 +15,7 @@ function Navbar() {
   const { pathname } = useLocation();
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-gray-100 bg-[#F0F8FF] backdrop-blur-md shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
+    <nav className="sticky top-0 z-50 w-full border-b border-gray-100 bg-background backdrop-blur-md shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 lg:px-10">
         {/* Left: Logo */}
         <Link to={ROUTES.HOME} className="flex shrink-0 items-center gap-2.5">
@@ -23,7 +23,7 @@ function Navbar() {
         </Link>
 
         {/* Center: Nav Pill */}
-        <div className="hidden md:flex items-center gap-1 rounded-full bg-[#7da282] px-1.5 py-1">
+        <div className="hidden md:flex items-center gap-1 rounded-full bg-secondary px-1.5 py-1">
           {navItems.map((item) => {
             const isActive = item.href === ROUTES.HOME && pathname === "/";
             return (
@@ -32,7 +32,7 @@ function Navbar() {
                 to={item.href}
                 className={`rounded-full px-5 py-1.5 text-sm font-medium transition-all duration-200 ${
                   isActive
-                    ? "bg-[#3c7443] text-white"
+                    ? "bg-primary text-white"
                     : "text-white/85 hover:bg-white/15 hover:text-white"
                 }`}
               >
@@ -43,16 +43,16 @@ function Navbar() {
         </div>
 
         {/* Right: Auth */}
-        <div className="hidden md:flex items-center gap-1 rounded-full border border-[#3c7443] px-1.5 py-1">
+        <div className="hidden md:flex items-center gap-1 rounded-full border border-primary px-1.5 py-1">
           <Link
             to={ROUTES.LOGIN}
-            className="rounded-full px-5 py-1.5 text-sm font-medium text-[#048340] transition-colors hover:bg-[#048340]/5"
+            className="rounded-full px-5 py-1.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary/5"
           >
             Log In
           </Link>
           <Link
             to={ROUTES.REGISTER}
-            className="rounded-full bg-[#3c7443] px-5 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-[#2d5a30]"
+            className="rounded-full bg-primary px-5 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-primary/90"
           >
             Sign Up
           </Link>
@@ -60,7 +60,7 @@ function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="flex items-center justify-center text-[#292d32] md:hidden"
+          className="flex items-center justify-center text-text-main md:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         >
@@ -76,7 +76,7 @@ function Navbar() {
               <Link
                 key={item.label}
                 to={item.href}
-                className="rounded-lg px-4 py-2.5 text-sm font-medium text-[#292d32] transition-colors hover:bg-gray-50"
+                className="rounded-lg px-4 py-2.5 text-sm font-medium text-text-main transition-colors hover:bg-gray-50"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.label}
@@ -85,14 +85,14 @@ function Navbar() {
             <hr className="my-2 border-gray-100" />
             <Link
               to={ROUTES.LOGIN}
-              className="rounded-lg px-4 py-2.5 text-sm font-medium text-[#048340] transition-colors hover:bg-gray-50"
+              className="rounded-lg px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-gray-50"
               onClick={() => setIsMenuOpen(false)}
             >
               Log In
             </Link>
             <Link
               to={ROUTES.REGISTER}
-              className="rounded-lg bg-[#3c7443] px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-[#2d5a30]"
+              className="rounded-lg bg-primary px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-primary/90"
               onClick={() => setIsMenuOpen(false)}
             >
               Sign Up

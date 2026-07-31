@@ -48,7 +48,7 @@ function OrganizationsTable({ organizations, pageSize = 10, viewAllHrefFor }: Or
             onChange={(e) => handleSearchChange(e.target.value)}
             placeholder="Search organizations…"
             aria-label="Search organizations"
-            className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#2F6844]"
+            className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
       </div>
@@ -79,7 +79,7 @@ function OrganizationsTable({ organizations, pageSize = 10, viewAllHrefFor }: Or
                   <td className="px-2 py-4 text-right whitespace-nowrap">
                     <Link
                       to={viewAllHrefFor(org)}
-                      className="text-blue-600 font-semibold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844] rounded"
+                      className="text-primary font-semibold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary rounded"
                     >
                       View all
                     </Link>

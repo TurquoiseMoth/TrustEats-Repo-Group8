@@ -45,9 +45,9 @@ export function ProductList({ products, onGenerateQr, onRemove, announcement }: 
                 aria-selected={isActive}
                 onClick={() => setFilter(f.value)}
                 className={[
-                  "flex items-center gap-1.5 px-3.5 py-2 rounded-full border-[1.5px] text-xs font-semibold whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6844] focus-visible:outline-offset-2",
+                  "flex items-center gap-1.5 px-3.5 py-2 rounded-full border-[1.5px] text-xs font-semibold whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2",
                   isActive
-                    ? "bg-[#2F6844] border-[#2F6844] text-white"
+                    ? "bg-primary border-primary text-white"
                     : "bg-white border-gray-200 text-gray-500",
                 ].join(" ")}
               >

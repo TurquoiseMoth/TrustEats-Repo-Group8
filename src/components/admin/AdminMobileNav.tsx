@@ -26,7 +26,7 @@ function AdminMobileNav() {
   const location = useLocation();
 
   return (
-    <div className="md:hidden bg-[#eef4fc] relative z-40">
+    <div className="md:hidden bg-background relative z-40">
       <div className="flex items-center justify-between px-5 py-4">
         <img src={logo} alt="TrustEats" className="h-7 w-auto" />
         <button
@@ -55,10 +55,10 @@ function AdminMobileNav() {
                     to={item.href}
                     onClick={() => setIsOpen(false)}
                     aria-current={isActive ? "page" : undefined}
-                    className={[
-                      "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium",
-                      isActive ? "bg-[#2F6844] text-white" : "text-gray-700",
-                    ].join(" ")}
+                      className={[
+                        "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium",
+                        isActive ? "bg-primary text-white" : "text-gray-700",
+                      ].join(" ")}
                   >
                     <Icon size={18} aria-hidden="true" />
                     {item.label}

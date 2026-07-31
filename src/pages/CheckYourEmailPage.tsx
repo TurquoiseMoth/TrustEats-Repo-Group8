@@ -52,7 +52,7 @@ export default function CheckYourEmailPage() {
 const styles: Record<string, React.CSSProperties> = {
   phone: {
     minHeight: '100vh',
-    background: '#EEF2F5',
+    background: '#f0f8ff',
     fontFamily: "'Inter', sans-serif",
     display: 'flex',
     flexDirection: 'column',
@@ -102,7 +102,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   body: {
     fontSize: '14px',
-    color: '#444',
+    color: '#444444',
     textAlign: 'center',
     lineHeight: '1.5',
     marginBottom: '4px',
@@ -117,7 +117,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     height: '52px',
     background: '#3c7443',
-    color: '#fff',
+    color: '#ffffff',
     fontSize: '17px',
     fontWeight: 700,
     fontFamily: "'Inter', sans-serif",

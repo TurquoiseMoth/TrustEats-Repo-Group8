@@ -1,10 +1,16 @@
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  type ReactNode,
+} from "react";
 import { authService } from "../services/auth";
 import type { Manufacturer, RegisterRequest } from "../types";
 
 interface AuthContextValue {
-  user: Manufacturer | null;
-  token: string | null;
+  user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
@@ -16,16 +22,22 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<Manufacturer | null>(authService.getStoredUser());
-  const [token, setToken] = useState<string | null>(authService.getStoredToken());
-  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const isAuthenticated = !!token;
+  const isAuthenticated = !!user;
+
+  useEffect(() => {
+    authService
+      .getCurrentUser()
+      .then(setUser)
+      .catch(() => setUser(null))
+      .finally(() => setIsLoading(false));
+  }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const result = await authService.login({ email, password });
-    setUser(result.manufacturer);
-    setToken(result.token ?? null);
+    const user = await authService.login({ email, password });
+    setUser(user);
   }, []);
 
   const register = useCallback(async (data: RegisterRequest) => {
@@ -34,27 +46,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken((result as any).token ?? null);
   }, []);
 
-  const logout = useCallback(() => {
-    authService.logout();
+  const logout = useCallback(async () => {
+    try {
+      await authService.logout();
+    } catch {
+      // ignore
+    }
     setUser(null);
-    setToken(null);
   }, []);
 
   const refreshUser = useCallback(async () => {
-    if (!token) return;
     try {
       setIsLoading(true);
-      const result = await authService.getCurrentUser();
-      setUser(result.manufacturer);
+      const user = await authService.getCurrentUser();
+      setUser(user);
     } catch {
-      logout();
+      setUser(null);
     } finally {
       setIsLoading(false);
     }
-  }, [token, logout]);
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, isLoading, login, register, logout, refreshUser }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated,
+        isLoading,
+        login,
+        register,
+        logout,
+        refreshUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

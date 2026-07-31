@@ -8,14 +8,14 @@ import type {
   MonthlyApplicationData,
 } from "../types/application.types";
 
-const MOCK_STATS: DashboardStats = {
+const PLACEHOLDER_STATS: DashboardStats = {
   totalCompanies: 12,
   verifiedCount: 7,
   pendingCount: 5,
   rejectedCount: 0,
 };
 
-const MOCK_CHART_DATA: MonthlyApplicationData[] = [
+const PLACEHOLDER_CHART_DATA: MonthlyApplicationData[] = [
   { month: "Jan", submitted: 45, approved: 42 },
   { month: "Feb", submitted: 52, approved: 48 },
   { month: "Mar", submitted: 58, approved: 58 },
@@ -25,7 +25,7 @@ const MOCK_CHART_DATA: MonthlyApplicationData[] = [
   { month: "Jul", submitted: 78, approved: 88 },
 ];
 
-const MOCK_APPLICATIONS: Application[] = [
+const PLACEHOLDER_APPLICATIONS: Application[] = [
   { id: "APP-5522", organization: "Sahel Frozen Foods", type: "Renewal", submittedDate: "17 Jul, 2026", status: "submitted" },
   { id: "APP-5523", organization: "Naija Crunch Foods Ltd", type: "Facility Addition", submittedDate: "15 Jul, 2026", status: "approved" },
   { id: "APP-5524", organization: "AquaPure Table Water", type: "Renewal", submittedDate: "12 Jul, 2026", status: "rejected" },
@@ -35,7 +35,7 @@ const MOCK_APPLICATIONS: Application[] = [
 export default function AdminDashboardPage() {
   return (
     <div>
-      <div className="hidden md:block bg-[#7a9b82] px-8 py-6">
+      <div className="hidden md:block bg-secondary px-8 py-6">
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
       </div>
 
@@ -43,35 +43,35 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6">
           <StatCard
             label="Company/Brand"
-            value={MOCK_STATS.totalCompanies}
+            value={PLACEHOLDER_STATS.totalCompanies}
             description="Total Company Registered"
             icon={Building2}
           />
           <StatCard
             label="Verified"
-            value={MOCK_STATS.verifiedCount}
+            value={PLACEHOLDER_STATS.verifiedCount}
             description="Approved Applications"
             icon={UserCheck}
           />
           <StatCard
             label="Pending"
-            value={MOCK_STATS.pendingCount}
+            value={PLACEHOLDER_STATS.pendingCount}
             description="Pending Applications"
             icon={PackageSearch}
           />
           <StatCard
             label="Rejected"
-            value={MOCK_STATS.rejectedCount}
+            value={PLACEHOLDER_STATS.rejectedCount}
             description="Rejected Applications"
             icon={Ban}
           />
         </div>
 
         <div className="mb-6">
-          <ApplicationsChart data={MOCK_CHART_DATA} />
+          <ApplicationsChart data={PLACEHOLDER_CHART_DATA} />
         </div>
 
-        <RecentApplicationsTable applications={MOCK_APPLICATIONS} />
+        <RecentApplicationsTable applications={PLACEHOLDER_APPLICATIONS} />
       </div>
     </div>
   );

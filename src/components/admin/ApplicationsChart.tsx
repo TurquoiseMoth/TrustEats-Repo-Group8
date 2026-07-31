@@ -28,8 +28,8 @@ function ApplicationsChart({ data }: ApplicationsChartProps) {
                 <stop offset="100%" stopColor="#5B8C6E" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="approvedFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#2F6844" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#2F6844" stopOpacity={0} />
+                <stop offset="0%" stopColor="#3c7443" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="#3c7443" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
@@ -59,7 +59,7 @@ function ApplicationsChart({ data }: ApplicationsChartProps) {
             <Area
               type="monotone"
               dataKey="approved"
-              stroke="#2F6844"
+              stroke="#3c7443"
               strokeWidth={2}
               fill="url(#approvedFill)"
               name="Approved"

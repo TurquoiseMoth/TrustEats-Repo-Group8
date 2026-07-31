@@ -102,7 +102,7 @@ export default function ManufacturerLoginPage() {
 const baseStyles: Record<string, React.CSSProperties> = {
   page: {
     minHeight: '100vh',
-    background: '#EEF2F5',
+    background: '#f0f8ff',
     fontFamily: "'Inter', sans-serif",
     display: 'flex',
     flexDirection: 'column',
@@ -133,12 +133,12 @@ const baseStyles: Record<string, React.CSSProperties> = {
   },
   subtitle: {
     fontSize: '14px',
-    color: '#444',
+    color: '#444444',
     marginBottom: '24px',
   },
   errorBox: {
     backgroundColor: '#FEE2E2',
-    color: '#DC2626',
+    color: '#ce0000',
     padding: '12px 16px',
     borderRadius: '8px',
     fontSize: '14px',
@@ -163,8 +163,8 @@ const baseStyles: Record<string, React.CSSProperties> = {
   },
   input: {
     height: '52px',
-    background: '#fff',
-    border: '1px solid #9A9A9A',
+    background: '#ffffff',
+    border: '1px solid #9CA3AF',
     borderRadius: '8px',
     padding: '0 16px',
     fontSize: '15px',
@@ -191,12 +191,12 @@ const baseStyles: Record<string, React.CSSProperties> = {
   checkbox: {
     width: '18px',
     height: '18px',
-    accentColor: '#E8721C',
+    accentColor: '#eb9134',
     cursor: 'pointer',
   },
   forgotLink: {
     fontSize: '14px',
-    color: '#E8721C',
+    color: '#eb9134',
     textDecoration: 'none',
     fontWeight: 500,
   },
@@ -255,9 +255,9 @@ const desktopStyles: Record<string, React.CSSProperties> = {
   },
   card: {
     width: '100%',
-    background: '#fff',
+    background: '#ffffff',
     borderRadius: '16px',
-    border: '1px solid #E0E0E0',
+    border: '1px solid #E5E7EB',
     padding: '40px 36px',
     boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
   },

@@ -17,7 +17,7 @@ export function Spinner({ size = "md", className }: SpinnerProps) {
     <div
       className={twMerge(
         clsx(
-          "animate-spin rounded-full border-2 border-gray-300 border-t-green-600",
+          "animate-spin rounded-full border-2 border-gray-300 border-t-primary",
           sizeStyles[size],
           className,
         ),

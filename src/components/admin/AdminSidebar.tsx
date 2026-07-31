@@ -23,7 +23,7 @@ function AdminSidebar() {
   const location = useLocation();
 
   return (
-    <aside className="hidden md:flex md:flex-col md:w-64 md:shrink-0 md:h-screen md:sticky md:top-0 bg-[#eef4fc] border-r border-gray-200 px-5 py-6">
+    <aside className="hidden md:flex md:flex-col md:w-64 md:shrink-0 md:h-screen md:sticky md:top-0 bg-background border-r border-gray-200 px-5 py-6">
       <div className="px-1 mb-8">
         <img src={logo} alt="TrustEats" className="h-8 w-auto" />
       </div>
@@ -41,7 +41,7 @@ function AdminSidebar() {
                   className={[
                     "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-[#2F6844] text-white"
+                      ? "bg-primary text-white"
                       : "text-gray-600 hover:bg-white hover:text-gray-900",
                   ].join(" ")}
                 >

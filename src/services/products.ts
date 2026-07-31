@@ -15,25 +15,26 @@ export const productService = {
     return apiClient.post<ApiResponse<Product>>("/products", data).then((res) => res.data.data!);
   },
 
-  getAll: () =>
-    apiClient.get<ApiResponse<Product[]>>("/products").then((res) => res.data.data!),
+  getAll: (page = 1, limit = 20) =>
+    apiClient.get<ApiResponse<{ products: Product[]; total: number; page: number; pages: number }>>(`/products?page=${page}&limit=${limit}`)
+      .then((res) => res.data.data!),
 
   getById: (id: string) =>
-    apiClient.get<ApiResponse<Product>>(`/products/${id}`).then((res) => res.data.data!),
+    apiClient.get<ApiResponse<{ product: Product }>>(`/products/${id}`)
+      .then((res) => res.data.data!.product),
 
-  update: (id: string, data: Partial<Product>) =>
-    apiClient.patch<ApiResponse<Product>>(`/products/${id}`, data).then((res) => res.data.data!),
+  update: (id: string, data: Record<string, unknown>) => {
+    const fd = buildFormData(data);
+    return apiClient.patch<ApiResponse<{ product: Product }>>(`/products/${id}`, fd)
+      .then((res) => res.data.data!.product);
+  },
 
-  delete: (id: string) =>
-    apiClient.delete<ApiResponse<null>>(`/products/${id}`).then((res) => res.data),
+  createBatch: (data: CreateBatchPayload) =>
+    apiClient.post<ApiResponse<{ batch: Batch; generatedCodes: { code: string; qrCodeUrl: string }[] }>>("/batches", data)
+      .then((res) => res.data.data!),
 
-  generateCodes: (productId: string, quantity: number, unitSerialPrefix: string) =>
-    apiClient.post<ApiResponse<{ count: number; codes: VerificationCode[] }>>(`/products/${productId}/codes`, { quantity, unitSerialPrefix }).then((res) => res.data.data!),
-
-  getCodes: (productId: string) =>
-    apiClient.get<ApiResponse<VerificationCode[]>>(`/products/${productId}/codes`).then((res) => res.data.data!),
-
-  revokeCode: (codeId: string) =>
-    apiClient.post<ApiResponse<VerificationCode>>(`/products/codes/${codeId}/revoke`).then((res) => res.data.data!),
+  getBatches: (productId: string) =>
+    apiClient.get<ApiResponse<{ batches: Batch[] }>>(`/batches?productId=${productId}`)
+      .then((res) => res.data.data!.batches),
 };
 
