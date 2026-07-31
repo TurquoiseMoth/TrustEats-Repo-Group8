@@ -1,19 +1,19 @@
 import apiClient from "./api";
 import { mockVerificationService } from "./mockVerification";
+import { shouldUseMock } from "./mockMode";
 import type { VerificationResult, VerificationRequest, ScanHistoryResponse, ApiResponse } from "../types";
 import { MOCK_VERIFICATIONS } from "../utils/mockData";
 
-// Prefer the real backend when VITE_API_BASE_URL is set; otherwise fall back to mock for local dev
-const USE_MOCK = import.meta.env.VITE_API_BASE_URL ? false : true;
-
 export const verificationService = {
-  verifyCode: (code: string) =>
-    apiClient
+  verifyCode: (code: string): Promise<VerificationResult> => {
+    if (shouldUseMock()) return mockVerificationService.verifyCode(code);
+    return apiClient
       .get<ApiResponse<VerificationResult>>(`/verify/${code}`)
-      .then((res) => res.data.data!),
+      .then((res) => res.data.data!);
+  },
 
   verifyCodeWithContext: (data: VerificationRequest): Promise<VerificationResult> => {
-    if (USE_MOCK) return mockVerificationService.verifyCode(data.code);
+    if (shouldUseMock()) return mockVerificationService.verifyCode(data.code);
     return apiClient
       .post<ApiResponse<VerificationResult>>("/verify", data)
       .then((res) => res.data.data!);
@@ -21,7 +21,7 @@ export const verificationService = {
 
   // Fetch scan history (paginated). Returns { events: [], total, page, pages }
   getHistory: async (params?: { page?: number; limit?: number }): Promise<ScanHistoryResponse> => {
-    if (USE_MOCK) {
+    if (shouldUseMock()) {
       return Promise.resolve({ events: MOCK_VERIFICATIONS, total: MOCK_VERIFICATIONS.length, page: 1, pages: 1 });
     }
     const query = [] as string[];

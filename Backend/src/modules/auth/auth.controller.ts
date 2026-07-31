@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
 import User from "../users/user.model";
 import Manufacturer from "../manufacturers/manufacturer.model";
 import {

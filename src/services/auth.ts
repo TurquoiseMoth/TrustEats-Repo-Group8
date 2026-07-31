@@ -1,4 +1,6 @@
 import apiClient from "./api";
+import { shouldUseMock } from "./mockMode";
+import { mockAuthService } from "./mockAuth";
 import type { AuthResponse, LoginRequest, RegisterRequest, ApiResponse } from "../types";
 
 // Auth service wraps the backend auth endpoints. It normalizes responses to
