@@ -82,8 +82,8 @@ const seed = async () => {
       contactEmail: "info@lagosdairies.ng",
       contactPhone: "+2348012345678",
       address: "14 Apapa Road, Lagos Island, Lagos",
-      cacNumber: "RC1234567",
-      napamsEmail: "abc@napams.ng",
+      // cacNumber: "RC1234567",
+      // napamsEmail: "abc@napams.ng",
     },
     {
       email: "learnable.limited@trusteats.ng",
@@ -95,8 +95,8 @@ const seed = async () => {
       contactEmail: "info@learnablelimited.com.ng",
       contactPhone: "+2348023456789",
       address: "1, Centenary City, Enugu State, Nigeria",
-      cacNumber: "RC1234565",
-      napamsEmail: "learnable@napams.ng"
+      // cacNumber: "RC1234565",
+      // napamsEmail: "learnable@napams.ng"
     },
     {
       email: "finefoods@trusteats.ng",
@@ -108,8 +108,8 @@ const seed = async () => {
       contactEmail: "info@finefoods.ng",
       contactPhone: "+2348034567890",
       address: "7 Trans-Amadi Industrial Layout, Port Harcourt",
-      cacNumber: "RC1234599",
-      napamsEmail: "finefood@napams.ng"
+      // cacNumber: "RC1234599",
+      // napamsEmail: "finefood@napams.ng"
     },
   ];
 
@@ -138,8 +138,8 @@ const seed = async () => {
       country: "Nigeria",
       status: "approved",
       approvedAt: new Date(),
-      cacNumber: m.cacNumber,
-      napamsEmail: m.napamsEmail,
+      // cacNumber: m.cacNumber,
+      // napamsEmail: m.napamsEmail,
     });
 
     manufacturers.push(manufacturer);
