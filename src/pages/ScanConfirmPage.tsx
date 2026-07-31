@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate, useLocation, Link } from "react-router";
 import { ROUTES } from "../constants";
+import { BackButton } from "../components/ui";
 import { verificationService } from "../services/verification";
 import type { VerificationResult } from "../types";
 
@@ -38,7 +39,7 @@ export default function ScanConfirmPage() {
   return (
     <div style={styles.page}>
       <div style={styles.header}>
-        <Link to={ROUTES.SCAN} style={styles.backBtn}>&lsaquo;</Link>
+        <BackButton to={ROUTES.SCAN} />
         <h1 style={styles.headerTitle}>Scan Confirmation</h1>
       </div>
 
@@ -96,16 +97,6 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "16px 20px",
     background: "#ffffff",
     borderBottom: "1px solid #E5E7EB",
-  },
-  backBtn: {
-    background: "none",
-    border: "none",
-    fontSize: "26px",
-    color: "#292d32",
-    cursor: "pointer",
-    lineHeight: 1,
-    padding: "0",
-    textDecoration: "none",
   },
   headerTitle: {
     fontSize: "17px",

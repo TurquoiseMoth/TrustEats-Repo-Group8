@@ -1,6 +1,7 @@
 import { useState, type ReactNode, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
+import { BackButton } from '../components/ui';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function ProfilePage() {
@@ -25,7 +26,7 @@ export default function ProfilePage() {
 
       {/* Header */}
       <div style={styles.header}>
-        <button style={styles.backBtn} onClick={() => navigate(-1)}>‹</button>
+        <BackButton />
         <h1 style={styles.headerTitle}>Profile (Consumer)</h1>
       </div>
 
@@ -186,15 +187,6 @@ const styles: Record<string, CSSProperties> = {
     gap: '8px',
     padding: '16px 20px 8px',
     background: '#f0f8ff',
-  },
-  backBtn: {
-    background: 'none',
-    border: 'none',
-    fontSize: '26px',
-    color: '#292d32',
-    cursor: 'pointer',
-    lineHeight: 1,
-    padding: '0',
   },
   headerTitle: {
     fontSize: '18px',

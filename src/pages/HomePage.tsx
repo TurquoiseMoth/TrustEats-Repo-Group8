@@ -277,15 +277,7 @@ function HomePage() {
                     Frequently Asked <span className="text-brand-base">Questions</span>
                 </h2>
 
-                <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center">
-                    <div className="hidden lg:block overflow-hidden rounded-2xl border border-gray-200 bg-white">
-                        <img
-                            src="/assets/national-symbol.png"
-                            alt="NAFDAC national symbol"
-                            className="h-full w-full object-cover"
-                        />
-                    </div>
-
+                <div className="mt-10 grid grid-cols-1 gap-10">
                     <div className="space-y-4">
                         {faqs.map((faq) => {
                             const open = openFaq === faq.q;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
-import { useNavigate } from 'react-router';
-import { ChevronLeft, Bell, AlertTriangle, Info } from 'lucide-react';
+import { Bell, AlertTriangle, Info } from 'lucide-react';
+import { BackButton } from '../components/ui';
 
 const PLACEHOLDER_NOTIFICATIONS = [
   { id: '1', type: 'info' as const, title: 'Welcome to TrustEats', message: 'Start scanning products to verify their authenticity.', createdAt: 'Just now', read: false },
@@ -10,7 +10,6 @@ const PLACEHOLDER_NOTIFICATIONS = [
 ];
 
 export default function NotificationsPage() {
-  const navigate = useNavigate();
   const [notifications, setNotifications] = useState(PLACEHOLDER_NOTIFICATIONS);
 
   const markAllRead = () => setNotifications(n => n.map(item => ({ ...item, read: true })));
@@ -19,7 +18,7 @@ export default function NotificationsPage() {
   return (
     <div style={s.page}>
       <div style={s.header}>
-        <button style={s.backBtn} onClick={() => navigate(-1)}><ChevronLeft size={22} /></button>
+        <BackButton />
         <h1 style={s.title}>Consumer Notifications</h1>
       </div>
 
@@ -60,8 +59,7 @@ export default function NotificationsPage() {
 
 const s: Record<string, CSSProperties> = {
   page: { minHeight: '100vh',     background: '#f0f8ff', fontFamily: "'Inter', sans-serif" },
-  header: { display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 20px' },
-  backBtn: { background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#292d32' },
+  header: { display: 'flex', alignItems: 'center', gap: '10px', padding: '16px 20px' },
   title: { fontSize: '18px', fontWeight: 700, color: '#292d32' },
   empty: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: '12px', padding: '80px 20px' },
   emptyText: { fontSize: '15px', color: '#aaaaaa' },

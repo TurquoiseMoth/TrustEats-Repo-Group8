@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { ChevronLeft, Upload, X } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 import { ROUTES } from '../constants';
+import { BackButton } from '../components/ui';
 import { reportsService } from '../services/reports';
 
 
@@ -68,9 +69,7 @@ export default function ReportPage() {
         <div style={styles.page}>
             {/* Header */}
             <div style={styles.headerRow}>
-                <button style={styles.backBtn} onClick={() => navigate(-1)}>
-                    <ChevronLeft size={22} strokeWidth={2.5} />
-                </button>
+                <BackButton />
                 <h1 style={styles.headerTitle}>Report Counterfeit</h1>
             </div>
 
@@ -190,17 +189,8 @@ const styles: Record<string, React.CSSProperties> = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        gap: '8px',
+        gap: '10px',
         padding: '16px 16px 0',
-    },
-    backBtn: {
-        background: 'none',
-        border: 'none',
-        cursor: 'pointer',
-        padding: 0,
-        display: 'flex',
-        alignItems: 'center',
-        color: '#292d32',
     },
     headerTitle: {
         fontSize: '20px',

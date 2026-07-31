@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router";
 import { ROUTES } from "../constants";
 import Layout from "../components/layout/Layout";
 import DashboardLayout from "../components/layout/DashboardLayout";
+import ConsumerDashboardLayout from "../components/layout/ConsumerDashboardLayout";
 import AdminLayout from "../components/admin/AdminLayout";
 import HomePage from "../pages/HomePage";
 import RegisterPage from "../pages/SignUpPage";
@@ -69,7 +70,6 @@ export function AppRoutes() {
       <Route path={ROUTES.RESULT} element={<ResultPage />} />
       <Route path={ROUTES.SCAN_CONFIRM} element={<ScanConfirmPage />} />
       <Route path={ROUTES.REPORTS} element={<ReportPage />} />
-      <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
 
       {/* Legacy self-contained pages (own nav) */}
       <Route path="/dashboard-mnf" element={<ManufacturerDashboardPage />} />
@@ -80,8 +80,13 @@ export function AppRoutes() {
       {/* With consumer layout (top navbar) */}
       <Route element={<Layout />}>
         <Route path={ROUTES.HOME} element={<HomePage />} />
-        <Route path={ROUTES.SCAN} element={<ScanPage />} />
         <Route path={ROUTES.PRODUCT} element={<ProductPage />} />
+      </Route>
+
+      {/* With consumer dashboard layout (dashboard navbar + bottom nav) */}
+      <Route element={<ConsumerDashboardLayout />}>
+        <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+        <Route path={ROUTES.SCAN} element={<ScanPage />} />
         <Route path={ROUTES.HISTORY} element={<HistoryPage />} />
         <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
         <Route path={ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />

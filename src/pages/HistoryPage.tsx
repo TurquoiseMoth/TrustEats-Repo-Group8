@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, CheckCircle2, AlertTriangle, XCircle, X } from "lucide-react";
-import { useNavigate } from "react-router";
+import { ChevronRight, CheckCircle2, AlertTriangle, XCircle, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { verificationService } from "../services/verification";
 import type { ScanEvent } from "../types";
-import { Spinner } from "../components/ui";
+import { Spinner, BackButton } from "../components/ui";
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
@@ -36,7 +35,6 @@ function statusBadge(event: ScanEvent) {
 }
 
 export default function HistoryPage() {
-  const navigate = useNavigate();
   const [selectedEvent, setSelectedEvent] = useState<ScanEvent | null>(null);
 
   const { data, isLoading, error } = useQuery({
@@ -69,9 +67,7 @@ export default function HistoryPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans pb-24 relative">
       <div className="flex items-center px-4 py-6">
-        <button onClick={() => navigate(-1)} className="mr-4 text-gray-700">
-          <ChevronLeft size={24} />
-        </button>
+        <BackButton className="mr-4" />
         <h1 className="text-[22px] font-bold text-text-main">History (Consumer)</h1>
       </div>
 

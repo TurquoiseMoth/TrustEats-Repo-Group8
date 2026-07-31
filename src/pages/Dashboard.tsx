@@ -5,68 +5,16 @@ import {
   AlertTriangle,
   XCircle,
   ChevronRight,
-  Home,
-  History,
-  User,
   Bell,
 } from "lucide-react";
-import { Link, useLocation } from "react-router";
+import { Link } from "react-router";
 import { ROUTES } from "../constants";
-import logo from "../assets/Logo.png";
 import phone from "../assets/phone.png";
 import pepper from "../assets/pepper.png";
 
-const navItems = [
-  { label: "Home", href: ROUTES.DASHBOARD, icon: Home },
-  { label: "Scan", href: ROUTES.SCAN, icon: Scan },
-  { label: "History", href: ROUTES.HISTORY, icon: History },
-  { label: "Profile", href: ROUTES.PROFILE, icon: User },
-];
-
 const Dashboard: React.FC = () => {
-  const { pathname } = useLocation();
-
   return (
-    <div className="flex min-h-screen justify-center bg-[#f3f4f6] font-[system-ui,-apple-system,BlinkMacSystemFont,Segoe_UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif]">
-      <div className="relative flex min-h-screen w-full max-w-[440px] flex-col bg-[#f4f8fa] pb-16 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05)] md:max-w-7xl md:pb-0 md:shadow-none">
-
-        {/* Desktop top bar */}
-        <header className="hidden items-center justify-between border-b border-gray-100 bg-white px-10 py-4 md:flex">
-          <Link to={ROUTES.HOME} className="flex shrink-0 items-center gap-2.5">
-            <img src={logo} alt="TrustEats home" className="h-8 w-auto" />
-          </Link>
-
-          <nav className="flex items-center gap-1 rounded-full bg-[#f0f8ff] px-1.5 py-1" aria-label="Dashboard navigation">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href;
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  aria-current={isActive ? "page" : undefined}
-                  className={`flex items-center gap-2 rounded-full px-5 py-1.5 text-sm font-medium transition-colors ${
-                    isActive ? "bg-primary text-white" : "text-gray-600 hover:bg-primary/10 hover:text-primary"
-                  }`}
-                >
-                  <Icon size={16} aria-hidden="true" />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
-
-          <Link
-            to={ROUTES.NOTIFICATIONS}
-            aria-label="Notifications"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-gray-600 transition-colors hover:bg-primary/10 hover:text-primary"
-          >
-            <Bell size={20} aria-hidden="true" />
-          </Link>
-        </header>
-
-        {/* Main Content */}
-        <div className="flex flex-col gap-6 px-5 pb-[15px] pt-12 md:mx-auto md:w-full md:max-w-5xl md:px-10 md:py-10">
+    <div className="flex flex-col gap-6 px-5 pb-[15px] pt-12 md:mx-auto md:w-full md:max-w-5xl md:px-10 md:py-10">
 
           {/* Header */}
           <header className="flex items-start justify-between bg-[#f0f7ff] p-4 md:bg-transparent md:p-0">
@@ -191,32 +139,6 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Bottom Navigation (mobile) */}
-        <nav className="fixed bottom-0 z-10 flex w-full max-w-[440px] items-center justify-between border-t border-[#f3f4f6] bg-white px-6 py-3 md:hidden" aria-label="Primary navigation">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                to={item.href}
-                aria-current={isActive ? "page" : undefined}
-                className={`flex flex-col items-center gap-1 text-[0.75rem] font-medium ${
-                  isActive ? "text-[#2d6a4f]" : "text-[#9ca3af]"
-                }`}
-              >
-                <div className={`flex items-center justify-center rounded-lg p-1.5 ${isActive ? "bg-[#2d6a4f] text-white" : ""}`}>
-                  <Icon size={20} aria-hidden="true" />
-                </div>
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
-
-      </div>
     </div>
   );
 };

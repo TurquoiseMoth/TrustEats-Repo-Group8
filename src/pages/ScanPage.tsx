@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
 import QrScanner from '../components/QrScanner';
+import { BackButton } from '../components/ui';
 import { verificationService } from '../services/verification';
 import type { VerificationResult } from '../types';
 
@@ -41,7 +42,7 @@ export default function ScanPage() {
   return (
     <div style={styles.page}>
       <div style={styles.header}>
-        <button style={styles.backBtn} onClick={() => navigate(-1)}>&lsaquo;</button>
+        <BackButton />
         <h1 style={styles.headerTitle}>Scan & Verify</h1>
       </div>
 
@@ -101,7 +102,7 @@ export default function ScanPage() {
         )}
 
         {scanState !== 'verifying' && (
-          <p style={styles.cameraHint}>Point your camera at a barcode</p>
+          <p style={styles.cameraHint}>Point your camera at the QR code on the product label</p>
         )}
       </div>
 
@@ -132,19 +133,10 @@ const styles: Record<string, React.CSSProperties> = {
   header: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: '10px',
     padding: '16px 20px',
     background: '#ffffff',
     borderBottom: '1px solid #E5E7EB',
-  },
-  backBtn: {
-    background: 'none',
-    border: 'none',
-    fontSize: '26px',
-    color: '#292d32',
-    cursor: 'pointer',
-    lineHeight: 1,
-    padding: '0',
   },
   headerTitle: {
     fontSize: '17px',
@@ -156,16 +148,20 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     alignItems: 'center',
     flex: 1,
+    padding: '28px 20px 0',
   },
   camera: {
     width: '100%',
-    height: '380px',
+    maxWidth: '380px',
+    height: '320px',
     background: '#0D0D0D',
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
+    borderRadius: '24px',
+    boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
   },
   bracket: {
     position: 'absolute',
@@ -191,7 +187,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   statusContainer: {
     width: '100%',
-    height: '380px',
+    maxWidth: '380px',
+    height: '320px',
     background: '#0D0D0D',
     display: 'flex',
     flexDirection: 'column',
@@ -199,6 +196,8 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'center',
     gap: '16px',
     padding: '24px',
+    borderRadius: '24px',
+    boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
   },
   spinner: {
     width: '40px',
