@@ -30,22 +30,39 @@ export const setTokenCookies = (
   refreshToken: string,
 ): void => {
   const isProd = process.env.NODE_ENV === "production";
-  res.cookie("accessToken", accessToken, {
+
+  const sameSiteSetting: "none" | "lax" = isProd ? "none" : "lax";
+
+  const accessCookieOpts: Record<string, any> = {
     httpOnly: true,
-    secure: isProd,
-    sameSite: "strict",
+    secure:isProd,
+    sameSite: sameSiteSetting,
     maxAge: 15 * 60 * 1000,
-  });
-  res.cookie("refreshToken", refreshToken, {
+    path: "/",
+  };
+
+  const refreshCookieOpts: Record<string, any> = {
     httpOnly: true,
     secure: isProd,
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    sameSite: sameSiteSetting,
+    maxAge: 15 * 60 * 1000,
     path: "/api/v1/auth/refresh",
-  });
+  };
+
+  if (process.env.COOKIE_DOMAIN) {
+    accessCookieOpts.domain = process.env.COOKIE_DOMAIN;
+    refreshCookieOpts.domain = process.env.COOKIE_DOMAIN;
+  }
+
+  res.cookie("accessToken", accessToken, accessCookieOpts);
+  res.cookie("refreshToken", refreshToken, refreshCookieOpts);
 }; 
 
 export const clearTokenCookies = (res: Response): void => {
-  res.clearCookie("accessToken");
-  res.clearCookie("refreshToken", { path: "/api/v1/auth/refresh" });
+  const opts: Record<string, any> = { path: "/" };
+  if (process.env.COOKIE_DOMAIN) opts.domain = process.env.COOKIE_DOMAIN;
+  res.clearCookie("accessToken", opts);
+  const refreshOpts: Record<string, any> = { path: "/api/v1/auth/refresh" };
+  if (process.env.COOKIE_DOMAIN) refreshOpts.domain = process.env.COOKIE_DOMAIN;
+  res.clearCookie("refreshToken", refreshOpts);
 };
