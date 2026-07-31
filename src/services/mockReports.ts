@@ -34,12 +34,20 @@ export const mockReportsService = {
     return report;
   },
 
-  create: async (data: { code: string; comment?: string }): Promise<Report> => {
+  create: async (data: { code: string; comment?: string } | FormData): Promise<Report> => {
     await delay();
+    const code = data instanceof FormData ? String(data.get("code") ?? "") : data.code;
+    let comment: string | undefined;
+    if (data instanceof FormData) {
+      const c = data.get("comment");
+      comment = typeof c === "string" ? c : undefined;
+    } else {
+      comment = data.comment;
+    }
     const report: Report = {
       id: `mock-report-${Date.now()}`,
-      code: data.code,
-      comment: data.comment,
+      code,
+      comment,
       status: "pending",
       createdAt: new Date().toISOString(),
     };

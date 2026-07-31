@@ -126,23 +126,27 @@ export const mockAuthService = {
     }
   },
 
-  forgotPassword: async (): Promise<ApiResponse<void>> => {
+  forgotPassword: async (email: string): Promise<ApiResponse<void>> => {
     await delay(200);
+    void email;
     return { success: true, message: "If that email exists, a reset link was sent." };
   },
 
-  resetPassword: async (): Promise<ApiResponse<void>> => {
+  resetPassword: async (payload: { token: string; userId: string; newPassword: string; confirmPassword: string }): Promise<ApiResponse<void>> => {
     await delay(200);
+    void payload;
     return { success: true };
   },
 
-  verifyEmail: async (): Promise<ApiResponse<Record<string, unknown>>> => {
+  verifyEmail: async (payload: { email: string; code?: string; otp?: string }): Promise<ApiResponse<Record<string, unknown>>> => {
     await delay(200);
+    void payload;
     return { success: true };
   },
 
-  resendVerification: async (): Promise<ApiResponse<void>> => {
+  resendVerification: async (email: string): Promise<ApiResponse<void>> => {
     await delay(200);
+    void email;
     return { success: true };
   },
 

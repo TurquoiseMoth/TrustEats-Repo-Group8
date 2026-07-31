@@ -1,9 +1,12 @@
-import { CheckCheckIcon, User, Landmark, PackagePlus, QrCode, ScanLine, BadgeCheck, ArrowRight } from "lucide-react"
+import { CheckCheckIcon, User, Landmark, PackagePlus, QrCode, ScanLine, BadgeCheck, ArrowRight, FlaskConical } from "lucide-react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router"
 import { Card, RoleCard, Button } from "../components/ui"
 import { WhyTrustEatSection } from "../components/WhyTrustEatSection"
 import { NafdacBanner } from "../components/NafdacBanner"
 import { ROUTES } from "../constants"
+import { isMockMode, setMockMode } from "../services/mockMode"
+import { MOCK_ACCOUNTS } from "../services/mockAuth"
 
 const ConsumerIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -31,6 +34,18 @@ const features = [
 ]
 
 function HomePage() {
+    const [mockOn, setMockOn] = useState<boolean>(isMockMode())
+
+    useEffect(() => {
+        const sync = () => setMockOn(isMockMode())
+        window.addEventListener("trusteats:mock-mode", sync)
+        return () => window.removeEventListener("trusteats:mock-mode", sync)
+    }, [])
+
+    const toggleMockMode = () => {
+        setMockMode(!isMockMode())
+    }
+
     return (
         <section>
             {/* ── Hero Section ─────────────────────────── */}
@@ -235,6 +250,52 @@ function HomePage() {
 
             {/* ── NAFDAC Banner ────────────────────────── */}
             <NafdacBanner />
+
+            {/* ── Mock Mode Toggle (dev/demo) ─────────── */}
+            <div className="mx-auto mt-16 w-full max-w-7xl px-6 pb-8 md:mt-20 lg:px-10">
+                <div className="flex flex-col items-center gap-4 rounded-[30px] border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+                        <FlaskConical className="h-7 w-7 text-primary" />
+                    </div>
+                    <h3 className="text-[20px] font-bold text-text-main">Demo Mode</h3>
+                    <p className="max-w-md text-sm leading-relaxed text-gray-500">
+                        Run the entire app on local mock data — no backend needed. Scan any QR code, log in,
+                        or explore the dashboard with sample data.
+                    </p>
+
+                    <Button
+                        onClick={toggleMockMode}
+                        className={`mt-2 rounded-2xl px-8 py-3 text-sm font-semibold transition-colors ${
+                            mockOn
+                                ? "border border-gray-300 bg-white text-text-main hover:bg-gray-100"
+                                : "bg-primary text-white hover:opacity-90"
+                        }`}
+                    >
+                        {mockOn ? "Disable Mock Data" : "Enable Mock Data"}
+                    </Button>
+
+                    {mockOn && (
+                        <div className="mt-4 w-full max-w-xl rounded-2xl bg-white p-5 text-left shadow-sm">
+                            <p className="text-sm font-semibold text-text-main">Demo accounts</p>
+                            <ul className="mt-3 space-y-2">
+                                {MOCK_ACCOUNTS.map((account) => (
+                                    <li key={account.email} className="flex flex-col gap-0.5 rounded-xl bg-gray-50 px-4 py-3">
+                                        <span className="text-sm font-medium capitalize text-text-main">
+                                            {account.user.role} — {account.email}
+                                        </span>
+                                        <span className="text-xs text-gray-500">{account.password}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                            <p className="mt-4 text-xs leading-relaxed text-gray-400">
+                                Mock verification codes: anything scans as GENUINE. Use <span className="font-semibold">FAKE</span>,
+                                <span className="font-semibold"> 000000</span>, <span className="font-semibold">SUS</span> or{" "}
+                                <span className="font-semibold">999999</span> to test warning results.
+                            </p>
+                        </div>
+                    )}
+                </div>
+            </div>
         </section>
 
     )
