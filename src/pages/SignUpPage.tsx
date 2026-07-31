@@ -77,6 +77,7 @@ export default function SignUpPage() {
         termsAccepted: termsAgreed,
       };
 
+
       await register(payload);
       navigate(ROUTES.DASHBOARD);
     } catch (err) {

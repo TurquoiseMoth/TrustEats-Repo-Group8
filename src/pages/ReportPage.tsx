@@ -55,7 +55,7 @@ export default function ReportPage() {
             navigate(ROUTES.DASHBOARD);
         } catch (err) {
             const e = err as Error | { message?: string } | null;
-            console.error('report submit failed', err);
+            // report submit failed — error handled below.
             setSubmitError(e?.message ?? 'Failed to submit report');
         } finally {
             setSubmitting(false);

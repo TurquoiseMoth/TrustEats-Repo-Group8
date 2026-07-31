@@ -40,17 +40,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const register = useCallback(async (data: RegisterRequest) => {
-    const result = (await authService.register(data)) as { manufacturer?: User; token?: string };
+    const result = await authService.register(data);
     setUser(result.manufacturer ?? null);
-  }, []);
-
-  const logout = useCallback(async () => {
-    try {
-      await authService.logout();
-    } catch {
-      // ignore
-    }
-    setUser(null);
   }, []);
 
   const refreshUser = useCallback(async () => {
@@ -63,6 +54,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
+  }, []);
+
+  const logout = useCallback(async () => {
+    try {
+      await authService.logout();
+    } catch {
+      // ignore
+    }
+    setUser(null);
   }, []);
 
   return (
