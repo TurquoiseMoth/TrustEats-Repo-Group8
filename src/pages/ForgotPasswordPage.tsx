@@ -2,40 +2,31 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
 import { authService } from '../services/auth';
+
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
-    setError("");
+    setError('');
+    if (!email.trim()) {
+      setError('Please enter your email address.');
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
-      await authService.forgotPassword(email);
-      setSent(true);
-    } catch {
-      setError("Failed to send reset link. Check the email address.");
+      await authService.forgotPassword(email.trim());
+      navigate(ROUTES.CHECK_YOUR_EMAIL);
+    } catch (err) {
+      setError((err as { message?: string })?.message ?? 'Failed to send reset link. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
-  if (sent) {
-    return (
-      <div style={styles.phone}>
-        <img src="/assets/Deco.svg" alt="" style={styles.archImg} />
-        <div style={styles.logoWrap}>
-          <img src="/assets/trusteats-logo.png" alt="TrustEats" className="h-8 w-auto" />
-        </div>
-        <div style={styles.content}>
-          <h1 style={styles.heading}>Check Your Email</h1>
-          <p style={styles.subtitle}>We've sent a password reset link to <strong>{email}</strong>. Please check your inbox.</p>
-          <button style={styles.btnPrimary} onClick={() => navigate(ROUTES.LOGIN)}>Back to Sign In</button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div style={styles.phone}>
@@ -59,6 +50,8 @@ export default function ForgotPasswordPage() {
           <strong>No worries!</strong> Enter your email address and we'll send you a link to reset your password.
         </p>
 
+        {error && <div style={styles.errorBox}>{error}</div>}
+
         <div style={styles.form}>
           <div style={styles.field}>
             <label style={styles.label}>Email</label>
@@ -69,12 +62,12 @@ export default function ForgotPasswordPage() {
               value={email}
               onChange={e => setEmail(e.target.value)}
               style={styles.input}
+              disabled={isSubmitting}
             />
           </div>
 
-          {error && <p style={{ color: '#ce0000', fontSize: '14px', marginBottom: '12px' }}>{error}</p>}
-          <button style={styles.btnPrimary} onClick={handleSubmit}>
-            Send Your Reset Link
+          <button style={styles.btnPrimary} onClick={handleSubmit} disabled={isSubmitting}>
+            {isSubmitting ? 'Sending…' : 'Send Your Reset Link'}
           </button>
 
           <Link to={ROUTES.LOGIN} style={styles.backLink}>

@@ -28,11 +28,11 @@ export const manufacturerService = {
         fd.append(key, String(value));
       }
     });
-    return apiClient.post<ApiResponse<{ manufacturer: ManufacturerProfile }>>("/api/v1/manufacturers/register", fd)
+    return apiClient.post<ApiResponse<{ manufacturer: ManufacturerProfile }>>("/manufacturers/register", fd)
       .then((res) => res.data.data!.manufacturer);
   },
 
   getProfile: () =>
-    apiClient.get<ApiResponse<{ manufacturer: ManufacturerProfile }>>("/api/v1/manufacturers/me")
+    apiClient.get<ApiResponse<{ manufacturer: ManufacturerProfile }>>("/manufacturers/me")
       .then((res) => res.data.data!.manufacturer),
 };

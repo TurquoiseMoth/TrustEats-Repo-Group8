@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { Bell, ScanLine, QrCode, Clock, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ROUTES } from "../constants";
 import { analyticsService } from "../services/analytics";
 import { verificationService } from "../services/verification";
@@ -24,6 +24,8 @@ function formatDate(dateStr: string) {
 }
 
 export default function ConsumerDashboardPage() {
+  const queryClient = useQueryClient();
+
   const { data: analytics, isLoading: loadingAnalytics, error: analyticsError } = useQuery({
     queryKey: ["analytics", "summary"],
     queryFn: () => analyticsService.getSummary(),
@@ -33,17 +35,20 @@ export default function ConsumerDashboardPage() {
 
   const { data: history, isLoading: loadingHistory, error: historyError } = useQuery({
     queryKey: ["scanHistory", "dashboard"],
-    queryFn: () => verificationService.getHistory(1, 3),
+    queryFn: () => verificationService.getHistory({ page: 1, limit: 3 }),
     staleTime: 30_000,
     retry: 1,
   });
 
-  const totalScans = analytics?.totalScans ?? 0;
-  const genuineCount = analytics?.scansByResult?.genuine ?? 0;
-  const flaggedCount = (analytics?.scansByResult?.suspicious ?? 0) + (analytics?.scansByResult?.fake ?? 0);
+  const defaultAnalytics = { totalScans: 0, scansByResult: { genuine: 0, suspicious: 0, fake: 0 } } as any;
+
+  const totalScans = analytics?.totalScans ?? defaultAnalytics.totalScans;
+  const genuineCount = analytics?.scansByResult?.genuine ?? defaultAnalytics.scansByResult.genuine;
+  const flaggedCount = (analytics?.scansByResult?.suspicious ?? defaultAnalytics.scansByResult.suspicious) + (analytics?.scansByResult?.fake ?? defaultAnalytics.scansByResult.fake);
   const recentScans = history?.events?.slice(0, 3) ?? [];
 
-  if (loadingAnalytics || loadingHistory) {
+  // Show spinner while both sources are loading. If only one is loading, render placeholders.
+  if (loadingAnalytics && loadingHistory) {
     return (
       <div className="p-6 max-w-2xl mx-auto flex items-center justify-center min-h-[60vh]">
         <Spinner size="lg" />
@@ -51,20 +56,25 @@ export default function ConsumerDashboardPage() {
     );
   }
 
-  if (analyticsError) {
-    return (
-      <div className="p-6 max-w-2xl mx-auto text-center">
-        <p className="text-red-500 text-sm mb-4">Failed to load dashboard data.</p>
-        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-primary text-white rounded-lg text-sm">Retry</button>
-      </div>
-    );
-  }
+  const hasError = !!analyticsError || !!historyError;
 
-
-
+  const handleRetry = () => {
+    // Invalidate the specific queries and let React Query refetch.
+    queryClient.invalidateQueries(["analytics", "summary"]);
+    queryClient.invalidateQueries(["scanHistory", "dashboard"]);
+  };
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
+      {hasError && (
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 flex items-center justify-between">
+          <div>Failed to load some dashboard data.</div>
+          <div>
+            <button onClick={handleRetry} className="px-3 py-1 bg-red-600 text-white rounded-md text-sm">Retry</button>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
         <Link to={ROUTES.NOTIFICATIONS} className="relative p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">

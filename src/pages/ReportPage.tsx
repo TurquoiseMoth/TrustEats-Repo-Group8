@@ -2,17 +2,31 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { ChevronLeft, Upload, X } from 'lucide-react';
 import { ROUTES } from '../constants';
-import { reportService } from '../services/reports';
+import { reportsService } from '../services/reports';
+
+
+
+const ISSUE_OPTIONS = [
+    'Fake Product',
+    'Expired Product',
+    'Wrong Packaging',
+    'Missing Verification Code',
+    'Damaged Packaging',
+    'Suspicious Label',
+    'Other',
+];
 
 export default function ReportPage() {
     const navigate = useNavigate();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [code, setCode] = useState('');
+    const [reason, setReason] = useState(ISSUE_OPTIONS[0]);
     const [comment, setComment] = useState('');
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState("");
+
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
@@ -23,22 +37,32 @@ export default function ReportPage() {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        if (!code.trim() || !comment.trim()) return;
-        setSubmitting(true);
         setSubmitError("");
+        if (!code || !comment) {
+            setSubmitError("Please fill in the required fields.");
+            return;
+        }
+        setSubmitting(true);
         try {
-            await reportService.submit({
-                code,
-                comment,
-                images: uploadedFile ?? undefined,
-            });
-            navigate(ROUTES.HISTORY);
-        } catch {
-            setSubmitError("Failed to submit report. Please try again.");
+            const form = new FormData();
+            form.append('code', code);
+            const augmentedComment = `${reason}: ${comment}`;
+            form.append('comment', augmentedComment);
+            if (uploadedFile) form.append('images', uploadedFile);
+
+            await reportsService.create(form);
+            // navigate back to dashboard on success
+            navigate(ROUTES.DASHBOARD);
+        } catch (err) {
+            const e = err as Error | { message?: string } | null;
+            console.error('report submit failed', err);
+            setSubmitError(e?.message ?? 'Failed to submit report');
         } finally {
             setSubmitting(false);
         }
     }
+
+
 
     return (
         <div style={styles.page}>
@@ -65,6 +89,22 @@ export default function ReportPage() {
                     />
                 </div>
 
+                {/* Reason */}
+                <div style={styles.fieldGroup}>
+                    <label style={styles.label}>
+                        Reason <span style={{ color: '#ce0000' }}>*</span>
+                    </label>
+                    <select
+                        value={reason}
+                        onChange={(e) => setReason(e.target.value)}
+                        style={{ ...styles.input, height: '44px' }}
+                    >
+                        {ISSUE_OPTIONS.map((opt) => (
+                            <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                    </select>
+                </div>
+
                 {/* Comment */}
                 <div style={styles.fieldGroup}>
                     <label style={styles.label}>
@@ -82,6 +122,7 @@ export default function ReportPage() {
                         />
                         <span style={styles.charCount}>{comment.length}/500</span>
                     </div>
+                    <p style={{ ...styles.helperText, marginTop: 6 }}>The selected reason will be prefixed to your comment before submission.</p>
                 </div>
 
                 {/* Images */}
