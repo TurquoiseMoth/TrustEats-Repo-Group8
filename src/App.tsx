@@ -1,7 +1,13 @@
 import { AppRoutes } from "./routes";
+import DocumentTitle from "./components/DocumentTitle";
 
 function App() {
-  return <AppRoutes />;
+  return (
+    <>
+      <DocumentTitle />
+      <AppRoutes />
+    </>
+  );
 }
 
 export default App;

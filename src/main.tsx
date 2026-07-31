@@ -1,13 +1,14 @@
 import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import { BrowserRouter } from 'react-router'
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import { BrowserRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from './contexts/AuthContext'
+import App from './App'
+import './index.css'
 
 const queryClient = new QueryClient()
 
+// eslint-disable-next-line react-refresh/only-export-components
 function Root() {
   useEffect(() => {
     // Initialize services from environment variable if present (optional)
@@ -19,8 +20,9 @@ function Root() {
     // Mount a tiny global toast listener for trusteats:notify events
     function mountToastListener() {
       if (typeof window === 'undefined') return;
-      if ((window as any).__trusteats_toast_initialized) return;
-      (window as any).__trusteats_toast_initialized = true;
+      const win = window as unknown as { __trusteats_toast_initialized?: boolean };
+      if (win.__trusteats_toast_initialized) return;
+      win.__trusteats_toast_initialized = true;
 
       const container = document.createElement('div');
       container.id = 'trusteats-toast-container';

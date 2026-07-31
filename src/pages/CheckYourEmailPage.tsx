@@ -1,10 +1,17 @@
 import { Link } from 'react-router';
 import { ROUTES } from '../constants';
+import { BackButton } from '../components/ui/BackButton';
+import { useMediaQuery } from '../hooks/useMediaQuery';
+import logo from '../assets/logo.png';
 export default function CheckYourEmailPage() {
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   return (
     <div style={styles.phone}>
 
       {/* Top decoration image */}
+      <div style={styles.backWrap}>
+        <BackButton />
+      </div>
       <img
         src="/assets/Deco.svg"
         alt=""
@@ -12,8 +19,8 @@ export default function CheckYourEmailPage() {
       />
 
       {/* Logo */}
-      <div style={styles.logoWrap}>
-        <img src="/assets/trusteats-logo.png" alt="TrustEats" className="h-8 w-auto" />
+      <div style={{ ...styles.logoWrap, ...(isDesktop ? { marginTop: '24px' } : {}) }}>
+        <img src={logo} alt="TrustEats" className="h-8 w-auto" />
       </div>
 
       {/* Content */}
@@ -56,12 +63,22 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: "'Inter', sans-serif",
     display: 'flex',
     flexDirection: 'column',
+    position: 'relative',
+  },
+  backWrap: {
+    position: 'absolute',
+    top: '12px',
+    left: '12px',
+    zIndex: 4,
   },
   archImg: {
     width: '100%',
     height: 'auto',
+    maxHeight: '180px',
+    objectFit: 'cover',
     display: 'block',
     marginTop: '-40px',
+    flexShrink: 0,
   },
   logoWrap: {
     display: 'flex',
@@ -71,11 +88,6 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: '-10px',
     zIndex: 2,
     position: 'relative',
-  },
-  logoText: {
-    fontSize: '22px',
-    fontWeight: 700,
-    color: '#3c7443',
   },
   content: {
     padding: '16px 20px 48px',

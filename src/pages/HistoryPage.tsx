@@ -72,7 +72,7 @@ export default function HistoryPage() {
         <button onClick={() => navigate(-1)} className="mr-4 text-gray-700">
           <ChevronLeft size={24} />
         </button>
-        <h1 className="text-[22px] font-bold text-text-main">History</h1>
+        <h1 className="text-[22px] font-bold text-text-main">History (Consumer)</h1>
       </div>
 
       {events.length === 0 ? (

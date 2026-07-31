@@ -1,13 +1,15 @@
 import { Link, useLocation } from "react-router";
 import { LayoutDashboard, QrCode, PlusSquare, Package, Bell, Settings, ShieldCheck } from "lucide-react";
 import { ROUTES } from "../../constants";
+import { DEFAULT_UNREAD_COUNT } from "../../constants/notifications";
+import { NotificationBell } from "../ui/NotificationBell";
 
 const navItems = [
-  { label: "Dashboard", href: ROUTES.DASHBOARD, icon: LayoutDashboard },
-  { label: "QR Code", href: ROUTES.QR_CODE, icon: QrCode },
-  { label: "Add Product", href: ROUTES.ADD_PRODUCT, icon: PlusSquare },
-  { label: "Product List", href: ROUTES.PRODUCT_LIST, icon: Package },
-  { label: "Notification", href: ROUTES.NOTIFICATIONS, icon: Bell },
+  { label: "Dashboard (Consumer)", href: ROUTES.DASHBOARD, icon: LayoutDashboard },
+  { label: "QR Code (Manufacturer)", href: ROUTES.QR_CODE, icon: QrCode },
+  { label: "Add Product (Manufacturer)", href: ROUTES.PRODUCT_UPLOAD, icon: PlusSquare },
+  { label: "Product List (Consumer)", href: ROUTES.PRODUCT_LIST, icon: Package },
+  { label: "Notification (Consumer)", href: ROUTES.NOTIFICATIONS, icon: Bell },
 ];
 
 function Sidebar() {
@@ -39,7 +41,14 @@ function Sidebar() {
                       : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
                   ].join(" ")}
                 >
-                  <Icon size={18} aria-hidden="true" />
+                  {item.href === ROUTES.NOTIFICATIONS ? (
+                    <NotificationBell
+                      count={DEFAULT_UNREAD_COUNT}
+                      iconClassName="h-[18px] w-[18px]"
+                    />
+                  ) : (
+                    <Icon size={18} aria-hidden="true" />
+                  )}
                   {item.label}
                 </Link>
               </li>
@@ -49,7 +58,7 @@ function Sidebar() {
       </nav>
 
       <Link
-        to={ROUTES.SETTINGS}
+        to={ROUTES.PROFILE}
         className="flex items-center gap-2 justify-center px-4 py-2.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
       >
         <Settings size={16} aria-hidden="true" />

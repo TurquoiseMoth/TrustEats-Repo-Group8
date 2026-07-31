@@ -1,8 +1,10 @@
-import { useState, useRef } from "react";
-import { useNavigate } from "react-router";
-import { ROUTES } from "../constants";
-import { useMediaQuery } from "../hooks/useMediaQuery";
-import { manufacturerService } from "../services/manufacturers";
+import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router';
+import { ROUTES } from '../constants';
+import { useMediaQuery } from '../hooks/useMediaQuery';
+import { manufacturerService } from '../services/manufacturers';
+import { BackButton } from '../components/ui/BackButton';
+import logo from '../assets/logo.png';
 export default function ManufacturerSignUpPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -65,6 +67,9 @@ export default function ManufacturerSignUpPage() {
   return (
     <div style={isDesktop ? desktopStyles.page : styles.page}>
       {/* Top decoration image */}
+      <div style={isDesktop ? desktopStyles.backWrap : styles.backWrap}>
+        <BackButton />
+      </div>
       <img
         src="/assets/Deco.svg"
         alt=""
@@ -237,14 +242,24 @@ const styles: Record<string, React.CSSProperties> = {
     minHeight: "100vh",
     background: "#f0f8ff",
     fontFamily: "'Inter', sans-serif",
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
+  },
+  backWrap: {
+    position: 'absolute',
+    top: '12px',
+    left: '12px',
+    zIndex: 4,
   },
   archImg: {
-    width: "100%",
-    height: "auto",
-    display: "block",
-    marginTop: "-40px",
+    width: '100%',
+    height: 'auto',
+    maxHeight: '180px',
+    objectFit: 'cover',
+    display: 'block',
+    marginTop: '-40px',
+    flexShrink: 0,
   },
   logoWrap: {
     display: "flex",
@@ -367,9 +382,16 @@ const desktopStyles: Record<string, React.CSSProperties> = {
     minHeight: "100vh",
     background: "#f0f8ff",
     fontFamily: "'Inter', sans-serif",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  backWrap: {
+    position: 'absolute',
+    top: '12px',
+    left: '12px',
+    zIndex: 4,
   },
   archImg: {
     width: "100%",
@@ -379,11 +401,11 @@ const desktopStyles: Record<string, React.CSSProperties> = {
     marginTop: "-40px",
   },
   logoWrap: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "10px",
-    marginTop: "-10px",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+    marginTop: '24px',
     zIndex: 2,
     position: "relative",
   },

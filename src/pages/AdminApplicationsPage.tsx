@@ -45,7 +45,7 @@ export default function AdminApplicationsPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="bg-emerald-700 px-8 py-6">
-        <h1 className="text-2xl font-bold text-white">Manufacturer Application</h1>
+        <h1 className="text-2xl font-bold text-white">Admin Applications</h1>
       </div>
 
       <div className="mx-auto max-w-4xl px-6 py-6">

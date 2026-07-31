@@ -1,36 +1,6 @@
-import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { ROUTES } from "../constants";
 import { EmailVerification } from "../components/EmailVerification";
-
-// Toast initialization moved to main.tsx to make it global across the app.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export default function VerifyEmailPage() {
   const navigate = useNavigate();
@@ -53,15 +23,16 @@ export default function VerifyEmailPage() {
       }
 
       // If backend provided an error message, surface it to the user via a toast
-      const backendMessage = (res && (res.message || (res.data && (res.data.message || (res.data as any).error)))) as string | undefined;
+      const data = res.data as { message?: string; error?: string } | undefined;
+      const backendMessage = (res && (res.message || (data && (data.message || data.error)))) as string | undefined;
       if (backendMessage) {
         window.dispatchEvent(new CustomEvent("trusteats:notify", { detail: { type: "error", message: backendMessage } }));
       }
 
       return false;
-    } catch (err: any) {
-      // verify email failed — handled by toast below.
-      const msg = err?.message ?? "Verification failed";
+    } catch (err: unknown) {
+      console.error("verify-email failed", err);
+      const msg = err instanceof Error ? err.message : "Verification failed";
       window.dispatchEvent(new CustomEvent("trusteats:notify", { detail: { type: "error", message: msg } }));
       return false;
     }

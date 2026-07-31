@@ -8,7 +8,6 @@ import {
 } from "react";
 import { authService } from "../services/auth";
 import type { User, RegisterRequest } from "../types";
-
 interface AuthContextValue {
   user: User | null;
   isAuthenticated: boolean;
@@ -65,7 +64,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     setUser(null);
   }, []);
-
 
   return (
     <AuthContext.Provider

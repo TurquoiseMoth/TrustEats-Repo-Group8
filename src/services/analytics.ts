@@ -6,7 +6,7 @@ export const analyticsService = {
     try {
       const res = await apiClient.get<ApiResponse<AnalyticsSummary>>("/analytics/summary");
       return res.data.data!;
-    } catch (err: any) {
+    } catch {
       // If the analytics endpoint is missing, not authorized, or offline,
       // return a safe default so the dashboard can render rather than erroring.
       return {

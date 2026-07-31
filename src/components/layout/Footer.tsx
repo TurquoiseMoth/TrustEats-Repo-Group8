@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
+import logo from "../../assets/logo.png";
 
 // ─── Data ───────────────────────────────────────────────────────────
 interface FooterLink {
@@ -112,7 +113,7 @@ function Footer() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
           {/* Brand column */}
           <div className="flex flex-col gap-3">
-            <img src="/assets/trusteats-logo.png" alt="TrustEats" className="h-8 w-auto brightness-0 invert" />
+            <img src={logo} alt="TrustEats" className="h-8 w-auto brightness-0 invert" />
             <p className="text-[15px] font-semibold text-white">Scan, Verify, Shop with Confidence</p>
             <p className="text-[14px] font-normal leading-relaxed text-white/60">
               Empowering consumers and manufacturers with transparent,
