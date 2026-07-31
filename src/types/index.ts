@@ -4,6 +4,7 @@ export type {
   LoginRequest,
   RegisterRequest,
   RegisterResponse,
+  AuthResponse,
 } from "./auth";
 export type { Product, Batch, CreateBatchPayload } from "./product";
 export type {

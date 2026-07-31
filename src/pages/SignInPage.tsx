@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
 import { useAuth } from '../contexts/AuthContext';
+import { BackButton } from '../components/ui/BackButton';
 
 export default function SignInPage() {
   const navigate = useNavigate();
@@ -31,6 +32,9 @@ export default function SignInPage() {
 
   return (
     <div style={styles.phone}>
+      <div style={styles.backWrap}>
+        <BackButton />
+      </div>
       <img src="/assets/Deco.svg" alt="" style={styles.archImg} />
       <div style={styles.content}>
         <h1 style={styles.heading}>Sign In</h1>
@@ -99,12 +103,22 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: "'Inter', sans-serif",
     display: 'flex',
     flexDirection: 'column',
+    position: 'relative',
+  },
+  backWrap: {
+    position: 'absolute',
+    top: '12px',
+    left: '12px',
+    zIndex: 3,
   },
   archImg: {
     width: '100%',
     height: 'auto',
+    maxHeight: '180px',
+    objectFit: 'cover',
     display: 'block',
     marginTop: '-40px',
+    flexShrink: 0,
   },
   content: {
     padding: '24px 20px 48px',

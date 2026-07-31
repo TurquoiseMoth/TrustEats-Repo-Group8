@@ -7,12 +7,12 @@ function LeafPattern() {
       <img
         src={leafPatternMobile}
         alt=""
-        className="block md:hidden w-full h-auto object-cover"
+        className="block md:hidden w-full h-auto max-h-[180px] object-cover object-top"
       />
       <img
         src={leafPatternDesktop}
         alt=""
-        className="hidden md:block w-full h-auto object-cover"
+        className="hidden md:block w-full h-auto max-h-[220px] object-cover object-top"
       />
     </div>
   );

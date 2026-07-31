@@ -1,5 +1,4 @@
 import { useOtpVerification } from "../../hooks/useOtpVerification";
-import styles from "./EmailVerification.module.css";
 
 interface EmailVerificationProps {
   /** The email address the code was sent to */
@@ -50,38 +49,38 @@ export function EmailVerification({
   const isError = status === "error";
 
   return (
-    <div className={styles.card}>
+    <div className="mx-auto w-full max-w-[420px] rounded-[16px] bg-white px-7 py-10 text-center shadow-[0_1px_2px_rgba(16,24,40,0.04)] max-[480px]:max-w-full max-[480px]:rounded-none max-[480px]:px-5 max-[480px]:py-8 max-[480px]:shadow-none">
       {step && (
-        <div className={styles.steps} aria-label={`Step ${step.current} of ${step.total}`}>
+        <div className="mb-7 flex items-center justify-center gap-2" aria-label={`Step ${step.current} of ${step.total}`}>
           {Array.from({ length: step.total }, (_, i) => i + 1).map((n, i, arr) => (
-            <div key={n} className={styles.stepItem}>
+            <div key={n} className="flex items-center gap-2">
               <span
                 className={[
-                  styles.stepDot,
-                  n <= step.current ? styles.stepDotActive : "",
+                  "inline-flex h-7 w-7 items-center justify-center rounded-full text-[13px] font-semibold",
+                  n <= step.current ? "bg-[#1e7a46] text-white" : "bg-[#e5e7eb] text-[#6b7280]",
                 ].join(" ")}
               >
                 {n}
               </span>
-              {i < arr.length - 1 && <span className={styles.stepLine} />}
+              {i < arr.length - 1 && <span className="h-px w-8 bg-[#d1d5db]" />}
             </div>
           ))}
         </div>
       )}
 
-      <div className={styles.iconWrap} aria-hidden="true">
+      <div className="mb-5 flex justify-center" aria-hidden="true">
         <EnvelopeIcon success={isSuccess} />
       </div>
 
-      <h1 className={styles.title}>Verify Your Email</h1>
-      <p className={styles.subtitle}>
+      <h1 className="mb-2 text-[22px] font-bold text-[#1a1a1a]">Verify Your Email</h1>
+      <p className="mb-7 text-sm leading-[1.5] text-[#6b7280]">
         We&apos;ve sent a {length}-digit verification code to
         <br />
-        <span className={styles.email}>{email}</span>
+        <span className="font-semibold text-[#1a1a1a]">{email}</span>
       </p>
 
       <div
-        className={styles.otpRow}
+        className="mb-3.5 flex justify-center gap-2.5 max-[480px]:gap-2"
         role="group"
         aria-label="Verification code"
         aria-invalid={isError}
@@ -103,40 +102,40 @@ export function EmailVerification({
             onKeyDown={(e) => handleKeyDown(i, e)}
             onPaste={handlePaste}
             className={[
-              styles.otpBox,
-              isError ? styles.otpBoxError : "",
-              isSuccess ? styles.otpBoxSuccess : "",
+              "h-[52px] w-12 rounded-[10px] border-[1.5px] border-[#d1d5db] bg-white text-center text-xl font-semibold text-[#1a1a1a] transition-[border-color,box-shadow] duration-150 focus:border-[#1e7a46] focus:shadow-[0_0_0_3px_rgba(30,122,70,0.15)] focus:outline-none disabled:opacity-70 max-[480px]:h-[50px] max-[480px]:w-11 max-[480px]:text-lg",
+              isError ? "border-[#e04f4f] bg-[#fef2f2]" : "",
+              isSuccess ? "border-[#4caf6d] bg-[#f2fbf5]" : "",
             ].join(" ")}
             aria-label={`Digit ${i + 1} of ${length}`}
           />
         ))}
       </div>
 
-      <div className={styles.statusRow} aria-live="polite">
+      <div className="mb-2 min-h-5" aria-live="polite">
         {isSubmitting && (
-          <span className={styles.statusText}>
+          <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#6b7280]">
             <Spinner /> Verifying…
           </span>
         )}
         {isError && errorMessage && (
-          <span className={`${styles.statusText} ${styles.statusError}`}>{errorMessage}</span>
+          <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#e04f4f]">{errorMessage}</span>
         )}
         {isSuccess && (
-          <span className={`${styles.statusText} ${styles.statusSuccess}`}>
+          <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#1e7a46]">
             Email verified ✓
           </span>
         )}
       </div>
 
-      <p className={styles.resendRow}>
+      <p className="mt-4 text-[13px] text-[#6b7280]">
         Didn&apos;t receive code?{" "}
         {canResend ? (
-          <button type="button" className={styles.resendLink} onClick={resend}>
+          <button type="button" className="cursor-pointer bg-transparent p-0 font-bold text-[#1e7a46] underline hover:text-[#16603a]" onClick={resend}>
             Resend
           </button>
         ) : (
           <>
-            <span className={styles.resendDisabled}>Resend</span> in{" "}
+            <span className="font-bold text-[#9ca3af]">Resend</span> in{" "}
             <strong>{isResending ? "…" : formattedTimeLeft}</strong>
           </>
         )}
@@ -176,5 +175,5 @@ function EnvelopeIcon({ success }: { success: boolean }) {
 }
 
 function Spinner() {
-  return <span className={styles.spinner} aria-hidden="true" />;
+  return <span className="h-[13px] w-[13px] animate-spin rounded-full border-2 border-[#d1d5db] border-t-[#6b7280] motion-reduce:animate-none" aria-hidden="true" />;
 }

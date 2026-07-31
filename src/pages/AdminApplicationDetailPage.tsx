@@ -67,7 +67,7 @@ export default function AdminApplicationDetailPage() {
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="text-2xl font-bold text-white">Manufacturer Application</h1>
+        <h1 className="text-2xl font-bold text-white">Admin Application Detail</h1>
       </div>
 
       <div className="mx-auto max-w-4xl px-6 py-6">

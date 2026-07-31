@@ -1,6 +1,23 @@
 import apiClient, { getApiBaseUrl } from "./api";
-import axios, { type AxiosRequestConfig } from "axios";
-import type { Product, VerificationCode, ApiResponse } from "../types";
+import axios from "axios";
+import type { Product, Batch, CreateBatchPayload, ApiResponse } from "../types";
+
+function buildFormData(data: Record<string, unknown>): FormData {
+  const fd = new FormData();
+  Object.entries(data).forEach(([key, value]) => {
+    if (value instanceof File) {
+      fd.append(key, value, value.name);
+    } else if (Array.isArray(value)) {
+      value.forEach((item) => {
+        if (item instanceof File) fd.append(key, item, item.name);
+        else fd.append(key, String(item));
+      });
+    } else if (value !== undefined && value !== null) {
+      fd.append(key, String(value));
+    }
+  });
+  return fd;
+}
 
 export const productService = {
   // create accepts either JSON or FormData (with image files).

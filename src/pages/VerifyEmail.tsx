@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import "./VerifyEmail.css";
 import emailImage from "../assets/email.png";
 
 const VerifyEmail = () => {
@@ -55,22 +54,22 @@ const VerifyEmail = () => {
   };
 
   return (
-    <div className="verify-page">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#eef6ff] px-5 py-[30px]">
       <img
         src={emailImage}
         alt="Email Verification"
-        className="email-image"
+        className="mb-[25px] h-[202px] w-[210px]"
       />
 
-      <h2>Verify Your Email</h2>
+      <h2 className="mb-3 h-6 w-[210px] font-bold text-[#2d2d2d]">Verify Your Email</h2>
 
-      <p className="subtitle">
+      <p className="mb-7 h-12 w-full text-center leading-[1.7] text-[#292D32]">
         We've sent a 6-digit verification code to
         <br />
-        <strong>info@greenfoodsltd.com</strong>
+        <strong className="font-[590] text-[#292D32]">info@greenfoodsltd.com</strong>
       </p>
 
-      <div className={`otp-container ${isOtpInvalid ? "error" : ""}`}>
+      <div className={`mb-2.5 flex justify-around gap-3 ${isOtpInvalid ? "error" : ""}`}>
         {otp.map((digit, index) => (
           <input
             key={index}
@@ -81,24 +80,23 @@ const VerifyEmail = () => {
             value={digit}
             onChange={(e) => handleChange(e.target.value, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
+            className={`h-[47px] w-10 rounded-[12px] border-2 border-[#86d4aa] bg-white text-center text-[22px] font-semibold outline-none transition-[0.2s] focus:border-[#2e9d63] focus:shadow-[0_0_0_3px_rgba(46,157,99,0.15)] ${isOtpInvalid ? "border border-[#FF0000] text-[#FF0000]" : ""}`}
           />
         ))}
       </div>
 
       {isOtpInvalid && (
-        <p className="otp-error-message">
+        <p className="mb-5 text-sm text-[#FF0000]">
           Incorrect verification code.
         </p>
       )}
 
-      <p className="resend">
+      <p className="text-[15px] text-[#555]">
         Didn't receive code?
-        <span> Resend in 1:59</span>
+        <span className="font-semibold text-[#333]"> Resend in 1:59</span>
       </p>
     </div>
   );
 };
 
 export default VerifyEmail;
-
-

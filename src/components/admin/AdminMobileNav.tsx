@@ -10,15 +10,17 @@ import {
   Bell,
 } from "lucide-react";
 import { ROUTES } from "../../constants";
+import { DEFAULT_UNREAD_COUNT } from "../../constants/notifications";
+import { NotificationBell } from "../ui/NotificationBell";
 import logo from "../../assets/images/logo.png";
 
 const navItems = [
-  { label: "Dashboard", href: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
-  { label: "Organizations", href: ROUTES.ADMIN_ORGANIZATIONS, icon: Building2 },
-  { label: "Applications", href: ROUTES.ADMIN_APPLICATIONS, icon: ClipboardList },
-  { label: "Consumer Reports", href: ROUTES.ADMIN_CONSUMER_REPORTS, icon: FileWarning },
-  { label: "Promotion & Tips", href: ROUTES.ADMIN_PROMOTION_TIPS, icon: Megaphone },
-  { label: "Notification", href: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
+  { label: "Dashboard (Admin)", href: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
+  { label: "Organizations (Admin)", href: ROUTES.ADMIN_ORGANIZATIONS, icon: Building2 },
+  { label: "Applications (Admin)", href: ROUTES.ADMIN_APPLICATIONS, icon: ClipboardList },
+  { label: "Consumer Reports (Admin)", href: ROUTES.ADMIN_CONSUMER_REPORTS, icon: FileWarning },
+  { label: "Promotion & Tips (Admin)", href: ROUTES.ADMIN_PROMOTION_TIPS, icon: Megaphone },
+  { label: "Notification (Admin)", href: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
 ];
 
 function AdminMobileNav() {
@@ -60,7 +62,14 @@ function AdminMobileNav() {
                         isActive ? "bg-primary text-white" : "text-gray-700",
                       ].join(" ")}
                   >
-                    <Icon size={18} aria-hidden="true" />
+                    {item.href === ROUTES.ADMIN_NOTIFICATIONS ? (
+                      <NotificationBell
+                        count={DEFAULT_UNREAD_COUNT}
+                        iconClassName="h-[18px] w-[18px]"
+                      />
+                    ) : (
+                      <Icon size={18} aria-hidden="true" />
+                    )}
                     {item.label}
                   </Link>
                 </li>

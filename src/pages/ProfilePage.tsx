@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   const [toggles, setToggles] = useState({
     productAlert: true,
@@ -20,18 +20,13 @@ export default function ProfilePage() {
   const fullName = user ? `${user.firstName} ${user.lastName}` : 'User';
   const email = user?.email ?? '';
 
-  const handleLogout = async () => {
-    await logout();
-    navigate(ROUTES.LOGIN);
-  };
-
   return (
     <div style={styles.page}>
 
       {/* Header */}
       <div style={styles.header}>
         <button style={styles.backBtn} onClick={() => navigate(-1)}>‹</button>
-        <h1 style={styles.headerTitle}>Profile</h1>
+        <h1 style={styles.headerTitle}>Profile (Consumer)</h1>
       </div>
 
       {/* Avatar */}

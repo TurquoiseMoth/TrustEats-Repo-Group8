@@ -7,8 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { authService } from "../services/auth";
-import type { Manufacturer, RegisterRequest } from "../types";
-
+import type { User, RegisterRequest } from "../types";
 interface AuthContextValue {
   user: User | null;
   isAuthenticated: boolean;
@@ -30,20 +29,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     authService
       .getCurrentUser()
-      .then(setUser)
+      .then((result) => setUser(result.manufacturer ?? null))
       .catch(() => setUser(null))
       .finally(() => setIsLoading(false));
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const user = await authService.login({ email, password });
-    setUser(user);
+    const result = await authService.login({ email, password });
+    setUser(result.manufacturer ?? null);
   }, []);
 
   const register = useCallback(async (data: RegisterRequest) => {
-    const result = await authService.register(data);
-    setUser((result as any).manufacturer);
-    setToken((result as any).token ?? null);
+    const result = (await authService.register(data)) as { manufacturer?: User; token?: string };
+    setUser(result.manufacturer ?? null);
   }, []);
 
   const logout = useCallback(async () => {
@@ -58,8 +56,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const refreshUser = useCallback(async () => {
     try {
       setIsLoading(true);
-      const user = await authService.getCurrentUser();
-      setUser(user);
+      const result = await authService.getCurrentUser();
+      setUser(result.manufacturer ?? null);
     } catch {
       setUser(null);
     } finally {

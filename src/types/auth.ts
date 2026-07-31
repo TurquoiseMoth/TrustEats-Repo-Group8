@@ -30,7 +30,7 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-  manufacturer: Manufacturer;
+  manufacturer?: User;
   token?: string;
 }
 

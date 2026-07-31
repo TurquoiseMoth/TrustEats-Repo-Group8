@@ -2,14 +2,6 @@ import { useState, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router";
 import {
   ArrowLeft,
-  LayoutDashboard,
-  QrCode,
-  PackagePlus,
-  Package,
-  Bell,
-  Settings,
-  Home,
-  ShieldCheck,
   ImageIcon,
   X,
   CheckCircle2,
@@ -17,22 +9,8 @@ import {
 } from "lucide-react";
 import { ROUTES } from "../constants";
 import { useMediaQuery } from "../hooks/useMediaQuery";
-import { productService } from "../services/products";
-
-const sidebarLinks = [
-  { label: "Dashboard", href: ROUTES.DASHBOARD, icon: LayoutDashboard },
-  { label: "QR Code", href: ROUTES.SCAN, icon: QrCode },
-  { label: "Add Product", href: ROUTES.PRODUCT_UPLOAD, icon: PackagePlus, active: true },
-  { label: "Product List", href: ROUTES.DASHBOARD, icon: Package },
-  { label: "Notification", href: ROUTES.NOTIFICATIONS, icon: Bell },
-];
-
-const mobileTabs = [
-  { label: "Home", href: ROUTES.HOME, icon: Home },
-  { label: "QR Code", href: ROUTES.SCAN, icon: QrCode },
-  { label: "Product", href: ROUTES.PRODUCT_UPLOAD, icon: Package, active: true },
-  { label: "Settings", href: ROUTES.DASHBOARD, icon: Settings },
-];
+import { ManufacturerSidebar } from "../components/manufacturer/ManufacturerSidebar";
+import { ManufacturerMobileNav } from "../components/manufacturer/ManufacturerMobileNav";
 
 function ProductUploadPage() {
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -43,7 +21,6 @@ function ProductUploadPage() {
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState("");
 
   const isNafdacValid = /^\d{2}-\d{4,}$/.test(nafdacNo);
 
@@ -99,7 +76,7 @@ function ProductUploadPage() {
     setNafdacNo(formatNafdac(e.target.value));
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid) return;
 
@@ -116,10 +93,11 @@ function ProductUploadPage() {
       // Show success toast
       window.dispatchEvent(new CustomEvent("trusteats:notify", { detail: { type: "success", message: "Product uploaded successfully" } }));
       setSubmitSuccess(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("product upload failed", err);
       // show a toast via the global event so user sees the error
-      window.dispatchEvent(new CustomEvent("trusteats:notify", { detail: { type: "error", message: err?.message ?? "Upload failed" } }));
+      const message = err instanceof Error ? err.message : "Upload failed";
+      window.dispatchEvent(new CustomEvent("trusteats:notify", { detail: { type: "error", message } }));
     }
   };
 
@@ -173,13 +151,13 @@ function ProductUploadPage() {
       {/* Action Buttons */}
       <div className="mt-6 flex w-full max-w-sm flex-col gap-3">
         <Link
-          to={ROUTES.SCAN}
+          to={ROUTES.QR_CODE}
           className="flex h-12 items-center justify-center rounded-xl bg-primary text-sm font-semibold text-white transition-colors hover:bg-primary/90"
         >
           Generate QR Code
         </Link>
         <Link
-          to={ROUTES.DASHBOARD}
+          to={ROUTES.MANUFACTURER_PRODUCTS}
           className="flex h-12 items-center justify-center rounded-xl border-2 border-primary text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
         >
           View Product List
@@ -191,9 +169,6 @@ function ProductUploadPage() {
   /* ── Form View ──────────────────────────────────── */
   const formContent = (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-      {submitError && (
-        <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{submitError}</div>
-      )}
       {/* Instructional Banner */}
       <div className="rounded-xl bg-primary px-5 py-4">
         <p className="text-sm leading-relaxed text-white">
@@ -318,7 +293,7 @@ function ProductUploadPage() {
           Add Product
         </button>
         <Link
-          to={ROUTES.DASHBOARD}
+          to={ROUTES.MANUFACTURER_PRODUCTS}
           className="flex h-12 flex-1 items-center justify-center rounded-xl border-2 border-primary text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
         >
           View Product List
@@ -337,7 +312,7 @@ function ProductUploadPage() {
             <ArrowLeft className="h-5 w-5" />
           </button>
           <h1 className="ml-4 flex-1 text-center text-sm font-bold text-white">
-            Upload Product
+            {submitSuccess ? "Product Uploaded" : "Add Product"}
           </h1>
         </header>
 
@@ -346,31 +321,7 @@ function ProductUploadPage() {
           {submitSuccess ? successContent : formContent}
         </main>
 
-        {/* Mobile Bottom Nav */}
-        <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white md:hidden">
-          <div className="flex h-14 items-center justify-around">
-            {mobileTabs.map(({ label, href, icon: Icon, active }) => (
-              <Link
-                key={label}
-                to={href}
-                className="flex w-full flex-col items-center justify-center gap-0.5"
-              >
-                <Icon
-                  size={20}
-                  strokeWidth={active ? 2.5 : 1.8}
-                  className={active ? "text-primary" : "text-gray-400"}
-                />
-                <span
-                  className={`text-xs font-medium ${
-                    active ? "text-primary" : "text-gray-400"
-                  }`}
-                >
-                  {label}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </nav>
+        <ManufacturerMobileNav />
       </div>
     );
   }
@@ -378,49 +329,13 @@ function ProductUploadPage() {
   /* ── DESKTOP VIEW ─────────────────────────────── */
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside className="fixed left-0 top-0 z-40 flex h-screen w-60 flex-col border-r border-gray-200 bg-white">
-        {/* Brand */}
-        <div className="flex items-center gap-2 px-5 py-5">
-          <ShieldCheck className="h-7 w-7 text-primary" />
-          <span className="text-lg font-bold text-primary">TrustEats</span>
-        </div>
-
-        {/* Nav Links */}
-        <nav className="flex flex-1 flex-col gap-1 px-3">
-          {sidebarLinks.map(({ label, href, icon: Icon, active }) => (
-            <Link
-              key={label}
-              to={href}
-              className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
-                active
-                  ? "bg-primary text-white"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-              }`}
-            >
-              <Icon className="h-5 w-5" />
-              {label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Settings */}
-        <div className="px-3 pb-5">
-          <Link
-            to={ROUTES.DASHBOARD}
-            className="flex items-center justify-center gap-2 rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-          >
-            <Settings className="h-4 w-4" />
-            Settings
-          </Link>
-        </div>
-      </aside>
+      <ManufacturerSidebar />
 
       {/* Main Content */}
       <div className="ml-60 flex flex-1 flex-col">
         {/* Header */}
         <header className="sticky top-0 z-30 flex h-14 items-center bg-secondary px-8">
-          <h1 className="text-lg font-bold text-white">Upload Product</h1>
+          <h1 className="text-lg font-bold text-white">Add Product</h1>
         </header>
 
         {/* Content */}

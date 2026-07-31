@@ -2,14 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import {
   ArrowLeft,
-  LayoutDashboard,
-  QrCode,
-  PackagePlus,
-  Package,
-  Bell,
-  Settings,
-  Home,
-  ShieldCheck,
   Download,
   Share2,
   Printer,
@@ -17,21 +9,8 @@ import {
 import { ROUTES } from "../constants";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { Card } from "../components/ui/Card";
-
-const sidebarLinks = [
-  { label: "Dashboard", href: ROUTES.MANUFACTURER_DASHBOARD, icon: LayoutDashboard },
-  { label: "QR Code", href: ROUTES.QR_CODE, icon: QrCode, active: true },
-  { label: "Add Product", href: ROUTES.PRODUCT_UPLOAD, icon: PackagePlus },
-  { label: "Product List", href: ROUTES.PRODUCT_LIST, icon: Package },
-  { label: "Notification", href: ROUTES.NOTIFICATIONS, icon: Bell },
-];
-
-const mobileTabs = [
-  { label: "Home", href: ROUTES.HOME, icon: Home },
-  { label: "QR Code", href: ROUTES.QR_CODE, icon: QrCode, active: true },
-  { label: "Product", href: ROUTES.PRODUCT_UPLOAD, icon: Package },
-  { label: "Profile", href: ROUTES.PROFILE, icon: Settings },
-];
+import { ManufacturerSidebar } from "../components/manufacturer/ManufacturerSidebar";
+import { ManufacturerMobileNav } from "../components/manufacturer/ManufacturerMobileNav";
 
 interface ProductData {
   name: string;
@@ -117,7 +96,7 @@ function ActionGroup() {
         Print
       </button>
       <Link
-        to={ROUTES.PRODUCT_LIST}
+        to={ROUTES.MANUFACTURER_PRODUCTS}
         className="mt-2 text-center text-sm font-medium text-gray-400 transition-colors hover:text-gray-600"
       >
         {"<-"} Back to Product List
@@ -262,69 +241,14 @@ function QrCodePage() {
           {submitSuccess ? <QrSuccessSummary product={submittedProduct} /> : formContent}
         </main>
 
-        <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white md:hidden">
-          <div className="flex h-14 items-center justify-around">
-            {mobileTabs.map(({ label, href, icon: Icon, active }) => (
-              <Link
-                key={label}
-                to={href}
-                className="flex w-full flex-col items-center justify-center gap-0.5"
-              >
-                <Icon
-                  size={20}
-                  strokeWidth={active ? 2.5 : 1.8}
-                  className={active ? "text-primary" : "text-gray-400"}
-                />
-                <span
-                  className={`text-xs font-medium ${
-                    active ? "text-primary" : "text-gray-400"
-                  }`}
-                >
-                  {label}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </nav>
+        <ManufacturerMobileNav />
       </div>
     );
   }
 
   return (
     <div className="flex min-h-screen bg-background">
-      <aside className="fixed left-0 top-0 z-40 flex h-screen w-60 flex-col border-r border-gray-200 bg-white">
-        <div className="flex items-center gap-2 px-5 py-5">
-          <ShieldCheck className="h-7 w-7 text-primary" />
-          <span className="text-lg font-bold text-primary">TrustEats</span>
-        </div>
-
-        <nav className="flex flex-1 flex-col gap-1 px-3">
-          {sidebarLinks.map(({ label, href, icon: Icon, active }) => (
-            <Link
-              key={label}
-              to={href}
-              className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
-                active
-                  ? "bg-primary text-white"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-              }`}
-            >
-              <Icon className="h-5 w-5" />
-              {label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="px-3 pb-5">
-          <Link
-            to={ROUTES.SETTINGS}
-            className="flex items-center justify-center gap-2 rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-          >
-            <Settings className="h-4 w-4" />
-            Settings
-          </Link>
-        </div>
-      </aside>
+      <ManufacturerSidebar />
 
       <div className="ml-60 flex flex-1 flex-col">
         <header className="sticky top-0 z-30 flex h-14 items-center bg-secondary px-8">

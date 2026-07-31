@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../constants";
 import { useAuth } from "../contexts/AuthContext";
+import { BackButton } from "../components/ui/BackButton";
+import { useMediaQuery } from "../hooks/useMediaQuery";
+import logo from "../assets/logo.png";
 
 function Field({
   label,
@@ -21,13 +24,13 @@ function Field({
 export default function SignUpPage() {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
   const [form, setForm] = useState({
     fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-  const [role, setRole] = useState<"consumer" | "manufacturer">("consumer");
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,31 +67,18 @@ export default function SignUpPage() {
 
     setIsSubmitting(true);
     try {
-      if (role === "manufacturer") {
-        // Redirect manufacturers to the dedicated manufacturer signup flow
-        navigate(ROUTES.MANUFACTURER_SIGNUP, {
-          state: { fullName: form.fullName, email: form.email },
-        });
-        return;
-      }
-
       const payload = {
         fullName: form.fullName,
         name: form.fullName,
         email: form.email,
         password: form.password,
         confirmPassword: form.confirmPassword,
-        role,
+        role: "consumer" as const,
         termsAccepted: termsAgreed,
       };
 
-      // Helpful for local debugging: inspect exact payload sent
-      // (remove or disable in production)
-      // (debug) inspect payload locally — remove when not needed
-      // console.log('Register payload', payload);
-
       await register(payload);
-      navigate(ROUTES.VERIFY_EMAIL, { state: { email: form.email } });
+      navigate(ROUTES.DASHBOARD);
     } catch (err) {
       setError(
         (err as { message?: string })?.message ??
@@ -101,11 +91,14 @@ export default function SignUpPage() {
 
   return (
     <div style={styles.phone}>
+      <div style={styles.backWrap}>
+        <BackButton />
+      </div>
       <img src="/assets/Deco.svg" alt="" style={styles.archImg} />
 
-      <div style={styles.logoWrap}>
+      <div style={{ ...styles.logoWrap, ...(isDesktop ? { marginTop: "24px" } : {}) }}>
         <img
-          src="/assets/trusteats-logo.png"
+          src={logo}
           alt="TrustEats"
           className="h-8 w-auto"
         />
@@ -119,10 +112,14 @@ export default function SignUpPage() {
         <div style={styles.form}>
           <Field label="Role">
             <select
-              value={role}
-              onChange={(e) =>
-                setRole(e.target.value as "consumer" | "manufacturer")
-              }
+              defaultValue="consumer"
+              onChange={(e) => {
+                if (e.target.value === "manufacturer") {
+                  navigate(ROUTES.MANUFACTURER_SIGNUP, {
+                    state: { fullName: form.fullName, email: form.email },
+                  });
+                }
+              }}
               style={{ ...styles.input, height: "44px" }}
               disabled={isSubmitting}
             >
@@ -206,45 +203,11 @@ export default function SignUpPage() {
           >
             {isSubmitting ? "Creating account…" : "Sign Up"}
           </button>
-
-          {/* <div style={styles.orDivider}>
-            <span style={styles.orLine} />
-            <span style={styles.orText}>Or</span>
-            <span style={styles.orLine} />
-          </div> */}
-
-          {/* Social OAuth buttons removed for MVP
-          <button style={styles.btnSocial}>
-            <GoogleIcon /> Sign up with Google
-          </button>
-          <button style={styles.btnSocial}>
-            <AppleIcon /> Sign up with Apple
-          </button>
-          */}
         </div>
       </div>
     </div>
   );
 }
-
-// function GoogleIcon() {
-//   return (
-//     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-//       <path d="M23.766 12.276c0-.815-.066-1.635-.207-2.438H12.24v4.621h6.482a5.554 5.554 0 01-2.399 3.647v3.028h3.886c2.272-2.092 3.557-5.177 3.557-8.858z" fill="#4285F4" />
-//       <path d="M12.24 24c3.236 0 5.966-1.062 7.955-2.886l-3.886-3.028c-1.078.722-2.46 1.146-4.069 1.146-3.13 0-5.782-2.112-6.73-4.951H1.517v3.15C3.507 21.3 7.544 24 12.24 24z" fill="#34A853" />
-//       <path d="M5.51 14.291a7.24 7.24 0 010-4.582V6.559H1.517a12.236 12.236 0 000 10.882l3.993-3.15z" fill="#FBBC05" />
-//       <path d="M12.24 4.75c1.771 0 3.36.625 4.613 1.83l3.424-3.426C18.197 1.19 15.468 0 12.24 0 7.544 0 3.507 2.7 1.517 6.56l3.993 3.15C6.458 6.862 9.11 4.75 12.24 4.75z" fill="#EA4335" />
-//     </svg>
-//   );
-// }
-
-// function AppleIcon() {
-//   return (
-//     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-//       <path d="M17.569 12.625c-.028-3.023 2.464-4.474 2.574-4.544-1.403-2.05-3.582-2.33-4.35-2.357-1.837-.184-3.607 1.088-4.545 1.088-.95 0-2.395-1.062-3.943-1.034-2.02.028-3.893 1.181-4.932 2.988C1.263 11.55.968 15.259 2.718 18a4.27 4.27 0 003.265 1.786c1.312.024 2.234-.922 3.49-.922 1.241 0 2.8 1.118 4.568 1.014a5.055 5.055 0 003.749-2.003c1.18-1.732 1.662-3.398 1.69-3.483-.037-.015-3.184-1.252-3.21-4.768zM14.955 5.18A4.594 4.594 0 0016.02 2c-.821.033-1.82.548-2.409 1.239a4.22 4.22 0 00-1.143 2.829 3.735 3.735 0 001.295-.413c.382-.2.9-.543 1.192-.475z" fill="currentColor" />
-//     </svg>
-//   );
-// }
 
 const styles: Record<string, React.CSSProperties> = {
   phone: {
@@ -253,12 +216,22 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: "'Inter', sans-serif",
     display: "flex",
     flexDirection: "column",
+    position: "relative",
+  },
+  backWrap: {
+    position: "absolute",
+    top: "12px",
+    left: "12px",
+    zIndex: 3,
   },
   archImg: {
     width: "100%",
     height: "auto",
+    maxHeight: "180px",
+    objectFit: "cover",
     display: "block",
     marginTop: "-40px",
+    flexShrink: 0,
   },
   logoWrap: {
     display: "flex",
@@ -268,11 +241,6 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: "-10px",
     zIndex: 2,
     position: "relative",
-  },
-  logoText: {
-    fontSize: "22px",
-    fontWeight: 700,
-    color: "#3c7443",
   },
   content: {
     padding: "16px 20px 48px",
@@ -360,37 +328,5 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-  },
-  orDivider: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    margin: "20px 0",
-  },
-  orLine: {
-    flex: 1,
-    height: "1px",
-    background: "#9A9A9A",
-  },
-  orText: {
-    fontSize: "14px",
-    color: "#9A9A9A",
-  },
-  btnSocial: {
-    width: "100%",
-    height: "52px",
-    background: "#fff",
-    color: "#292d32",
-    fontSize: "15px",
-    fontWeight: 600,
-    fontFamily: "'Inter', sans-serif",
-    border: "1px solid #9A9A9A",
-    borderRadius: "8px",
-    cursor: "pointer",
-    marginBottom: "10px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "10px",
   },
 };

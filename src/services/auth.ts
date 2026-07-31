@@ -26,7 +26,7 @@ export const authService = {
     // Normalize response to { manufacturer?, token? }
     const manufacturer = (payload && (payload.manufacturer ?? payload.user)) ?? undefined;
     const token = (payload && (payload.token ?? payload.accessToken ?? payload.access_token)) ?? undefined;
-    const result = { manufacturer, token } as any;
+    const result: AuthResponse = { manufacturer, token };
     storeAuth(result);
     return result;
   },
@@ -36,7 +36,7 @@ export const authService = {
     const payload = (res.data && res.data.data) ? res.data.data : res.data;
     const manufacturer = (payload && (payload.manufacturer ?? payload.user)) ?? undefined;
     const token = (payload && (payload.token ?? payload.accessToken ?? payload.access_token)) ?? undefined;
-    const result = { manufacturer, token } as any;
+    const result: AuthResponse = { manufacturer, token };
     storeAuth(result);
     return result;
   },
@@ -44,7 +44,7 @@ export const authService = {
   logout: async () => {
     try {
       await apiClient.post("/auth/logout");
-    } catch (e) {
+    } catch {
       // ignore
     }
 
@@ -56,7 +56,7 @@ export const authService = {
     const payload = (res.data && res.data.data) ? res.data.data : res.data;
     const manufacturer = (payload && (payload.manufacturer ?? payload.user)) ?? undefined;
     const token = (payload && (payload.token ?? payload.accessToken ?? payload.access_token)) ?? undefined;
-    const result = { manufacturer, token } as any;
+    const result: AuthResponse = { manufacturer, token };
     storeAuth(result);
     return result;
   },
@@ -85,7 +85,7 @@ export const authService = {
   // Email verification (accepts either `code` or `otp` from callers and sends `otp` to backend)
   verifyEmail: async (payload: { email: string; code?: string; otp?: string }) => {
     const body = { email: payload.email, otp: payload.otp ?? payload.code };
-    const res = await apiClient.post<ApiResponse<any>>("/auth/verify-email", body);
+    const res = await apiClient.post<ApiResponse<Record<string, unknown>>>("/auth/verify-email", body);
     return res.data;
   },
 

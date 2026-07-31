@@ -32,7 +32,7 @@ export default function AdminOrganizationsPage() {
   return (
     <div>
       <div className="hidden md:block bg-secondary px-8 py-6">
-        <h1 className="text-2xl font-bold text-white">Registered Organizations</h1>
+        <h1 className="text-2xl font-bold text-white">Admin Organizations</h1>
       </div>
 
       <div className="px-5 md:px-8 py-6 max-w-[1400px] mx-auto">

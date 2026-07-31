@@ -1,4 +1,4 @@
-import axios, { isAxiosError, type AxiosError, type AxiosRequestConfig } from "axios";
+import axios, { isAxiosError, AxiosHeaders, type AxiosError, type AxiosRequestConfig } from "axios";
 import type { ApiError } from "../types";
 
 // Default Render deployment for the TrustEats backend.
@@ -22,13 +22,13 @@ apiClient.interceptors.request.use((config) => {
   // Prefer an explicit client-side token when available (localStorage).
   // For development, allow an env fallback token: VITE_DEV_AUTH_TOKEN (useful for local API that doesn't use cookies).
   const tokenFromStorage = localStorage.getItem("auth_token");
-  const devToken = (import.meta.env as any)?.VITE_DEV_AUTH_TOKEN as string | undefined;
+  const devToken = (import.meta.env as { VITE_DEV_AUTH_TOKEN?: string }).VITE_DEV_AUTH_TOKEN;
   const token = tokenFromStorage || (import.meta.env.DEV ? devToken : undefined);
 
   if (token) {
     const headers = { ...(config.headers as Record<string, string> | undefined), Authorization: `Bearer ${token}` };
     // assign back in a way compatible with axios types
-    config.headers = headers as any;
+    config.headers = new AxiosHeaders(headers);
   }
   return config;
 });
@@ -116,7 +116,10 @@ apiClient.interceptors.response.use(
             // ignore storage errors
           }
           // also update default header so immediate retries include it
-          apiClient.defaults.headers = { ...(apiClient.defaults.headers as Record<string, unknown>), Authorization: `Bearer ${refreshedToken}` } as any;
+          apiClient.defaults.headers = {
+            ...(apiClient.defaults.headers as Record<string, string>),
+            Authorization: `Bearer ${refreshedToken}`,
+          } as unknown as typeof apiClient.defaults.headers;
         }
 
         processQueue(undefined, refreshedToken ?? null);
@@ -145,22 +148,13 @@ apiClient.interceptors.response.use(
     }
 
     // For other errors, normalize to ApiError
-    const message = (error.response?.data as any)?.message ?? getDefaultErrorMessage(status as number);
+    const responseData = error.response?.data as { message?: string; details?: unknown } | undefined;
+    const message = responseData?.message ?? getDefaultErrorMessage(status as number);
     const apiError: ApiError = {
       success: false,
       message,
-      details: (error.response?.data as any)?.details,
+      details: responseData?.details as Array<{ path: string; message: string }> | undefined,
     };
-
-    if (error.response?.status === 401 && !error.config?._retry) {
-      try {
-        error.config._retry = true;
-        await apiClient.post("/auth/refresh");
-        return apiClient(error.config);
-      } catch {
-        return Promise.reject(apiError);
-      }
-    }
 
     return Promise.reject(apiError);
   },

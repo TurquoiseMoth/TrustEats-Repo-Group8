@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { Eye, EyeOff } from "lucide-react";
 import { ROUTES } from "../constants";
 import LeafPattern from "../components/auth/LeafPattern";
+import { BackButton } from "../components/ui/BackButton";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function AdminSignInPage() {
@@ -33,13 +34,16 @@ export default function AdminSignInPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col relative">
+      <div className="absolute top-3 left-3 z-10">
+        <BackButton />
+      </div>
       <LeafPattern />
 
       <div className="flex-1 flex items-start justify-center px-5 md:px-6 pb-10">
         <div className="w-full max-w-[420px] md:max-w-[700px] md:bg-white md:border md:border-green-100 md:shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] rounded-none md:rounded-2xl p-0 md:p-12 mt-6 md:mt-20 lg:mt-28">
           <div className="px-1 md:px-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Sign In</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Admin Sign In</h1>
             <p className="text-sm md:text-base font-bold text-gray-900 mb-0.5">Welcome!</p>
             <p className="text-sm md:text-base text-gray-600 mb-6 md:mb-8">Sign in to continue to your account</p>
 

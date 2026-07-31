@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router';
 import { ROUTES } from '../constants';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 import { useAuth } from '../contexts/AuthContext';
+import { BackButton } from '../components/ui/BackButton';
 
 export default function ManufacturerLoginPage() {
   const navigate = useNavigate();
@@ -35,6 +36,9 @@ export default function ManufacturerLoginPage() {
 
   return (
     <div style={s.page}>
+      <div style={s.backWrap}>
+        <BackButton />
+      </div>
       <img src="/assets/Deco.svg" alt="" style={s.archImg} />
 
       <div style={s.content}>
@@ -106,12 +110,22 @@ const baseStyles: Record<string, React.CSSProperties> = {
     fontFamily: "'Inter', sans-serif",
     display: 'flex',
     flexDirection: 'column',
+    position: 'relative',
+  },
+  backWrap: {
+    position: 'absolute',
+    top: '12px',
+    left: '12px',
+    zIndex: 3,
   },
   archImg: {
     width: '100%',
     height: 'auto',
+    maxHeight: '180px',
+    objectFit: 'cover',
     display: 'block',
     marginTop: '-40px',
+    flexShrink: 0,
   },
   content: {
     padding: '24px 20px 48px',
@@ -244,7 +258,7 @@ const desktopStyles: Record<string, React.CSSProperties> = {
   },
   archImg: {
     ...baseStyles.archImg,
-    maxWidth: '720px',
+    maxHeight: '220px',
   },
   content: {
     display: 'flex',

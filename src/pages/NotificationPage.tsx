@@ -20,7 +20,7 @@ export default function NotificationsPage() {
     <div style={s.page}>
       <div style={s.header}>
         <button style={s.backBtn} onClick={() => navigate(-1)}><ChevronLeft size={22} /></button>
-        <h1 style={s.title}>Notification</h1>
+        <h1 style={s.title}>Consumer Notifications</h1>
       </div>
 
       {notifications.length === 0 ? (

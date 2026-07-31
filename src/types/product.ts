@@ -10,6 +10,7 @@ export interface Product {
   countryOfOrigin?: string;
   category?: string;
   imageUrl?: string;
+  qrGenerated?: boolean;
   isActive?: boolean;
   createdAt?: string;
 }

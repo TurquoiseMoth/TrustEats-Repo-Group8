@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
 import { authService } from '../services/auth';
+import { BackButton } from '../components/ui/BackButton';
+import { useMediaQuery } from '../hooks/useMediaQuery';
+import logo from '../assets/logo.png';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -32,6 +36,9 @@ export default function ForgotPasswordPage() {
     <div style={styles.phone}>
 
       {/* Top decoration image */}
+      <div style={styles.backWrap}>
+        <BackButton />
+      </div>
       <img
         src="/assets/Deco.svg"
         alt=""
@@ -39,8 +46,8 @@ export default function ForgotPasswordPage() {
       />
 
       {/* Logo */}
-      <div style={styles.logoWrap}>
-        <img src="/assets/trusteats-logo.png" alt="TrustEats" className="h-8 w-auto" />
+      <div style={{ ...styles.logoWrap, ...(isDesktop ? { marginTop: '24px' } : {}) }}>
+        <img src={logo} alt="TrustEats" className="h-8 w-auto" />
       </div>
 
       {/* Content */}
@@ -86,12 +93,22 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: "'Inter', sans-serif",
     display: 'flex',
     flexDirection: 'column',
+    position: 'relative',
+  },
+  backWrap: {
+    position: 'absolute',
+    top: '12px',
+    left: '12px',
+    zIndex: 4,
   },
   archImg: {
     width: '100%',
     height: 'auto',
+    maxHeight: '180px',
+    objectFit: 'cover',
     display: 'block',
     marginTop: '-40px',
+    flexShrink: 0,
   },
   logoWrap: {
     display: 'flex',
@@ -101,11 +118,6 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: '-10px',
     zIndex: 2,
     position: 'relative',
-  },
-  logoText: {
-    fontSize: '22px',
-    fontWeight: 700,
-    color: '#3c7443',
   },
   content: {
     padding: '24px 20px 48px',
