@@ -74,6 +74,15 @@ export default function ResultPage() {
 
         {product ? (
           <>
+            {product.imageUrl && (
+              <div style={styles.productImageWrap}>
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  style={styles.productImage}
+                />
+              </div>
+            )}
             <Row label="Product Name" value={product.name} />
             <Row label="Brand" value={product.brand} />
             <Row label="Batch Number" value={batch?.batchNumber ?? 'N/A'} />
@@ -231,6 +240,18 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '16px',
     paddingBottom: '12px',
     borderBottom: '1px solid #E5E7EB',
+  },
+  productImageWrap: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: '12px',
+  },
+  productImage: {
+    width: '112px',
+    height: '112px',
+    objectFit: 'cover',
+    borderRadius: '12px',
+    border: '1px solid #E8EDE8',
   },
   row: {
     display: 'flex',

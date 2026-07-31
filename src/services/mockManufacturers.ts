@@ -12,6 +12,7 @@ const DEFAULT_PROFILE: ManufacturerProfile = {
   contactPhone: "+2348034567890",
   address: "7 Trans-Amadi Industrial Layout, Port Harcourt",
   country: "Nigeria",
+  logoUrl: "/assets/trusteats-logo.png",
   status: "approved",
   termsAcceptedAt: new Date().toISOString(),
   createdAt: new Date().toISOString(),

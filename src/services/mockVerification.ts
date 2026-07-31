@@ -5,16 +5,19 @@ const delay = (ms = 300) => new Promise((r) => setTimeout(r, ms));
 const GENUINE_PRODUCT = {
   name: "Our Full Cream Milk",
   brand: "Our",
+  imageUrl: "/assets/products/farm-milk-bottle-product-image.png",
 };
 
 const SUSPICIOUS_PRODUCT = {
   name: "NutriStart Infant Formula",
   brand: "NutriStart",
+  imageUrl: "/assets/products/sunharvest-vegetable-oil-product-image.png",
 };
 
 const FAKE_PRODUCT = {
   name: "Golden Morn Cereal",
   brand: "Golden Morn",
+  imageUrl: "/assets/products/golden-morn-cereal-product-image.png",
 };
 
 export const mockVerificationService = {

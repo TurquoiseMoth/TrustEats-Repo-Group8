@@ -1,4 +1,4 @@
-import { CheckCheckIcon, User, Landmark, PackagePlus, QrCode, ScanLine, BadgeCheck, ArrowRight, FlaskConical } from "lucide-react"
+import { CheckCheckIcon, User, Landmark, PackagePlus, QrCode, ScanLine, BadgeCheck, ArrowRight, FlaskConical, ChevronDown } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link } from "react-router"
 import { Card, RoleCard, Button } from "../components/ui"
@@ -33,8 +33,28 @@ const features = [
     { icon: Landmark, label: "NAFDAC Aligned" },
 ]
 
+const faqs = [
+    {
+        q: "What is TrustEats?",
+        a: "TrustEats is a food product verification platform that lets Nigerian consumers confirm the authenticity of packaged food products by scanning QR codes linked to NAFDAC records.",
+    },
+    {
+        q: "How do I verify a product?",
+        a: "Tap \"Scan a Product\" on the home page and point your camera at the QR code on the product label. You can also enter the NAFDAC number manually using the fallback option.",
+    },
+    {
+        q: "What do the verification results mean?",
+        a: "GENUINE means the product passed all checks. SUSPICIOUS means the batch is expired or flagged for review. FAKE means the code could not be verified and may be counterfeit.",
+    },
+    {
+        q: "Who can use TrustEats?",
+        a: "Consumers can scan and verify products, manufacturers can register products and generate QR codes, and administrators can monitor reports and platform activity.",
+    },
+]
+
 function HomePage() {
     const [mockOn, setMockOn] = useState<boolean>(isMockMode())
+    const [openFaq, setOpenFaq] = useState<string | null>(faqs[0].q)
 
     useEffect(() => {
         const sync = () => setMockOn(isMockMode())
@@ -250,6 +270,51 @@ function HomePage() {
 
             {/* ── NAFDAC Banner ────────────────────────── */}
             <NafdacBanner />
+
+            {/* ── FAQ ──────────────────────────────────── */}
+            <div id="faq" className="mx-auto mt-16 w-full max-w-7xl px-6 md:mt-24 lg:px-10">
+                <h2 className="text-center text-[28px] font-bold leading-tight text-text-main">
+                    Frequently Asked <span className="text-brand-base">Questions</span>
+                </h2>
+
+                <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center">
+                    <div className="hidden lg:block overflow-hidden rounded-2xl border border-gray-200 bg-white">
+                        <img
+                            src="/assets/national-symbol.png"
+                            alt="NAFDAC national symbol"
+                            className="h-full w-full object-cover"
+                        />
+                    </div>
+
+                    <div className="space-y-4">
+                        {faqs.map((faq) => {
+                            const open = openFaq === faq.q;
+                            return (
+                                <div key={faq.q} className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
+                                    <button
+                                        type="button"
+                                        onClick={() => setOpenFaq(open ? null : faq.q)}
+                                        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                                        aria-expanded={open}
+                                    >
+                                        <span className="text-[15px] font-semibold text-text-main">{faq.q}</span>
+                                        <ChevronDown
+                                            className={`h-5 w-5 shrink-0 text-primary transition-transform ${
+                                                open ? "rotate-180" : ""
+                                            }`}
+                                        />
+                                    </button>
+                                    {open && (
+                                        <p className="border-t border-gray-100 px-5 py-4 text-sm leading-relaxed text-gray-500">
+                                            {faq.a}
+                                        </p>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
 
             {/* ── Mock Mode Toggle (dev/demo) ─────────── */}
             <div className="mx-auto mt-16 w-full max-w-7xl px-6 pb-8 md:mt-20 lg:px-10">

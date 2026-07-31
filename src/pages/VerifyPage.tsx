@@ -91,6 +91,16 @@ export default function VerifyPage() {
       <div className="w-full max-w-95 rounded-[1.25rem] border-[1.5px] border-primary/40 bg-background p-6 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] mb-10">
         <h3 className="mb-6 text-[17px] font-bold text-gray-900 tracking-wide">Product Details</h3>
 
+        {product?.imageUrl && (
+          <div className="mb-5 flex justify-center">
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className="h-36 w-36 rounded-2xl border border-gray-200 object-cover"
+            />
+          </div>
+        )}
+
         <div className="space-y-4">
           <div className="flex justify-between border-b border-gray-300 pb-4">
             <span className="text-[15px] text-gray-600">Product Name</span>

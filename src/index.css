@@ -28,6 +28,15 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Keep anchored sections clear of the sticky navbar */
+  [id] {
+    scroll-margin-top: 90px;
+  }
+
   body {
     color: var(--color-text-main, #292d32);
     background-color: var(--color-background, #f0f8ff);

@@ -7,6 +7,7 @@ export interface VerificationResult {
   product?: {
     name: string;
     brand: string;
+    imageUrl?: string;
   } | null;
   batch?: {
     batchNumber: string;

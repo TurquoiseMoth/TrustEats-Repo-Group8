@@ -1,6 +1,6 @@
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
-import { Link, useLocation } from "react-router";
+import { useState, type MouseEvent } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
 import { ROUTES } from "../../constants";
 import logo from "../../assets/Logo.png";
 
@@ -26,6 +26,29 @@ const manufacturerLinks = [
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  // Smooth-scroll to an in-page section (e.g. "/#about"). If we're on another
+  // route, navigate home first, then scroll once the page has rendered.
+  const handleNavClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("/#")) {
+      e.preventDefault();
+      const id = href.slice(2);
+      const scrollToSection = () => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      };
+      if (pathname === "/") {
+        scrollToSection();
+      } else {
+        navigate(ROUTES.HOME);
+        setTimeout(scrollToSection, 180);
+      }
+    } else if (href === ROUTES.HOME && pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-gray-100 bg-background backdrop-blur-md shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]" aria-label="Main navigation">
@@ -43,6 +66,7 @@ function Navbar() {
               <Link
                 key={item.label}
                 to={item.href}
+                onClick={(e) => handleNavClick(e, item.href)}
                 aria-current={isActive ? "page" : undefined}
                 className={`rounded-full px-5 py-1.5 text-sm font-medium transition-all duration-200 ${
                   isActive
@@ -92,7 +116,10 @@ function Navbar() {
                 key={item.label}
                 to={item.href}
                 className="rounded-lg px-4 py-2.5 text-sm font-medium text-text-main transition-colors hover:bg-gray-50"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={(e) => {
+                  handleNavClick(e, item.href);
+                  setIsMenuOpen(false);
+                }}
               >
                 {item.label}
               </Link>
