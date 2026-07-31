@@ -4,7 +4,6 @@ import helmet from "helmet";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
-
 import connectDB from "./config/db";
 import configureCloudinary from "./config/cloudinary";
 import { sanitiseQuery } from "./middleware/sanitiseQuery";
