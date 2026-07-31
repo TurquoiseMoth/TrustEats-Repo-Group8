@@ -1,3 +1,7 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
 import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
@@ -6,8 +10,21 @@ import { BrowserRouter } from 'react-router'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { AuthProvider } from './contexts/AuthContext'
 
-const queryClient = new QueryClient()
+const rootElement = document.getElementById('root');
 
+if (!rootElement) {
+  throw new Error("Failed to find the root element");
+}
+
+ReactDOM.createRoot(rootElement).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>
+);
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
 function Root() {
   useEffect(() => {
     // Initialize services from environment variable if present (optional)
@@ -76,3 +93,4 @@ createRoot(document.getElementById('root')!).render(
     <Root />
   </StrictMode>,
 )
+

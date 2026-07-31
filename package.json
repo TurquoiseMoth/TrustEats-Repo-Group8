@@ -17,11 +17,16 @@
     "clsx": "^2.1.1",
     "html5-qrcode": "^2.3.8",
     "lucide-react": "^1.24.0",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-hook-form": "^7.81.0",
+<<<<<<< HEAD
+    "react-icons": "^5.7.0",
+    "react-router-dom": "^7.18.2",
+=======
     "react-router-dom": "^7.18.1",
     "recharts": "^3.10.1",
+>>>>>>> b11a7705f9d3dab5c8a7c2c56fec5bc6fcf3a561
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.2",
     "zod": "^4.4.3"
