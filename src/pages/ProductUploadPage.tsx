@@ -117,7 +117,7 @@ function ProductUploadPage() {
       window.dispatchEvent(new CustomEvent("trusteats:notify", { detail: { type: "success", message: "Product uploaded successfully" } }));
       setSubmitSuccess(true);
     } catch (err: any) {
-      console.error("product upload failed", err);
+      // product upload failed — show toast above.
       // show a toast via the global event so user sees the error
       window.dispatchEvent(new CustomEvent("trusteats:notify", { detail: { type: "error", message: err?.message ?? "Upload failed" } }));
     }

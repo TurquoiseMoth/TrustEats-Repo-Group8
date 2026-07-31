@@ -152,16 +152,6 @@ apiClient.interceptors.response.use(
       details: (error.response?.data as any)?.details,
     };
 
-    if (error.response?.status === 401 && !error.config?._retry) {
-      try {
-        error.config._retry = true;
-        await apiClient.post("/auth/refresh");
-        return apiClient(error.config);
-      } catch {
-        return Promise.reject(apiError);
-      }
-    }
-
     return Promise.reject(apiError);
   },
 );

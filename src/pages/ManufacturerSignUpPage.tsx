@@ -1,25 +1,25 @@
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router';
-import { ROUTES } from '../constants';
-import { useMediaQuery } from '../hooks/useMediaQuery';
-import { manufacturerService } from '../services/manufacturers';
+import { useState, useRef } from "react";
+import { useNavigate } from "react-router";
+import { ROUTES } from "../constants";
+import { useMediaQuery } from "../hooks/useMediaQuery";
+import { manufacturerService } from "../services/manufacturers";
 export default function ManufacturerSignUpPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    companyName: '',
-    napamsEmail: '',
-    cacNumber: '',
-    nafdacCorNo: '',
+    companyName: "",
+    napamsEmail: "",
+    cacNumber: "",
+    nafdacCorNo: "",
   });
   const [corFile, setCorFile] = useState<File | null>(null);
   const [agreed, setAgreed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +33,14 @@ export default function ManufacturerSignUpPage() {
 
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!agreed) return;
+    if (!agreed) {
+      setSubmitError("You must accept the Terms & Conditions.");
+      return;
+    }
+    if (!corFile) {
+      setSubmitError("Please upload your Certificate of Recognition image.");
+      return;
+    }
     setSubmitting(true);
     setSubmitError("");
     try {
@@ -42,11 +49,14 @@ export default function ManufacturerSignUpPage() {
         napamsEmail: form.napamsEmail,
         cacNumber: form.cacNumber,
         nafdacCofRNumber: form.nafdacCorNo,
-        corFile: corFile,
+        certificateOfRecognition: corFile,
+        termsAccepted: agreed,
       });
       navigate(ROUTES.MANUFACTURER_DASHBOARD);
     } catch {
-      setSubmitError("Registration failed. Please check your information and try again.");
+      setSubmitError(
+        "Registration failed. Please check your information and try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -54,7 +64,6 @@ export default function ManufacturerSignUpPage() {
 
   return (
     <div style={isDesktop ? desktopStyles.page : styles.page}>
-
       {/* Top decoration image */}
       <img
         src="/assets/Deco.svg"
@@ -64,13 +73,21 @@ export default function ManufacturerSignUpPage() {
 
       {/* Logo */}
       <div style={isDesktop ? desktopStyles.logoWrap : styles.logoWrap}>
-        <img src="/assets/trusteats-logo.png" alt="TrustEats" className="h-8 w-auto" />
+        <img
+          src="/assets/trusteats-logo.png"
+          alt="TrustEats"
+          className="h-8 w-auto"
+        />
       </div>
 
       {/* Content */}
       <div style={isDesktop ? desktopStyles.content : styles.content}>
-        <h1 style={isDesktop ? desktopStyles.heading : styles.heading}>Create Company Account</h1>
-        <p style={isDesktop ? desktopStyles.subtitle : styles.subtitle}>Register your business on TrustEat</p>
+        <h1 style={isDesktop ? desktopStyles.heading : styles.heading}>
+          Create Company Account
+        </h1>
+        <p style={isDesktop ? desktopStyles.subtitle : styles.subtitle}>
+          Register your business on TrustEat
+        </p>
 
         <div style={isDesktop ? desktopStyles.form : styles.form}>
           <div style={isDesktop ? desktopStyles.row2Col : undefined}>
@@ -129,15 +146,26 @@ export default function ManufacturerSignUpPage() {
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
               />
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#9CA3AF"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="17 8 12 3 7 8" />
                 <line x1="12" y1="3" x2="12" y2="15" />
               </svg>
               <span style={styles.dropzoneText}>
-                {corFile ? corFile.name : 'Tap to upload Certificate of Recognition image'}
+                {corFile
+                  ? corFile.name
+                  : "Tap to upload Certificate of Recognition image"}
               </span>
             </div>
           </Field>
@@ -147,18 +175,37 @@ export default function ManufacturerSignUpPage() {
             <input
               type="checkbox"
               checked={agreed}
-              onChange={e => setAgreed(e.target.checked)}
+              onChange={(e) => setAgreed(e.target.checked)}
               style={styles.checkbox}
             />
             <span>
-              I Agree to the{' '}
+              I Agree to the{" "}
               <span style={styles.termsLink}>Terms & Conditions</span>
             </span>
           </label>
 
-          {submitError && <p style={{ color: '#ce0000', fontSize: '14px', textAlign: 'center', marginBottom: '12px' }}>{submitError}</p>}
-          <button style={{ ...styles.btnPrimary, opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer' }} onClick={handleSubmit} disabled={submitting}>
-            {submitting ? 'Submitting...' : 'Submit'}
+          {submitError && (
+            <p
+              style={{
+                color: "#ce0000",
+                fontSize: "14px",
+                textAlign: "center",
+                marginBottom: "12px",
+              }}
+            >
+              {submitError}
+            </p>
+          )}
+          <button
+            style={{
+              ...styles.btnPrimary,
+              opacity: submitting ? 0.7 : 1,
+              cursor: submitting ? "not-allowed" : "pointer",
+            }}
+            onClick={handleSubmit}
+            disabled={submitting}
+          >
+            {submitting ? "Submitting..." : "Submit"}
           </button>
         </div>
       </div>
@@ -177,7 +224,9 @@ function Field({
 }) {
   return (
     <div style={desktop ? desktopStyles.field : styles.field}>
-      <label style={desktop ? desktopStyles.label : styles.label}>{label}</label>
+      <label style={desktop ? desktopStyles.label : styles.label}>
+        {label}
+      </label>
       {children}
     </div>
   );
@@ -185,199 +234,199 @@ function Field({
 
 const styles: Record<string, React.CSSProperties> = {
   page: {
-    minHeight: '100vh',
-    background: '#f0f8ff',
+    minHeight: "100vh",
+    background: "#f0f8ff",
     fontFamily: "'Inter', sans-serif",
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
   },
   archImg: {
-    width: '100%',
-    height: 'auto',
-    display: 'block',
-    marginTop: '-40px',
+    width: "100%",
+    height: "auto",
+    display: "block",
+    marginTop: "-40px",
   },
   logoWrap: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
-    marginTop: '-10px',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px",
+    marginTop: "-10px",
     zIndex: 2,
-    position: 'relative',
+    position: "relative",
   },
-    content: {
-        padding: '16px 20px 48px',
-    display: 'flex',
-    flexDirection: 'column',
+  content: {
+    padding: "16px 20px 48px",
+    display: "flex",
+    flexDirection: "column",
     flex: 1,
   },
   heading: {
-    fontSize: '24px',
+    fontSize: "24px",
     fontWeight: 700,
-    color: '#292d32',
-    textAlign: 'center',
-    marginBottom: '4px',
+    color: "#292d32",
+    textAlign: "center",
+    marginBottom: "4px",
   },
   subtitle: {
-    fontSize: '14px',
-    color: '#444444',
-    textAlign: 'center',
-    marginBottom: '24px',
+    fontSize: "14px",
+    color: "#444444",
+    textAlign: "center",
+    marginBottom: "24px",
   },
   form: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
   },
   field: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginBottom: '18px',
+    display: "flex",
+    flexDirection: "column",
+    marginBottom: "18px",
   },
   label: {
-    fontSize: '15px',
+    fontSize: "15px",
     fontWeight: 600,
-    color: '#292d32',
-    marginBottom: '6px',
+    color: "#292d32",
+    marginBottom: "6px",
   },
   input: {
-    height: '52px',
-    background: '#ffffff',
-    border: '1px solid #9A9A9A',
-    borderRadius: '8px',
-    padding: '0 16px',
-    fontSize: '15px',
+    height: "52px",
+    background: "#ffffff",
+    border: "1px solid #9A9A9A",
+    borderRadius: "8px",
+    padding: "0 16px",
+    fontSize: "15px",
     fontFamily: "'Inter', sans-serif",
-    color: '#292d32',
-    outline: 'none',
-    width: '100%',
-    boxSizing: 'border-box',
+    color: "#292d32",
+    outline: "none",
+    width: "100%",
+    boxSizing: "border-box",
   },
   dropzone: {
-    width: '100%',
-    minHeight: '120px',
-    background: '#ffffff',
-    border: '2px dashed #9A9A9A',
-    borderRadius: '8px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
-    cursor: 'pointer',
-    padding: '20px 16px',
-    boxSizing: 'border-box',
+    width: "100%",
+    minHeight: "120px",
+    background: "#ffffff",
+    border: "2px dashed #9A9A9A",
+    borderRadius: "8px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px",
+    cursor: "pointer",
+    padding: "20px 16px",
+    boxSizing: "border-box",
   },
   dropzoneText: {
-    fontSize: '14px',
-    color: '#9CA3AF',
-    textAlign: 'center',
+    fontSize: "14px",
+    color: "#9CA3AF",
+    textAlign: "center",
   },
   checkLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    fontSize: '14px',
-    color: '#292d32',
-    cursor: 'pointer',
-    marginBottom: '24px',
-    marginTop: '4px',
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    fontSize: "14px",
+    color: "#292d32",
+    cursor: "pointer",
+    marginBottom: "24px",
+    marginTop: "4px",
   },
   checkbox: {
-    width: '18px',
-    height: '18px',
-    accentColor: '#3c7443',
-    cursor: 'pointer',
+    width: "18px",
+    height: "18px",
+    accentColor: "#3c7443",
+    cursor: "pointer",
     flexShrink: 0,
   },
   termsLink: {
-    color: '#3c7443',
+    color: "#3c7443",
     fontWeight: 600,
-    textDecoration: 'underline',
+    textDecoration: "underline",
   },
   btnPrimary: {
-    width: '100%',
-    height: '52px',
-    background: '#3c7443',
-    color: '#ffffff',
-    fontSize: '17px',
+    width: "100%",
+    height: "52px",
+    background: "#3c7443",
+    color: "#ffffff",
+    fontSize: "17px",
     fontWeight: 700,
     fontFamily: "'Inter', sans-serif",
-    border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 };
 
 const desktopStyles: Record<string, React.CSSProperties> = {
   page: {
-    minHeight: '100vh',
-    background: '#f0f8ff',
+    minHeight: "100vh",
+    background: "#f0f8ff",
     fontFamily: "'Inter', sans-serif",
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   archImg: {
-    width: '100%',
-    maxWidth: '720px',
-    height: 'auto',
-    display: 'block',
-    marginTop: '-40px',
+    width: "100%",
+    maxWidth: "720px",
+    height: "auto",
+    display: "block",
+    marginTop: "-40px",
   },
   logoWrap: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '10px',
-    marginTop: '-10px',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "10px",
+    marginTop: "-10px",
     zIndex: 2,
-    position: 'relative',
+    position: "relative",
   },
-    content: {
-        padding: '24px 24px 60px',
-    display: 'flex',
-    flexDirection: 'column',
+  content: {
+    padding: "24px 24px 60px",
+    display: "flex",
+    flexDirection: "column",
     flex: 1,
-    width: '100%',
-    maxWidth: '640px',
+    width: "100%",
+    maxWidth: "640px",
   },
   heading: {
-    fontSize: '30px',
+    fontSize: "30px",
     fontWeight: 700,
-    color: '#292d32',
-    textAlign: 'center',
-    marginBottom: '6px',
+    color: "#292d32",
+    textAlign: "center",
+    marginBottom: "6px",
   },
   subtitle: {
-    fontSize: '16px',
-    color: '#444444',
-    textAlign: 'center',
-    marginBottom: '32px',
+    fontSize: "16px",
+    color: "#444444",
+    textAlign: "center",
+    marginBottom: "32px",
   },
   form: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
   },
   row2Col: {
-    display: 'flex',
-    gap: '16px',
+    display: "flex",
+    gap: "16px",
   },
   field: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginBottom: '18px',
+    display: "flex",
+    flexDirection: "column",
+    marginBottom: "18px",
     flex: 1,
   },
   label: {
-    fontSize: '15px',
+    fontSize: "15px",
     fontWeight: 600,
-    color: '#292d32',
-    marginBottom: '6px',
+    color: "#292d32",
+    marginBottom: "6px",
   },
 };

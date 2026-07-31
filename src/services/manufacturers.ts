@@ -18,8 +18,21 @@ export interface ManufacturerProfile {
   createdAt: string;
 }
 
+export interface SubmitManufacturerProfileInput {
+  companyName: string;
+  napamsEmail: string;
+  cacNumber: string;
+  nafdacCofRNumber?: string;
+  certificateOfRecognition: File;
+  termsAccepted: boolean;
+  contactPhone?: string;
+  address?: string;
+  country?: string;
+  logo?: File;
+}
+
 export const manufacturerService = {
-  submitProfile: (data: Record<string, unknown>) => {
+  submitProfile: (data: SubmitManufacturerProfileInput) => {
     const fd = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (value instanceof File) {
@@ -28,11 +41,17 @@ export const manufacturerService = {
         fd.append(key, String(value));
       }
     });
-    return apiClient.post<ApiResponse<{ manufacturer: ManufacturerProfile }>>("/manufacturers/register", fd)
+    return apiClient
+      .post<
+        ApiResponse<{ manufacturer: ManufacturerProfile }>
+      >("/manufacturers/register", fd)
       .then((res) => res.data.data!.manufacturer);
   },
 
   getProfile: () =>
-    apiClient.get<ApiResponse<{ manufacturer: ManufacturerProfile }>>("/manufacturers/me")
+    apiClient
+      .get<
+        ApiResponse<{ manufacturer: ManufacturerProfile }>
+      >("/manufacturers/me")
       .then((res) => res.data.data!.manufacturer),
 };

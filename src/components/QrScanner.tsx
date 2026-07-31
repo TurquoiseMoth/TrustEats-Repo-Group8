@@ -75,8 +75,7 @@ export default function QrScanner({
       .then(() => {
         setCameraReady(true);
       })
-      .catch((err: unknown) => {
-        console.error("QR Scanner failed to start:", err);
+      .catch(() => {
         setPermissionDenied(true);
       });
 

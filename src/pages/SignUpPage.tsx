@@ -82,10 +82,6 @@ export default function SignUpPage() {
         termsAccepted: termsAgreed,
       };
 
-      // Helpful for local debugging: inspect exact payload sent
-      // (remove or disable in production)
-      // (debug) inspect payload locally — remove when not needed
-      // console.log('Register payload', payload);
 
       await register(payload);
       navigate(ROUTES.VERIFY_EMAIL, { state: { email: form.email } });

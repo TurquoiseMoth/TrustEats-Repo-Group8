@@ -60,7 +60,7 @@ export default function VerifyEmailPage() {
 
       return false;
     } catch (err: any) {
-      console.error("verify-email failed", err);
+      // verify email failed — handled by toast below.
       const msg = err?.message ?? "Verification failed";
       window.dispatchEvent(new CustomEvent("trusteats:notify", { detail: { type: "error", message: msg } }));
       return false;
