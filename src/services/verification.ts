@@ -1,8 +1,10 @@
 import apiClient from "./api";
 import { mockVerificationService } from "./mockVerification";
 import type { VerificationResult, VerificationRequest, ApiResponse } from "../types";
+import { MOCK_VERIFICATIONS } from "../utils/mockData";
 
-const USE_MOCK = !import.meta.env.VITE_API_BASE_URL;
+// Prefer the real backend when VITE_API_BASE_URL is set; otherwise fall back to mock for local dev
+const USE_MOCK = import.meta.env.VITE_API_BASE_URL ? false : true;
 
 export const verificationService = {
   verifyCode: (code: string): Promise<VerificationResult> => {
@@ -18,4 +20,18 @@ export const verificationService = {
       .post<ApiResponse<VerificationResult>>("/verify", data)
       .then((res) => res.data.data!);
   },
+
+  // Fetch scan history (paginated). Returns { events: [], total, page, pages }
+  getHistory: async (params?: { page?: number; limit?: number }) => {
+    if (USE_MOCK) {
+      return Promise.resolve({ events: MOCK_VERIFICATIONS, total: MOCK_VERIFICATIONS.length, page: 1, pages: 1 } as any);
+    }
+    const query = [] as string[];
+    if (params?.page) query.push(`page=${params.page}`);
+    if (params?.limit) query.push(`limit=${params.limit}`);
+    const path = `/verify/history${query.length ? `?${query.join("&")}` : ""}`;
+    const res = await apiClient.get<ApiResponse<{ events: any[]; total: number; page: number; pages: number }>>(path);
+    return res.data.data!;
+  },
 };
+

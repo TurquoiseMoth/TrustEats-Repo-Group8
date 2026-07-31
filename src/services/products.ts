@@ -1,9 +1,19 @@
-import apiClient from "./api";
+import apiClient, { getApiBaseUrl } from "./api";
+import axios, { type AxiosRequestConfig } from "axios";
 import type { Product, VerificationCode, ApiResponse } from "../types";
 
 export const productService = {
-  create: (data: Partial<Product>) =>
-    apiClient.post<ApiResponse<Product>>("/products", data).then((res) => res.data.data!),
+  // create accepts either JSON or FormData (with image files).
+  create: (data: Partial<Product> | FormData) => {
+    if (data instanceof FormData) {
+      const base = getApiBaseUrl?.() ?? apiClient.defaults.baseURL ?? "";
+      return axios
+        .post(`${base.replace(/\/$/, "")}/products`, data, { withCredentials: true })
+        .then((res) => (res.data && res.data.data) ? res.data.data : res.data);
+    }
+
+    return apiClient.post<ApiResponse<Product>>("/products", data).then((res) => res.data.data!);
+  },
 
   getAll: () =>
     apiClient.get<ApiResponse<Product[]>>("/products").then((res) => res.data.data!),
@@ -26,3 +36,4 @@ export const productService = {
   revokeCode: (codeId: string) =>
     apiClient.post<ApiResponse<VerificationCode>>(`/products/codes/${codeId}/revoke`).then((res) => res.data.data!),
 };
+

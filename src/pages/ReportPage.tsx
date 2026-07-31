@@ -1,6 +1,9 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { ChevronLeft, ChevronDown, Upload, X } from 'lucide-react';
+import { ROUTES } from '../constants';
+import { reportsService } from '../services/reports';
+
 
 const ISSUE_OPTIONS = [
     'Fake Product',
@@ -30,8 +33,28 @@ export default function ReportPage() {
         }
     }
 
-    function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        // create report via API
+        if (!productName || !issues || !details) return;
+        const form = new FormData();
+        form.append('code', productName);
+        form.append('comment', details);
+        if (uploadedFile) form.append('images', uploadedFile);
+        try {
+            // Use FormData so file attachments are supported
+            const baseForm = new FormData();
+            baseForm.append('code', productName);
+            baseForm.append('comment', details);
+            baseForm.append('reason', issues);
+            if (uploadedFile) baseForm.append('images', uploadedFile);
+            await reportsService.create(baseForm);
+            // show a simple confirmation then navigate back
+            navigate(ROUTES.DASHBOARD);
+        } catch (err) {
+            // silent fail for now - could show UI
+            console.error('report submit failed', err);
+        }
 
     }
 

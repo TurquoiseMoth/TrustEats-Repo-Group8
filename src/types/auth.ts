@@ -14,9 +14,16 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  name: string;
+  // legacy "name" kept for compatibility with older callers
+  name?: string;
+  // preferred: full name field
+  fullName?: string;
   email: string;
   password: string;
+  confirmPassword?: string;
+  role?: 'consumer' | 'manufacturer';
+  // whether the user accepted terms — sent for audit/compliance, optional
+  termsAccepted?: boolean;
 }
 
 export interface AuthResponse {

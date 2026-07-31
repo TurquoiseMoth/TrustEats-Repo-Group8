@@ -7,8 +7,21 @@ interface UseOtpVerificationOptions {
   length?: number;
   /** Seconds before "Resend" becomes available again. Defaults to 119 (1:59). */
   resendCooldownSeconds?: number;
-  /** Called once all boxes are filled. Return/resolve false (or throw) to mark the code as invalid. */
-  onSubmit: (code: string) => Promise<boolean> | boolean;
+  /**
+   * Called once all boxes are filled.
+   * Accepts multiple return shapes:
+   * - boolean or Promise<boolean> (true = success)
+   * - string (error message)
+   * - { success: boolean; message?: string } (detailed result)
+   * Throwing/rejecting will be treated as an error and its message displayed if available.
+   */
+  onSubmit: (
+    code: string
+  ) =>
+    | Promise<boolean | { success: boolean; message?: string } | string>
+    | boolean
+    | { success: boolean; message?: string }
+    | string;
   /** Called when the person taps "Resend". */
   onResend?: () => Promise<void> | void;
 }
@@ -71,16 +84,59 @@ export function useOtpVerification({
       setStatus("submitting");
       setErrorMessage(null);
       try {
-        const ok = await onSubmit(codeToSubmit);
+        const result = await onSubmit(codeToSubmit);
+
+        // Normalize possible return shapes from onSubmit
+        // - boolean: true = success, false = invalid
+        // - string: treated as an error message
+        // - { success, message }
+        let ok = false;
+        let message: string | null = null;
+
+        if (typeof result === "boolean") {
+          ok = result;
+        } else if (typeof result === "string") {
+          ok = false;
+          message = result;
+        } else if (result && typeof result === "object") {
+          const obj = result as { [k: string]: unknown };
+          const succ = obj["success"];
+          if (typeof succ === "boolean") {
+            ok = succ;
+            const msgVal = obj["message"];
+            if (typeof msgVal === "string") message = msgVal;
+          } else {
+            // Unknown object shape — treat truthy as success
+            ok = !!result;
+          }
+        }
+
         if (ok) {
           setStatus("success");
         } else {
           setStatus("error");
-          setErrorMessage("That code doesn't look right. Check it and try again.");
+          setErrorMessage(message ?? "That code doesn't look right. Check it and try again.");
         }
-      } catch {
+      } catch (err: unknown) {
         setStatus("error");
-        setErrorMessage("Something went wrong verifying your code. Please try again.");
+        // Prefer an error message from the thrown value when available
+        let msg: string | undefined;
+        if (err instanceof Error) {
+          msg = err.message;
+        } else if (typeof err === "object" && err !== null) {
+          const e = err as { [k: string]: unknown };
+          const m = e["message"];
+          if (typeof m === "string") msg = m;
+          else {
+            const data = e["data"];
+            if (typeof data === "object" && data !== null) {
+              const dd = data as { [k: string]: unknown };
+              const dm = dd["message"];
+              if (typeof dm === "string") msg = dm;
+            }
+          }
+        }
+        setErrorMessage(msg ?? "Something went wrong verifying your code. Please try again.");
       }
     },
     [onSubmit]

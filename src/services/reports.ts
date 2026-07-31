@@ -1,4 +1,5 @@
-import apiClient from "./api";
+import apiClient, { getApiBaseUrl } from "./api";
+import axios from "axios";
 import type { ApiResponse } from "../types";
 
 export interface Report {
@@ -17,6 +18,15 @@ export const reportsService = {
   getById: (id: string) =>
     apiClient.get<ApiResponse<Report>>(`/reports/${id}`).then((res) => res.data.data!),
 
-  create: (data: { code: string; reason: string; description?: string }) =>
-    apiClient.post<ApiResponse<Report>>("/reports", data).then((res) => res.data.data!),
+  // Accept either a JSON object or FormData (with file attachments).
+  create: (data: { code: string; reason: string; description?: string } | FormData) => {
+    if (data instanceof FormData) {
+      // Use a plain axios call so the Content-Type header (with boundary) is set correctly by the browser
+      const base = getApiBaseUrl?.() ?? apiClient.defaults.baseURL ?? "";
+      return axios.post(`${base.replace(/\/$/, "")}/reports`, data, { withCredentials: true }).then((res) => (res.data && res.data.data) ? res.data.data : res.data);
+    }
+
+    return apiClient.post<ApiResponse<Report>>("/reports", data).then((res) => res.data.data!);
+  },
 };
+

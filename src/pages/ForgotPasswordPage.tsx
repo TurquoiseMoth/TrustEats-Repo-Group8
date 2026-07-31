@@ -1,13 +1,31 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
+import { authService } from '../services/auth';
+
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.MouseEvent) => {
+  const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
-    navigate(ROUTES.CHECK_YOUR_EMAIL);
+    setError('');
+    if (!email.trim()) {
+      setError('Please enter your email address.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await authService.forgotPassword(email.trim());
+      navigate(ROUTES.CHECK_YOUR_EMAIL);
+    } catch (err) {
+      setError((err as { message?: string })?.message ?? 'Failed to send reset link. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -32,6 +50,8 @@ export default function ForgotPasswordPage() {
           <strong>No worries!</strong> Enter your email address and we'll send you a link to reset your password.
         </p>
 
+        {error && <div style={styles.errorBox}>{error}</div>}
+
         <div style={styles.form}>
           <div style={styles.field}>
             <label style={styles.label}>Email</label>
@@ -42,11 +62,12 @@ export default function ForgotPasswordPage() {
               value={email}
               onChange={e => setEmail(e.target.value)}
               style={styles.input}
+              disabled={isSubmitting}
             />
           </div>
 
-          <button style={styles.btnPrimary} onClick={handleSubmit}>
-            Send Your Reset Link
+          <button style={styles.btnPrimary} onClick={handleSubmit} disabled={isSubmitting}>
+            {isSubmitting ? 'Sending…' : 'Send Your Reset Link'}
           </button>
 
           <Link to={ROUTES.LOGIN} style={styles.backLink}>

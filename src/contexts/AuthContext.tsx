@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
 import { authService } from "../services/auth";
-import type { Manufacturer } from "../types";
+import type { Manufacturer, RegisterRequest } from "../types";
 
 interface AuthContextValue {
   user: Manufacturer | null;
@@ -8,7 +8,7 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (data: { name: string; email: string; password: string }) => Promise<void>;
+  register: (data: RegisterRequest) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -28,10 +28,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(result.token ?? null);
   }, []);
 
-  const register = useCallback(async (data: { name: string; email: string; password: string }) => {
+  const register = useCallback(async (data: RegisterRequest) => {
     const result = await authService.register(data);
-    setUser(result.manufacturer);
-    setToken(result.token ?? null);
+    setUser((result as any).manufacturer);
+    setToken((result as any).token ?? null);
   }, []);
 
   const logout = useCallback(() => {
