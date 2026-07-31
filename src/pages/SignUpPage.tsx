@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../constants";
 import { useAuth } from "../contexts/AuthContext";
-import { BackButton } from "../components/ui/BackButton";
+import { BackButton, PasswordInput, DemoAccountsHint } from "../components/ui";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import logo from "../assets/Logo.png";
 
@@ -110,6 +110,8 @@ export default function SignUpPage() {
 
         {error && <div style={styles.errorBox}>{error}</div>}
 
+        <DemoAccountsHint />
+
         <div style={styles.form}>
           <Field label="Role">
             <select
@@ -154,26 +156,24 @@ export default function SignUpPage() {
           </Field>
 
           <Field label="Password">
-            <input
+            <PasswordInput
               name="password"
-              type="password"
-              placeholder="Password"
               value={form.password}
               onChange={handleChange}
-              style={styles.input}
+              placeholder="Password"
+              inputStyle={styles.input}
               disabled={isSubmitting}
             />
           </Field>
           <p style={styles.hint}>Not less than 8 characters</p>
 
           <Field label="Confirm Password">
-            <input
+            <PasswordInput
               name="confirmPassword"
-              type="password"
-              placeholder="Confirm Password"
               value={form.confirmPassword}
               onChange={handleChange}
-              style={styles.input}
+              placeholder="Confirm Password"
+              inputStyle={styles.input}
               disabled={isSubmitting}
             />
           </Field>

@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router';
 import { ROUTES } from '../constants';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 import { useAuth } from '../contexts/AuthContext';
-import { BackButton } from '../components/ui/BackButton';
+import { BackButton, PasswordInput, DemoAccountsHint } from '../components/ui';
 
 export default function ManufacturerLoginPage() {
   const navigate = useNavigate();
@@ -47,6 +47,8 @@ export default function ManufacturerLoginPage() {
           <p style={s.welcomeBold}>Welcome!</p>
           <p style={s.subtitle}>Sign in to continue to your account</p>
 
+          <DemoAccountsHint />
+
           {error && <div style={s.errorBox}>{error}</div>}
 
           <div style={s.form}>
@@ -65,13 +67,12 @@ export default function ManufacturerLoginPage() {
 
             <div style={s.field}>
               <label style={s.label}>Password</label>
-              <input
+              <PasswordInput
                 name="password"
-                type="password"
-                placeholder="••••••••"
                 value={form.password}
                 onChange={handleChange}
-                style={s.input}
+                placeholder="••••••••"
+                inputStyle={s.input}
                 disabled={isSubmitting}
               />
             </div>

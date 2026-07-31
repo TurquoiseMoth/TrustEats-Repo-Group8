@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
 import { useAuth } from '../contexts/AuthContext';
-import { BackButton } from '../components/ui/BackButton';
+import { BackButton, PasswordInput, DemoAccountsHint } from '../components/ui';
 
 export default function SignInPage() {
   const navigate = useNavigate();
@@ -41,6 +41,8 @@ export default function SignInPage() {
         <p style={styles.welcomeBold}>Welcome!</p>
         <p style={styles.subtitle}>Sign in to continue to your account</p>
 
+        <DemoAccountsHint />
+
         {error && <div style={styles.errorBox}>{error}</div>}
 
         <div style={styles.form}>
@@ -59,13 +61,12 @@ export default function SignInPage() {
 
           <div style={styles.field}>
             <label style={styles.label}>Password</label>
-            <input
+            <PasswordInput
               name="password"
-              type="password"
-              placeholder="••••••••"
               value={form.password}
               onChange={handleChange}
-              style={styles.input}
+              placeholder="••••••••"
+              inputStyle={styles.input}
               disabled={isSubmitting}
             />
           </div>

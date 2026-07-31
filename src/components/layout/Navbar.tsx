@@ -12,7 +12,6 @@ const navItems = [
 ];
 
 const consumerLinks = [
-  { label: "Dashboard", href: ROUTES.DASHBOARD },
   { label: "Scan", href: ROUTES.SCAN },
   { label: "History", href: ROUTES.HISTORY },
   { label: "Profile", href: ROUTES.PROFILE },
@@ -22,11 +21,6 @@ const consumerLinks = [
 const manufacturerLinks = [
   { label: "Manufacturer Login", href: ROUTES.MANUFACTURER_LOGIN },
   { label: "Manufacturer Sign Up", href: ROUTES.MANUFACTURER_SIGNUP },
-];
-
-const adminLinks = [
-  { label: "Admin Dashboard", href: ROUTES.ADMIN_DASHBOARD },
-  { label: "Admin Login", href: ROUTES.ADMIN_LOGIN },
 ];
 
 function Navbar() {
@@ -62,20 +56,8 @@ function Navbar() {
           })}
         </div>
 
-        {/* Right: Auth + quick links */}
+        {/* Right: Auth links */}
         <div className="hidden md:flex items-center gap-1 rounded-full border border-primary px-1.5 py-1">
-          <Link
-            to={ROUTES.DASHBOARD}
-            className="rounded-full px-4 py-1.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary/5"
-          >
-            Dashboard
-          </Link>
-          <Link
-            to={ROUTES.ADMIN_DASHBOARD}
-            className="rounded-full px-4 py-1.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary/5"
-          >
-            Admin
-          </Link>
           <Link
             to={ROUTES.LOGIN}
             className="rounded-full px-4 py-1.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary/5"
@@ -149,20 +131,6 @@ function Navbar() {
               Manufacturer
             </p>
             {manufacturerLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="rounded-lg px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-gray-50"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
-
-            <p className="mt-3 mb-1 px-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
-              Admin
-            </p>
-            {adminLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}

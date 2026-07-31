@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Eye, EyeOff } from "lucide-react";
 import { ROUTES } from "../constants";
 import LeafPattern from "../components/auth/LeafPattern";
-import { BackButton } from "../components/ui/BackButton";
+import { BackButton, DemoAccountsHint } from "../components/ui";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function AdminSignInPage() {
@@ -46,6 +46,8 @@ export default function AdminSignInPage() {
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Admin Sign In</h1>
             <p className="text-sm md:text-base font-bold text-gray-900 mb-0.5">Welcome!</p>
             <p className="text-sm md:text-base text-gray-600 mb-6 md:mb-8">Sign in to continue to your account</p>
+
+            <DemoAccountsHint />
 
             {formError && (
               <div
