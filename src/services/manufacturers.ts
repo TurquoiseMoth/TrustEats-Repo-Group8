@@ -1,4 +1,6 @@
 import apiClient from "./api";
+import { shouldUseMock } from "./mockMode";
+import { mockManufacturerService } from "./mockManufacturers";
 import type { ApiResponse } from "../types";
 
 export interface ManufacturerProfile {
@@ -33,6 +35,7 @@ export interface SubmitManufacturerProfileInput {
 
 export const manufacturerService = {
   submitProfile: (data: SubmitManufacturerProfileInput) => {
+    if (shouldUseMock()) return mockManufacturerService.submitProfile(data);
     const fd = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (value instanceof File) {
@@ -48,10 +51,12 @@ export const manufacturerService = {
       .then((res) => res.data.data!.manufacturer);
   },
 
-  getProfile: () =>
-    apiClient
+  getProfile: () => {
+    if (shouldUseMock()) return mockManufacturerService.getProfile();
+    return apiClient
       .get<
         ApiResponse<{ manufacturer: ManufacturerProfile }>
       >("/manufacturers/me")
-      .then((res) => res.data.data!.manufacturer),
+      .then((res) => res.data.data!.manufacturer);
+  },
 };

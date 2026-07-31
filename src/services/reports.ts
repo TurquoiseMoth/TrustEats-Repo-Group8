@@ -1,5 +1,7 @@
 import apiClient, { getApiBaseUrl } from "./api";
 import axios from "axios";
+import { shouldUseMock } from "./mockMode";
+import { mockReportsService } from "./mockReports";
 import type { ApiResponse } from "../types";
 
 export interface Report {
@@ -14,14 +16,19 @@ export interface Report {
 }
 
 export const reportsService = {
-  getAll: () =>
-    apiClient.get<ApiResponse<Report[]>>("/reports").then((res) => res.data.data!),
+  getAll: () => {
+    if (shouldUseMock()) return mockReportsService.getAll();
+    return apiClient.get<ApiResponse<Report[]>>("/reports").then((res) => res.data.data!);
+  },
 
-  getById: (id: string) =>
-    apiClient.get<ApiResponse<Report>>(`/reports/${id}`).then((res) => res.data.data!),
+  getById: (id: string) => {
+    if (shouldUseMock()) return mockReportsService.getById(id);
+    return apiClient.get<ApiResponse<Report>>(`/reports/${id}`).then((res) => res.data.data!);
+  },
 
   // Accept either a JSON object or FormData (with file attachments).
   create: (data: { code: string; comment?: string } | FormData) => {
+    if (shouldUseMock()) return mockReportsService.create(data);
     if (data instanceof FormData) {
       // Use a plain axios call so the Content-Type header (with boundary) is set correctly by the browser
       const base = getApiBaseUrl?.() ?? apiClient.defaults.baseURL ?? "";

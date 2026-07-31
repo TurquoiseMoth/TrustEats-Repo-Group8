@@ -1,8 +1,11 @@
 import apiClient from "./api";
+import { shouldUseMock } from "./mockMode";
+import { mockAnalyticsService } from "./mockAnalytics";
 import type { AnalyticsSummary, ApiResponse } from "../types";
 
 export const analyticsService = {
   getSummary: async (): Promise<AnalyticsSummary> => {
+    if (shouldUseMock()) return mockAnalyticsService.getSummary();
     try {
       const res = await apiClient.get<ApiResponse<AnalyticsSummary>>("/analytics/summary");
       return res.data.data!;

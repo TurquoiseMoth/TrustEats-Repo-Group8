@@ -23,6 +23,7 @@ function clearAuth() {
 
 export const authService = {
   login: async (data: LoginRequest) => {
+    if (shouldUseMock()) return mockAuthService.login(data);
     const res = await apiClient.post("/auth/login", data);
     const payload = (res.data && res.data.data) ? res.data.data : res.data;
     // Normalize response to { manufacturer?, token? }
@@ -34,6 +35,7 @@ export const authService = {
   },
 
   register: async (data: RegisterRequest) => {
+    if (shouldUseMock()) return mockAuthService.register(data);
     const res = await apiClient.post("/auth/register", data);
     const payload = (res.data && res.data.data) ? res.data.data : res.data;
     const manufacturer = (payload && (payload.manufacturer ?? payload.user)) ?? undefined;
@@ -44,6 +46,7 @@ export const authService = {
   },
 
   logout: async () => {
+    if (shouldUseMock()) return mockAuthService.logout();
     try {
       await apiClient.post("/auth/logout");
     } catch {
@@ -54,6 +57,7 @@ export const authService = {
   },
 
   getCurrentUser: async () => {
+    if (shouldUseMock()) return mockAuthService.getCurrentUser();
     const res = await apiClient.get("/auth/me");
     const payload = (res.data && res.data.data) ? res.data.data : res.data;
     const manufacturer = (payload && (payload.manufacturer ?? payload.user)) ?? undefined;
@@ -65,6 +69,7 @@ export const authService = {
 
   // Convenience accessors for client-side state
   getStoredUser: () => {
+    if (shouldUseMock()) return mockAuthService.getStoredUser();
     try {
       const raw = localStorage.getItem("auth_user");
       return raw ? JSON.parse(raw) : null;
@@ -75,28 +80,39 @@ export const authService = {
 
   // Password reset
   forgotPassword: async (email: string) => {
+    if (shouldUseMock()) return mockAuthService.forgotPassword(email);
     const res = await apiClient.post<ApiResponse<void>>("/auth/forgot-password", { email });
     return res.data;
   },
 
   resetPassword: async (payload: { token: string; userId: string; newPassword: string; confirmPassword: string }) => {
+    if (shouldUseMock()) return mockAuthService.resetPassword(payload);
     const res = await apiClient.post<ApiResponse<void>>("/auth/reset-password", payload);
     return res.data;
   },
 
   // Email verification (accepts either `code` or `otp` from callers and sends `otp` to backend)
   verifyEmail: async (payload: { email: string; code?: string; otp?: string }) => {
+    if (shouldUseMock()) return mockAuthService.verifyEmail(payload);
     const body = { email: payload.email, otp: payload.otp ?? payload.code };
     const res = await apiClient.post<ApiResponse<Record<string, unknown>>>("/auth/verify-email", body);
     return res.data;
   },
 
   resendVerification: async (email: string) => {
+    if (shouldUseMock()) return mockAuthService.resendVerification(email);
     const res = await apiClient.post<ApiResponse<void>>("/auth/resend-verification", { email });
     return res.data;
   },
 
-  getStoredToken: () => localStorage.getItem("auth_token"),
+  getStoredToken: () => {
+    if (shouldUseMock()) return mockAuthService.getStoredToken();
+    try {
+      return localStorage.getItem("auth_token");
+    } catch {
+      return null;
+    }
+  },
 };
 
 

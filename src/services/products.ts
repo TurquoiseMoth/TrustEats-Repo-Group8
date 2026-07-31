@@ -1,5 +1,7 @@
 import apiClient, { getApiBaseUrl } from "./api";
 import axios from "axios";
+import { shouldUseMock } from "./mockMode";
+import { mockProductService } from "./mockProducts";
 import type { Product, Batch, CreateBatchPayload, ApiResponse } from "../types";
 
 function buildFormData(data: Record<string, unknown>): FormData {
@@ -22,6 +24,8 @@ function buildFormData(data: Record<string, unknown>): FormData {
 export const productService = {
   // create accepts either JSON or FormData (with image files).
   create: (data: Partial<Product> | FormData) => {
+    if (shouldUseMock()) return mockProductService.create(data);
+
     if (data instanceof FormData) {
       const base = getApiBaseUrl?.() ?? apiClient.defaults.baseURL ?? "";
       return axios
@@ -32,26 +36,35 @@ export const productService = {
     return apiClient.post<ApiResponse<Product>>("/products", data).then((res) => res.data.data!);
   },
 
-  getAll: (page = 1, limit = 20) =>
-    apiClient.get<ApiResponse<{ products: Product[]; total: number; page: number; pages: number }>>(`/products?page=${page}&limit=${limit}`)
-      .then((res) => res.data.data!),
+  getAll: (page = 1, limit = 20) => {
+    if (shouldUseMock()) return mockProductService.getAll(page, limit);
+    return apiClient.get<ApiResponse<{ products: Product[]; total: number; page: number; pages: number }>>(`/products?page=${page}&limit=${limit}`)
+      .then((res) => res.data.data!);
+  },
 
-  getById: (id: string) =>
-    apiClient.get<ApiResponse<{ product: Product }>>(`/products/${id}`)
-      .then((res) => res.data.data!.product),
+  getById: (id: string) => {
+    if (shouldUseMock()) return mockProductService.getById(id);
+    return apiClient.get<ApiResponse<{ product: Product }>>(`/products/${id}`)
+      .then((res) => res.data.data!.product);
+  },
 
   update: (id: string, data: Record<string, unknown>) => {
+    if (shouldUseMock()) return mockProductService.update(id, data);
     const fd = buildFormData(data);
     return apiClient.patch<ApiResponse<{ product: Product }>>(`/products/${id}`, fd)
       .then((res) => res.data.data!.product);
   },
 
-  createBatch: (data: CreateBatchPayload) =>
-    apiClient.post<ApiResponse<{ batch: Batch; generatedCodes: { code: string; qrCodeUrl: string }[] }>>("/batches", data)
-      .then((res) => res.data.data!),
+  createBatch: (data: CreateBatchPayload) => {
+    if (shouldUseMock()) return mockProductService.createBatch(data);
+    return apiClient.post<ApiResponse<{ batch: Batch; generatedCodes: { code: string; qrCodeUrl: string }[] }>>("/batches", data)
+      .then((res) => res.data.data!);
+  },
 
-  getBatches: (productId: string) =>
-    apiClient.get<ApiResponse<{ batches: Batch[] }>>(`/batches?productId=${productId}`)
-      .then((res) => res.data.data!.batches),
+  getBatches: (productId: string) => {
+    if (shouldUseMock()) return mockProductService.getBatches(productId);
+    return apiClient.get<ApiResponse<{ batches: Batch[] }>>(`/batches?productId=${productId}`)
+      .then((res) => res.data.data!.batches);
+  },
 };
 
