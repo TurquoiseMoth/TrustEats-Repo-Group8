@@ -20,7 +20,7 @@ import adminRoutes from "./modules/admin/admin.routes";
 import analyticsRoutes from "./modules/analytics/analytics.route";
 
 const allowedOrigins = (
-  process.env.ALLOWED_ORIGINS || "http://localhost:5173,http://localhost:3000"
+  process.env.ALLOWED_ORIGINS || "http://localhost:5173,http://localhost:3000","https://trusteatsrepogroup8.vercel.app/"
 )
   .split(",")
   .map((origin) => origin.trim())
