@@ -1,4 +1,3 @@
-
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   className?: string;
@@ -6,11 +5,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 function Button({ children, className, ...props }: ButtonProps) {
   return (
-    <div>
-      <button className={className} {...props}>
-        {children}
-      </button>
-    </div>
+    <button className={className} {...props}>
+      {children}
+    </button>
   );
 }
 
