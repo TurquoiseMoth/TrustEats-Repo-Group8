@@ -394,19 +394,27 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
   setTokenCookies(res, accessToken, refreshToken);
 
+  // For local development make the access token available in the JSON response
+  // so client-side header-based flows can work when cross-origin cookies aren't sent.
+  const responseData: any = {
+    user: {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    },
+  };
+  if (process.env.NODE_ENV !== "production") {
+    responseData.token = accessToken;
+  }
+
   res.status(200).json({
     success: true,
     message: "Login successful",
-    data: {
-      user: {
-        id: user._id,
-        email: user.email,
-        role: user.role,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      },
-    },
+    data: responseData,
   });
+
 };
 
 export const logout = async (
