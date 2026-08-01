@@ -20,7 +20,7 @@ const consumerLinks = [
 
 const manufacturerLinks = [
   { label: "Manufacturer Login", href: ROUTES.MANUFACTURER_LOGIN },
-  { label: "Manufacturer Sign Up", href: ROUTES.MANUFACTURER_SIGNUP },
+  { label: "Manufacturer Sign Up", href: `${ROUTES.REGISTER}?role=manufacturer` },
 ];
 
 function Navbar() {

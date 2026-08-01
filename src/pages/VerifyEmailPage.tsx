@@ -1,12 +1,22 @@
 import { useLocation, useNavigate } from "react-router";
 import { ROUTES } from "../constants";
 import { EmailVerification } from "../components/EmailVerification";
+import { useAuth } from "../contexts/AuthContext";
+import { manufacturerService } from "../services/manufacturers";
 
 export default function VerifyEmailPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { refreshUser } = useAuth();
 
-  const email = (location.state as { email?: string })?.email;
+  const state = location.state as
+    | {
+        email?: string;
+        role?: "consumer" | "manufacturer";
+      }
+    | undefined;
+  const email = state?.email;
+  const role = state?.role ?? "consumer";
 
   const handleVerify = async (code: string): Promise<boolean> => {
     if (!email) return false;
@@ -65,7 +75,23 @@ export default function VerifyEmailPage() {
         email={email}
         onVerify={handleVerify}
         onResend={handleResend}
-        onVerified={() => navigate(ROUTES.DASHBOARD)}
+        onVerified={async () => {
+          if (role === "manufacturer") {
+            await refreshUser();
+            try {
+              await manufacturerService.getProfile();
+              navigate(ROUTES.MANUFACTURER_DASHBOARD, { replace: true });
+            } catch {
+              navigate(ROUTES.MANUFACTURER_SIGNUP, { replace: true });
+            }
+            return;
+          }
+          await refreshUser();
+          navigate(
+            ROUTES.DASHBOARD,
+            { replace: true },
+          );
+        }}
         step={{ current: 2, total: 3 }}
       />
     </div>

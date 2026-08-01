@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { ROUTES } from "../constants";
 import { useAuth } from "../contexts/AuthContext";
 import { BackButton, PasswordInput, DemoAccountsHint } from "../components/ui";
@@ -25,10 +25,15 @@ function Field({
 
 export default function SignUpPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { register } = useAuth();
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const initialRole =
+    new URLSearchParams(location.search).get("role") === "manufacturer"
+      ? "manufacturer"
+      : "consumer";
 
-  const [role, setRole] = useState<UserRole>("consumer");
+  const [role, setRole] = useState<UserRole>(initialRole);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -95,17 +100,19 @@ export default function SignUpPage() {
         termsAccepted: termsAgreed,
       };
 
-      await register(payload);
-
       if (role === "manufacturer") {
         navigate(ROUTES.MANUFACTURER_SIGNUP, {
           replace: true,
+          state: { accountData: payload },
         });
         return;
       }
 
-      navigate(ROUTES.DASHBOARD, {
+      await register(payload);
+
+      navigate(ROUTES.VERIFY_EMAIL, {
         replace: true,
+        state: { email: payload.email, role },
       });
     } catch (err) {
       setError(

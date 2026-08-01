@@ -9,8 +9,14 @@ import type { ApiError } from "../types";
 // Default Render deployment for the TrustEats backend.
 const DEFAULT_API_BASE_URL = "https://trusteats-repo-group8.onrender.com/api/v1";
 
-const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL as string) || DEFAULT_API_BASE_URL;
+function normalizeApiBaseUrl(url: string): string {
+  const trimmed = url.replace(/\/$/, "");
+  return trimmed.endsWith("/api/v1") ? trimmed : `${trimmed}/api/v1`;
+}
+
+const API_BASE_URL = normalizeApiBaseUrl(
+  (import.meta.env.VITE_API_BASE_URL as string) || DEFAULT_API_BASE_URL,
+);
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -175,10 +181,12 @@ apiClient.interceptors.response.use(
 
     // For other errors, normalize to ApiError
     const responseData = error.response?.data as
-      | { message?: string; details?: unknown }
+      | { message?: string; error?: string; details?: unknown }
       | undefined;
     const message =
-      responseData?.message ?? getDefaultErrorMessage(status as number);
+      responseData?.message ??
+      responseData?.error ??
+      getDefaultErrorMessage(status as number);
     const apiError: ApiError = {
       success: false,
       message,
@@ -213,7 +221,7 @@ function getDefaultErrorMessage(status: number | undefined): string {
 }
 
 export function setApiBaseUrl(url: string) {
-  apiClient.defaults.baseURL = url;
+  apiClient.defaults.baseURL = normalizeApiBaseUrl(url);
 }
 
 export function getApiBaseUrl() {

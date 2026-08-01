@@ -96,6 +96,16 @@ export const authService = {
     if (shouldUseMock()) return mockAuthService.verifyEmail(payload);
     const body = { email: payload.email, otp: payload.otp ?? payload.code };
     const res = await apiClient.post<ApiResponse<Record<string, unknown>>>("/auth/verify-email", body);
+    const responsePayload = res.data?.data ?? res.data;
+    const manufacturer =
+      responsePayload && "user" in responsePayload
+        ? (responsePayload.user as AuthResponse["manufacturer"])
+        : undefined;
+    const token =
+      responsePayload && "token" in responsePayload
+        ? (responsePayload.token as string)
+        : undefined;
+    storeAuth({ manufacturer, token });
     return res.data;
   },
 

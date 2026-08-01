@@ -83,6 +83,13 @@ function ProductUploadPage() {
     // Build FormData for upload
     const form = new FormData();
     form.append("name", productName);
+    form.append("brand", productName);
+    form.append(
+      "description",
+      `Product submitted with NAFDAC registration number ${nafdacNo}.`,
+    );
+    form.append("category", "food");
+    form.append("countryOfOrigin", "Nigeria");
     form.append("nafdacNumber", nafdacNo);
     // backend expects field name "image" for single product image
     if (files.length > 0) form.append("image", files[0], files[0].name);

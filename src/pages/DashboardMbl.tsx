@@ -12,15 +12,41 @@ import { NotificationBell } from "../components/ui/NotificationBell";
 import phone from "../assets/phone.png";
 
 import goldenMorn from "../assets/goldenMorn.png";
+import type { AnalyticsSummary } from "../types";
 
-const DashboardMbl: React.FC = () => {
+interface DashboardMblProps {
+  summary?: AnalyticsSummary;
+  isLoading?: boolean;
+  error?: unknown;
+}
+
+function formatActivityTime(value?: string) {
+  if (!value) return "";
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
+const DashboardMbl: React.FC<DashboardMblProps> = ({
+  summary,
+  isLoading,
+  error,
+}) => {
+  const companyName = summary?.manufacturer?.companyName ?? "Manufacturer";
+  const status = summary?.manufacturer?.status;
+  const recentProducts = summary?.recentProducts ?? [];
+  const recentFlags = summary?.recentFlags ?? [];
+
   return (
     <div className="min-h-screen bg-[#f1f7fa] font-[system-ui,-apple-system,BlinkMacSystemFont,Segoe_UI,Roboto,sans-serif] text-[#1e293b] pb-20 max-w-[440px] mx-auto relative shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] rounded-[24px] overflow-hidden border border-[#e2e8f0]">
       
       {/* Top Header */}
       <header className="flex justify-between items-start px-[20px] pt-[32px] pb-[16px]">
         <h1 className="text-[1.5rem] font-bold leading-[1.25] text-[#0f172a] m-0 mt-[30px]">
-          Welcome,<br />Greenfoods LTD!
+          Welcome,<br />{companyName}!
         </h1>
         <Link to={ROUTES.MANUFACTURER_NOTIFICATIONS} className="bg-transparent border-none p-2 rounded-full cursor-pointer text-[#334155] transition-colors duration-200 absolute top-[11px] left-[380px] mt-[20px] hover:bg-[rgba(203,213,225,0.5)]" aria-label="Notifications">
           <NotificationBell count={DEFAULT_UNREAD_COUNT} iconClassName="h-6 w-6" />
@@ -28,6 +54,17 @@ const DashboardMbl: React.FC = () => {
       </header>
 
       <main className="px-[20px] flex flex-col gap-6">
+        {(isLoading || error || status === "pending" || status === "suspended") && (
+          <section className="rounded-[14px] border border-[#d9e5dc] bg-white px-4 py-3 text-xs leading-5 text-[#1f3528]">
+            {isLoading
+              ? "Loading dashboard data..."
+              : error
+                ? "Unable to load live dashboard data right now."
+                : status === "pending"
+                  ? "Your company profile is pending admin approval. Product upload and QR generation unlock after approval."
+                  : "Your manufacturer account is suspended. Contact an admin before uploading products."}
+          </section>
+        )}
 
         {/* Hero Banner Card */}
         <section className="relative flex bg-[#dce7e1] rounded-[16px] p-[20px] overflow-hidden shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
@@ -71,15 +108,15 @@ const DashboardMbl: React.FC = () => {
         <section className="grid grid-cols-3 gap-3">
           <div className="bg-[#d5e4dc] p-3 rounded-[16px] text-center shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
             <p className="text-[11px] font-medium text-[#475569] m-0">Total Product</p>
-            <p className="text-[1.25rem] font-bold text-[#0f172a] m-0 mt-1">5</p>
+            <p className="text-[1.25rem] font-bold text-[#0f172a] m-0 mt-1">{summary?.totalProducts ?? 0}</p>
           </div>
           <div className="bg-[#d5e4dc] p-3 rounded-[16px] text-center shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
             <p className="text-[11px] font-medium text-[#475569] m-0">Verified Products</p>
-            <p className="text-[1.25rem] font-bold text-[#0f172a] m-0 mt-1">4</p>
+            <p className="text-[1.25rem] font-bold text-[#0f172a] m-0 mt-1">{summary?.scansByResult.genuine ?? 0}</p>
           </div>
           <div className="bg-[#d5e4dc] p-3 rounded-[16px] text-center shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
             <p className="text-[11px] font-medium text-[#475569] m-0">QR Code Generated</p>
-            <p className="text-[1.25rem] font-bold text-[#0f172a] m-0 mt-1">4</p>
+            <p className="text-[1.25rem] font-bold text-[#0f172a] m-0 mt-1">{summary?.totalCodesIssued ?? 0}</p>
           </div>
         </section>
 
@@ -114,7 +151,6 @@ const DashboardMbl: React.FC = () => {
           <h3 className="text-base font-bold text-[#0f172a] m-0 mb-3">Recent Activities</h3>
           <div className="flex flex-col gap-3">
 
-            {/* Item 1 */}
             <div className="bg-[#d1e2db] px-4 py-[14px] rounded-[18px] flex items-center justify-between border-none shadow-none">
               <div className="flex items-center gap-[14px]">
                 <div className="w-8 h-8 flex items-center justify-center shrink-0">
@@ -122,47 +158,54 @@ const DashboardMbl: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-[0.875rem] font-bold text-[#1e293b] m-0 mb-0.5 leading-[1.2]">Document Verification</p>
-                  <p className="text-[0.75rem] text-[#475569] m-0 leading-[1.2]">Document verified successfully</p>
+                  <p className="text-[0.75rem] text-[#475569] m-0 leading-[1.2]">
+                    {status === "approved"
+                      ? "Document verified successfully"
+                      : status === "suspended"
+                        ? "Manufacturer account suspended"
+                        : "Submitted for admin review"}
+                  </p>
                 </div>
               </div>
               <div className="flex flex-col items-end justify-between gap-[10px]">
                 <span className="inline-flex items-center gap-1 px-[10px] py-1 rounded-full bg-white text-[0.75rem] font-semibold text-green-600">
                   <CheckCircle2 size={12} />
-                  <span>Verified</span>
+                  <span>{status === "approved" ? "Verified" : status === "suspended" ? "Suspended" : "Pending"}</span>
                 </span>
-                <p className="text-[0.75rem] font-medium text-[#475569] m-0">9:30 AM</p>
               </div>
             </div>
 
-            {/* Item 2 */}
-            <div className="bg-[#d1e2db] px-4 py-[14px] rounded-[18px] flex items-center justify-between border-none shadow-none">
-  <div className="flex items-center gap-[14px]">
-        <img src={goldenMorn} style={{ width: 24, height: 24, }} alt="Golden Morn" />
-    <div>
-      <p className="text-[0.875rem] font-bold text-[#1e293b] m-0 mb-0.5 leading-[1.2]">Golden Morn</p>
-      <p className="text-[0.75rem] text-[#475569] m-0 leading-[1.2]">New product added</p>
-    </div>
-  </div>
-  <div className="flex flex-col items-end justify-between gap-[10px]">
-    <p className="text-[0.75rem] font-medium text-[#475569] m-0">10:30 PM</p>
-  </div>
-</div>
+            {recentProducts.slice(0, 2).map((product) => (
+              <div key={product.id} className="bg-[#d1e2db] px-4 py-[14px] rounded-[18px] flex items-center justify-between border-none shadow-none">
+                <div className="flex items-center gap-[14px]">
+                  <img src={product.imageUrl || goldenMorn} style={{ width: 24, height: 24, objectFit: "cover" }} alt={product.name} />
+                  <div>
+                    <p className="text-[0.875rem] font-bold text-[#1e293b] m-0 mb-0.5 leading-[1.2]">{product.name}</p>
+                    <p className="text-[0.75rem] text-[#475569] m-0 leading-[1.2]">New product added</p>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end justify-between gap-[10px]">
+                  <p className="text-[0.75rem] font-medium text-[#475569] m-0">{formatActivityTime(product.createdAt)}</p>
+                </div>
+              </div>
+            ))}
 
-            {/* Item 3 */}
-            <div className="bg-[#d1e2db] px-4 py-[14px] rounded-[18px] flex items-center justify-between border-none shadow-none">
-              <div className="flex items-center gap-[14px]">
-                <div className="w-8 h-8 flex items-center justify-center shrink-0">
-                  <QrCode size={24} />
+            {recentFlags.slice(0, 2).map((flag) => (
+              <div key={flag.id} className="bg-[#d1e2db] px-4 py-[14px] rounded-[18px] flex items-center justify-between border-none shadow-none">
+                <div className="flex items-center gap-[14px]">
+                  <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                    <QrCode size={24} />
+                  </div>
+                  <div>
+                    <p className="text-[0.875rem] font-bold text-[#1e293b] m-0 mb-0.5 leading-[1.2]">{flag.result === "fake" ? "Fake Scan Flagged" : "Suspicious Scan"}</p>
+                    <p className="text-[0.75rem] text-[#475569] m-0 leading-[1.2]">Product: {flag.product?.name ?? flag.code}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-[0.875rem] font-bold text-[#1e293b] m-0 mb-0.5 leading-[1.2]">QR Code Generated</p>
-                  <p className="text-[0.75rem] text-[#475569] m-0 leading-[1.2]">Product: Golden Morn</p>
+                <div className="flex flex-col items-end justify-between gap-[10px]">
+                  <p className="text-[0.75rem] font-medium text-[#475569] m-0">{formatActivityTime(flag.scannedAt)}</p>
                 </div>
               </div>
-              <div className="flex flex-col items-end justify-between gap-[10px]">
-                <p className="text-[0.75rem] font-medium text-[#475569] m-0">12:01 PM</p>
-              </div>
-            </div>
+            ))}
 
           </div>
         </section>

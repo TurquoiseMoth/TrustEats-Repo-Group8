@@ -21,6 +21,11 @@ function buildFormData(data: Record<string, unknown>): FormData {
   return fd;
 }
 
+function authHeaders() {
+  const token = localStorage.getItem("auth_token");
+  return token ? { Authorization: `Bearer ${token}` } : undefined;
+}
+
 export const productService = {
   // create accepts either JSON or FormData (with image files).
   create: (data: Partial<Product> | FormData) => {
@@ -29,7 +34,10 @@ export const productService = {
     if (data instanceof FormData) {
       const base = getApiBaseUrl?.() ?? apiClient.defaults.baseURL ?? "";
       return axios
-        .post(`${base.replace(/\/$/, "")}/products`, data, { withCredentials: true })
+        .post(`${base.replace(/\/$/, "")}/products`, data, {
+          withCredentials: true,
+          headers: authHeaders(),
+        })
         .then((res) => (res.data && res.data.data) ? res.data.data : res.data);
     }
 
@@ -54,7 +62,10 @@ export const productService = {
     // Use a raw axios call so the browser sets multipart boundaries correctly
     const base = getApiBaseUrl?.() ?? apiClient.defaults.baseURL ?? "";
     return axios
-      .patch(`${base.replace(/\/$/, "")}/products/${id}`, fd, { withCredentials: true })
+      .patch(`${base.replace(/\/$/, "")}/products/${id}`, fd, {
+        withCredentials: true,
+        headers: authHeaders(),
+      })
       .then((res) => (res.data && res.data.data && res.data.data.product) ? res.data.data.product : res.data);
   },
 

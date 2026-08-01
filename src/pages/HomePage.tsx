@@ -216,7 +216,7 @@ function HomePage() {
                         backgroundColor="bg-[#F5F3FF]"
                         buttonBgColor="bg-[#7C3AED]"
                         buttonText="Register as Manufacturer →"
-                        buttonHref={ROUTES.MANUFACTURER_SIGNUP}
+                        buttonHref={`${ROUTES.REGISTER}?role=manufacturer`}
                         loginPrefix="Already have an account?"
                         loginText="Log in"
                         loginHref={ROUTES.MANUFACTURER_LOGIN}

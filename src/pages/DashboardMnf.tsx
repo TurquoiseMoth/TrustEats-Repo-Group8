@@ -1,4 +1,5 @@
 import { HiOutlinePlusCircle } from "react-icons/hi";
+import type React from "react";
 
 import { HiOutlineQrCode } from "react-icons/hi2";
 
@@ -15,45 +16,93 @@ import { FileText } from 'lucide-react';
 import { Link } from "react-router";
 
 import { ROUTES } from "../constants";
+import type { AnalyticsSummary } from "../types";
 
-const DashboardMnf = () => {
+interface DashboardMnfProps {
+  summary?: AnalyticsSummary;
+  isLoading?: boolean;
+  error?: unknown;
+}
+
+interface ActivityItem {
+  icon?: React.ReactNode;
+  image?: string;
+  title: string;
+  subtitle: string;
+  status?: string;
+  time: string;
+}
+
+function formatActivityTime(value?: string) {
+  if (!value) return "";
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
+const DashboardMnf = ({ summary, isLoading, error }: DashboardMnfProps) => {
+  const status = summary?.manufacturer?.status;
+  const companyName = summary?.manufacturer?.companyName ?? "Manufacturer";
 
   const stats = [
     {
       title: "Total Product",
-      value: 5,
+      value: summary?.totalProducts ?? 0,
     },
     {
       title: "Verified Products",
-      value: 4,
+      value: summary?.scansByResult.genuine ?? 0,
     },
     {
       title: "QR Code Generated",
-      value: 4,
+      value: summary?.totalCodesIssued ?? 0,
     },
   ];
 
-const activities = [
-  {
-    icon: <FileText size={28} />, // Changed icon here
-    title: 'Document Verification',
-    subtitle: 'Document verified successfully',
-    status: 'Verified',
-    time: '9:30 AM',
-  },
-  {
-    image: goldenMorn, // Added product image
-    title: 'Golden Morn',
-    subtitle: 'New product added',
-    time: '10:30 PM',
-  },
-  {
+const activities: ActivityItem[] = [
+  ...(status
+    ? [
+        {
+          icon: <FileText size={28} />,
+          title: "Document Verification",
+          subtitle:
+            status === "approved"
+              ? "Document verified successfully"
+              : status === "suspended"
+                ? "Manufacturer account suspended"
+                : "Submitted for admin review",
+          status:
+            status === "approved"
+              ? "Verified"
+              : status === "suspended"
+                ? "Suspended"
+                : "Pending",
+          time: "",
+        },
+      ]
+    : []),
+  ...(summary?.recentProducts ?? []).map((product) => ({
+    image: product.imageUrl || goldenMorn,
+    title: product.name,
+    subtitle: "New product added",
+    time: formatActivityTime(product.createdAt),
+  })),
+  ...(summary?.recentFlags ?? []).slice(0, 3).map((flag) => ({
     icon: <IoQrCodeOutline />,
-    title: 'QR Code Generated',
-    subtitle: 'Product: Golden Morn',
-    time: '12:01 PM',
-  },
-];
+    title:
+      flag.result === "fake"
+        ? "Fake Scan Flagged"
+        : flag.result === "suspicious"
+          ? "Suspicious Scan"
+          : "Product Verified",
+    subtitle: `Product: ${flag.product?.name ?? flag.code}`,
+    status: flag.result,
+    time: formatActivityTime(flag.scannedAt),
+  })),
+].slice(0, 5);
 
   return (
       <main className="flex-1 flex flex-col bg-[#f2f7f7]">
@@ -61,6 +110,18 @@ const activities = [
         <header className="sticky top-0 z-30 flex h-14 items-center bg-secondary px-8">
           <h1 className="text-lg font-bold text-white">Manufacturer Dashboard</h1>
         </header>
+
+        {(isLoading || error || status === "pending" || status === "suspended") && (
+          <section className="mx-8 mt-8 rounded-lg border border-[#d9e5dc] bg-white px-5 py-4 text-sm text-[#1f3528]">
+            {isLoading
+              ? "Loading dashboard data..."
+              : error
+                ? "Unable to load live dashboard data right now."
+                : status === "pending"
+                  ? `${companyName} is pending admin approval. Product upload and QR generation are available after approval.`
+                  : `${companyName} is suspended. Contact an admin before uploading products.`}
+          </section>
+        )}
 
         {/* ================= Hero ================= */}
 
@@ -242,6 +303,11 @@ const activities = [
 </div>
       </div>
     ))}
+    {activities.length === 0 && (
+      <div className="bg-[#e5ece8] rounded-lg px-4 py-5 text-center text-sm text-[#62776a]">
+        No recent activities yet.
+      </div>
+    )}
   </div>
 </section>
 

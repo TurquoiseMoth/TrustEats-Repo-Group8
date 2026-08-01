@@ -13,11 +13,13 @@ export const analyticsService = {
       // If the analytics endpoint is missing, not authorized, or offline,
       // return a safe default so the dashboard can render rather than erroring.
       return {
+        manufacturer: undefined,
         totalProducts: 0,
         totalCodesIssued: 0,
         totalScans: 0,
         scansByResult: { genuine: 0, suspicious: 0, fake: 0 },
         recentFlags: [],
+        recentProducts: [],
       } as AnalyticsSummary;
     }
   },
