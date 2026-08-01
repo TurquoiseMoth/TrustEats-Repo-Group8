@@ -178,7 +178,7 @@ function Footer() {
       {/* ── Bottom: Copyright ────────────────────────── */}
       <div className="mx-auto flex max-w-7xl items-center justify-center px-6 pb-8 pt-6 lg:px-10">
         <p className="text-center text-[13px] text-white/60">
-          &copy; 2026 TrustEat. All Rights Reserved. | Privacy Policy | Terms of Services
+          &copy; 2026 TrustEat. All Rights Reserved. | Privacy Policy | Terms of Services.
         </p>
       </div>
     </footer>
