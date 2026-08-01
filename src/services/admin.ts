@@ -11,9 +11,49 @@ export interface AuditLogEntry {
   targetModel?: string;
 }
 
+export interface AdminManufacturer {
+  _id: string;
+  userId?:
+    | string
+    | {
+        _id?: string;
+        email?: string;
+        firstName?: string;
+        lastName?: string;
+      };
+  companyName: string;
+  napamsEmail?: string;
+  cacNumber?: string;
+  nafdacNumber?: string;
+  nafdacCofRNumber?: string;
+  certificateOfRecognitionUrl?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  address?: string;
+  country?: string;
+  status: "pending" | "approved" | "suspended";
+  createdAt?: string;
+  approvedAt?: string;
+}
+
 export const adminService = {
+  getManufacturers: async (params?: { status?: "pending" | "approved" | "suspended" }) => {
+    const qs = params?.status ? `?status=${encodeURIComponent(params.status)}` : "";
+    const res = await apiClient.get<ApiResponse<{ manufacturers: AdminManufacturer[] }>>(
+      `/admin/manufacturers${qs}`,
+    );
+    return res.data.data!;
+  },
+
+  getManufacturerById: async (manufacturerId: string) => {
+    const res = await apiClient.get<ApiResponse<{ manufacturer: AdminManufacturer }>>(
+      `/admin/manufacturers/${manufacturerId}`,
+    );
+    return res.data.data!.manufacturer;
+  },
+
   getPendingManufacturers: async () => {
-    const res = await apiClient.get<ApiResponse<{ manufacturers: unknown[] }>>("/admin/manufacturers/pending");
+    const res = await apiClient.get<ApiResponse<{ manufacturers: AdminManufacturer[] }>>("/admin/manufacturers/pending");
     return res.data.data!;
   },
 

@@ -12,36 +12,6 @@ import type { Product as ListProduct } from "../types/product.types";
 import { Spinner } from "../components/ui";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
-// Demo fallback so the manufacturer flow is testable without a backend.
-const DEMO_PRODUCTS: ListProduct[] = [
-  {
-    id: "demo-1",
-    name: "Golden Morn",
-    imageUrl: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=200&h=200&fit=crop",
-    nafdacRegNo: "07-8463",
-    status: "active",
-    qrGenerated: true,
-  },
-  {
-    id: "demo-2",
-    name: "Farm Milk",
-    imageUrl: "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=200&h=200&fit=crop",
-    nafdacRegNo: "04-6231",
-    status: "active",
-    qrGenerated: false,
-  },
-  {
-    id: "demo-3",
-    name: "Tomato Sauce",
-    imageUrl: "https://images.unsplash.com/photo-1472476443507-c7a5948772fc?w=200&h=200&fit=crop",
-    nafdacRegNo: "09-1120",
-    status: "active",
-    qrGenerated: false,
-  },
-];
-
-const IS_DEMO_MODE = !import.meta.env.VITE_API_BASE_URL;
-
 function toListProduct(p: ApiProduct): ListProduct {
   return {
     id: p._id ?? p.id ?? "",
@@ -74,13 +44,7 @@ export default function ProductListPage({ variant = "consumer" }: ProductListPag
     retry: 1,
   });
 
-  const isUsingDemo = IS_DEMO_MODE || !!error;
-
-  const sourceProducts = isUsingDemo
-    ? DEMO_PRODUCTS
-    : data
-      ? data.products.map(toListProduct)
-      : [];
+  const sourceProducts = data ? data.products.map(toListProduct) : [];
   const products = sourceProducts
     .filter((p) => !removedIds.has(p.id))
     .map((p) => (generatedIds.has(p.id) ? { ...p, qrGenerated: true } : p));
@@ -121,10 +85,9 @@ export default function ProductListPage({ variant = "consumer" }: ProductListPag
 
   const listContent = (
     <div className="px-4 pb-8 md:px-8 md:py-6 max-w-[1000px] mx-auto">
-      {isUsingDemo && (
-        <div className="mb-4 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-800">
-          Showing demo products (no backend connected). Some products have no QR code generated yet —
-          tap "Generate QR Code" on one to see the select-all popup.
+      {error && (
+        <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+          Products are unavailable until your manufacturer account is approved.
         </div>
       )}
       <ProductList

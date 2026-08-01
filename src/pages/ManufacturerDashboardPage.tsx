@@ -4,6 +4,7 @@ import DashboardMnf from "./DashboardMnf";
 import DashboardMbl from "./DashboardMbl";
 import { useQuery } from "@tanstack/react-query";
 import { analyticsService } from "../services/analytics";
+import { manufacturerService } from "../services/manufacturers";
 import { CheckCircle2, Clock3 } from "lucide-react";
 import { useState } from "react";
 
@@ -28,7 +29,15 @@ function ManufacturerDashboardPage() {
     refetchInterval: (query) =>
       query.state.data?.manufacturer?.status === "pending" ? 5000 : false,
   });
-  const status = summary?.manufacturer?.status;
+  const { data: manufacturerProfile } = useQuery({
+    queryKey: ["manufacturer-profile"],
+    queryFn: () => manufacturerService.getProfile(),
+    staleTime: 15_000,
+    retry: 1,
+    refetchInterval: (query) =>
+      query.state.data?.status === "pending" ? 5000 : false,
+  });
+  const status = manufacturerProfile?.status ?? summary?.manufacturer?.status;
   const showPendingModal = status === "pending";
   const showApprovedModal = status === "approved" && !approvedModalDismissed;
 
