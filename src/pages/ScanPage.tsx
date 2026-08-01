@@ -51,10 +51,9 @@ export default function ScanPage() {
           <div style={styles.camera}>
             <QrScanner
               onScanSuccess={handleScanSuccess}
-              qrboxSize={250}
+              qrboxSize={450}
               fps={10}
             />
-            {/* Corner brackets overlay */}
             <div style={{ ...styles.bracket, top: 20, left: 20, borderTop: '3px solid #3c7443', borderLeft: '3px solid #3c7443' }} />
             <div style={{ ...styles.bracket, top: 20, right: 20, borderTop: '3px solid #3c7443', borderRight: '3px solid #3c7443' }} />
             <div style={{ ...styles.bracket, bottom: 20, left: 20, borderBottom: '3px solid #3c7443', borderLeft: '3px solid #3c7443' }} />
@@ -152,15 +151,14 @@ const styles: Record<string, React.CSSProperties> = {
   },
   camera: {
     width: '100%',
-    maxWidth: '380px',
-    height: '320px',
+    maxWidth: '480px',
+    aspectRatio: '16 / 9',
     background: '#0D0D0D',
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    borderRadius: '24px',
     boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
   },
   bracket: {
@@ -171,13 +169,13 @@ const styles: Record<string, React.CSSProperties> = {
   },
   scanLine: {
     position: 'absolute',
-    width: '60%',
+    width: '40%',
     height: '2px',
     background: '#3c7443',
     opacity: 0.9,
     zIndex: 10,
     top: '50%',
-    left: '20%',
+    left: '30%',
   },
   cameraHint: {
     fontSize: '13px',
@@ -187,8 +185,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   statusContainer: {
     width: '100%',
-    maxWidth: '380px',
-    height: '320px',
+    maxWidth: '480px',
+    aspectRatio: '16 / 9',
     background: '#0D0D0D',
     display: 'flex',
     flexDirection: 'column',
@@ -196,7 +194,6 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'center',
     gap: '16px',
     padding: '24px',
-    borderRadius: '24px',
     boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
   },
   spinner: {

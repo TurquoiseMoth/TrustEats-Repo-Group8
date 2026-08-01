@@ -107,7 +107,7 @@ function Footer() {
   ];
 
   return (
-    <footer className="bg-primary/90">
+    <footer className="bg-[#1e3a21]">
       {/* ── Top: Brand + Links + Newsletter ─────────────── */}
       <div className="mx-auto max-w-7xl px-6 pt-16 pb-12 lg:px-10">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">

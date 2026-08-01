@@ -50,11 +50,13 @@ export default function QrScanner({
         { facingMode },
         {
           fps,
-          // qrbox sized relative to the live video so the box always fits
+          // qrbox sized relative to the live video so the box always fits.
+          // Expanded in width: a landscape window inset 20px from the edges
+          // so it aligns with the parent's corner-bracket overlay.
           qrbox: (width: number, height: number) => {
-            const min = Math.min(width, height);
-            const size = Math.min(qrboxSize, Math.floor(min * 0.8));
-            return { width: size, height: size };
+            const qrWidth = Math.max(120, Math.min(qrboxSize, Math.floor(width - 40)));
+            const qrHeight = Math.max(120, Math.floor(height - 40));
+            return { width: qrWidth, height: qrHeight };
           },
           videoConstraints: {
             facingMode,
@@ -133,17 +135,40 @@ export default function QrScanner({
     };
   }, [retryKey, startCamera]);
 
-  // Make the injected <video> fill its container (library sometimes keeps
-  // a smaller intrinsic size, which leaves black bars).
+  // The library injects its own <video>, a <canvas> used for decoding, and a
+  // shaded region (with white corner shaders) into the container. We override
+  // them so the feed fills the container edge-to-edge and only the dark
+  // shading remains over the area outside the scan window.
   useEffect(() => {
-    if (!cameraReady) return;
-    const video = containerRef.current?.querySelector("video");
-    if (video) {
-      video.style.width = "100%";
-      video.style.height = "100%";
-      video.style.objectFit = "cover";
-    }
-  }, [cameraReady]);
+    const container = containerRef.current;
+    if (!container) return;
+
+    const applySurfaceStyles = () => {
+      const video = container.querySelector("video");
+      if (video) {
+        video.style.width = "100%";
+        video.style.height = "100%";
+        video.style.objectFit = "cover";
+      }
+      const canvas = container.querySelector("canvas");
+      if (canvas) {
+        canvas.style.display = "none";
+      }
+      const shadedRegion = container.querySelector("#qr-shaded-region");
+      if (shadedRegion) {
+        const region = shadedRegion as HTMLElement;
+        region.style.display = "block";
+        region.querySelectorAll("div").forEach((child) => {
+          (child as HTMLElement).style.display = "none";
+        });
+      }
+    };
+
+    applySurfaceStyles();
+    const observer = new MutationObserver(applySurfaceStyles);
+    observer.observe(container, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
 
   const errorState = cameraError !== null;
 
@@ -177,7 +202,7 @@ export default function QrScanner({
           padding: "24px",
           textAlign: "center",
           gap: "12px",
-          minHeight: "300px",
+          height: "100%",
         }}
       >
         <p style={{ fontSize: "15px", fontWeight: 600, margin: 0 }}>{copy.title}</p>
@@ -222,8 +247,12 @@ export default function QrScanner({
         ref={containerRef}
         style={{
           width: "100%",
-          height: "300px",
+          height: "100%",
           background: "#0D0D0D",
+          overflow: "hidden",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       />
 

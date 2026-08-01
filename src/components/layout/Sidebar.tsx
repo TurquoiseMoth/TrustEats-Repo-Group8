@@ -5,11 +5,11 @@ import { DEFAULT_UNREAD_COUNT } from "../../constants/notifications";
 import { NotificationBell } from "../ui/NotificationBell";
 
 const navItems = [
-  { label: "Dashboard (Consumer)", href: ROUTES.DASHBOARD, icon: LayoutDashboard },
-  { label: "QR Code (Manufacturer)", href: ROUTES.QR_CODE, icon: QrCode },
-  { label: "Add Product (Manufacturer)", href: ROUTES.PRODUCT_UPLOAD, icon: PlusSquare },
-  { label: "Product List (Consumer)", href: ROUTES.PRODUCT_LIST, icon: Package },
-  { label: "Notification (Consumer)", href: ROUTES.NOTIFICATIONS, icon: Bell },
+  { label: "Dashboard", href: ROUTES.DASHBOARD, icon: LayoutDashboard },
+  { label: "QR Code", href: ROUTES.QR_CODE, icon: QrCode },
+  { label: "Add Product", href: ROUTES.PRODUCT_UPLOAD, icon: PlusSquare },
+  { label: "Product List", href: ROUTES.PRODUCT_LIST, icon: Package },
+  { label: "Notification", href: ROUTES.NOTIFICATIONS, icon: Bell },
 ];
 
 function Sidebar() {
