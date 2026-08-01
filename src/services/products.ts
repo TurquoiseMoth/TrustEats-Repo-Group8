@@ -51,9 +51,13 @@ export const productService = {
   update: (id: string, data: Record<string, unknown>) => {
     if (shouldUseMock()) return mockProductService.update(id, data);
     const fd = buildFormData(data);
-    return apiClient.patch<ApiResponse<{ product: Product }>>(`/products/${id}`, fd)
-      .then((res) => res.data.data!.product);
+    // Use a raw axios call so the browser sets multipart boundaries correctly
+    const base = getApiBaseUrl?.() ?? apiClient.defaults.baseURL ?? "";
+    return axios
+      .patch(`${base.replace(/\/$/, "")}/products/${id}`, fd, { withCredentials: true })
+      .then((res) => (res.data && res.data.data && res.data.data.product) ? res.data.data.product : res.data);
   },
+
 
   createBatch: (data: CreateBatchPayload) => {
     if (shouldUseMock()) return mockProductService.createBatch(data);

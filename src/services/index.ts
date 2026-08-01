@@ -1,6 +1,9 @@
 export { default as apiClient } from "./api";
 export { authService } from "./auth";
 export { productService } from "./products";
+export { manufacturerService } from "./manufacturers";
+export { reportsService } from "./reports";
+export { adminService } from "./admin";
 export { analyticsService } from "./analytics";
 export { verificationService } from "./verification";
 

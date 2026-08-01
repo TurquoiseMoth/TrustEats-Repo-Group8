@@ -8,9 +8,8 @@ export const errorHandler = (
   err: AppError,
   _req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ): void => {
-  void next;
   const statusCode = err.statusCode || 500;
   const isDev = process.env.NODE_ENV === "development";
   console.error(`[ERROR] ${err.message}`, isDev ? err.stack : "");

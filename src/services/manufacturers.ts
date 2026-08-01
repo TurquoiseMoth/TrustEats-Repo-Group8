@@ -1,4 +1,5 @@
-import apiClient from "./api";
+import apiClient, { getApiBaseUrl } from "./api";
+import axios from "axios";
 import { shouldUseMock } from "./mockMode";
 import { mockManufacturerService } from "./mockManufacturers";
 import type { ApiResponse } from "../types";
@@ -44,11 +45,11 @@ export const manufacturerService = {
         fd.append(key, String(value));
       }
     });
-    return apiClient
-      .post<
-        ApiResponse<{ manufacturer: ManufacturerProfile }>
-      >("/manufacturers/register", fd)
-      .then((res) => res.data.data!.manufacturer);
+    // Use a plain axios call so the browser sets the multipart Content-Type boundary correctly
+    const base = getApiBaseUrl?.() ?? apiClient.defaults.baseURL ?? "";
+    return axios
+      .post(`${base.replace(/\/$/, "")}/manufacturers/register`, fd, { withCredentials: true })
+      .then((res) => (res.data && res.data.data) ? res.data.data.manufacturer : res.data);
   },
 
   getProfile: () => {
