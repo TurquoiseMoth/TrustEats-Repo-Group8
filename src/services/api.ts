@@ -7,7 +7,7 @@ import axios, {
 import type { ApiError } from "../types";
 
 // Default Render deployment for the TrustEats backend.
-const DEFAULT_API_BASE_URL = "https://trusteats-repo-group8.onrender.com";
+const DEFAULT_API_BASE_URL = "https://trusteats-repo-group8.onrender.com/api/v1";
 
 const API_BASE_URL =
   (import.meta.env.VITE_API_BASE_URL as string) || DEFAULT_API_BASE_URL;

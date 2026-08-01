@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { Response, type CookieOptions } from "express";
+import { Response } from "express";
 import { UserRole } from "../types";
 
 interface TokenPayload {
@@ -33,7 +33,7 @@ export const setTokenCookies = (
 
   const sameSiteSetting: "none" | "lax" = isProd ? "none" : "lax";
 
-  const accessCookieOpts: CookieOptions = {
+  const accessCookieOpts: Record<string, any> = {
     httpOnly: true,
     secure:isProd,
     sameSite: sameSiteSetting,
@@ -41,11 +41,12 @@ export const setTokenCookies = (
     path: "/",
   };
 
-  const refreshCookieOpts: CookieOptions = {
+  const refreshCookieOpts: Record<string, any> = {
     httpOnly: true,
     secure: isProd,
     sameSite: sameSiteSetting,
-    maxAge: 15 * 60 * 1000,
+    // Keep refresh cookie for 7 days (matches refresh token expiry)
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     path: "/api/v1/auth/refresh",
   };
 
@@ -59,10 +60,10 @@ export const setTokenCookies = (
 }; 
 
 export const clearTokenCookies = (res: Response): void => {
-  const opts: CookieOptions = { path: "/" };
+  const opts: Record<string, any> = { path: "/" };
   if (process.env.COOKIE_DOMAIN) opts.domain = process.env.COOKIE_DOMAIN;
   res.clearCookie("accessToken", opts);
-  const refreshOpts: CookieOptions = { path: "/api/v1/auth/refresh" };
+  const refreshOpts: Record<string, any> = { path: "/api/v1/auth/refresh" };
   if (process.env.COOKIE_DOMAIN) refreshOpts.domain = process.env.COOKIE_DOMAIN;
   res.clearCookie("refreshToken", refreshOpts);
 };

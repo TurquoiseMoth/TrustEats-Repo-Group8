@@ -84,7 +84,8 @@ function ProductUploadPage() {
     const form = new FormData();
     form.append("name", productName);
     form.append("nafdacNumber", nafdacNo);
-    files.forEach((f) => form.append("images", f, f.name));
+    // backend expects field name "image" for single product image
+    if (files.length > 0) form.append("image", files[0], files[0].name);
 
     try {
       // Use productService.create to send FormData
