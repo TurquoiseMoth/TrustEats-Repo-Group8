@@ -156,11 +156,31 @@ export const verifyEmail = async (
   (user as unknown as Record<string, unknown>).emailVerificationOtp = undefined;
   (user as unknown as Record<string, unknown>).emailVerificationOtpExpiresAt =
     undefined;
+
+  const { accessToken, refreshToken } = issueTokens({
+    userId: user._id.toString(),
+    role: user.role,
+  });
+  user.refreshTokenHash = await bcrypt.hash(refreshToken, 10);
   await user.save();
+
+  setTokenCookies(res, accessToken, refreshToken);
+
+  const responseData: any = {
+    user: {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    },
+  };
+  responseData.token = accessToken;
 
   res.status(200).json({
     success: true,
-    message: "Email verified successfully. You can now log in.",
+    message: "Email verified successfully.",
+    data: responseData,
   });
 };
 
@@ -405,9 +425,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       lastName: user.lastName,
     },
   };
-  if (process.env.NODE_ENV !== "production") {
-    responseData.token = accessToken;
-  }
+  responseData.token = accessToken;
 
   res.status(200).json({
     success: true,

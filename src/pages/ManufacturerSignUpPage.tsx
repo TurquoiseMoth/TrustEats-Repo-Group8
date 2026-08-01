@@ -1,11 +1,18 @@
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { ROUTES } from '../constants';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-import { manufacturerService } from '../services/manufacturers';
+import {
+  manufacturerService,
+  type SubmitManufacturerProfileInput,
+} from '../services/manufacturers';
+import type { RegisterRequest } from '../types';
 import { BackButton } from '../components/ui/BackButton';
 export default function ManufacturerSignUpPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const accountData = (location.state as { accountData?: RegisterRequest } | null)
+    ?.accountData;
   const [form, setForm] = useState({
     companyName: "",
     napamsEmail: "",
@@ -45,18 +52,38 @@ export default function ManufacturerSignUpPage() {
     setSubmitting(true);
     setSubmitError("");
     try {
-      await manufacturerService.submitProfile({
+      const companyProfile: SubmitManufacturerProfileInput = {
         companyName: form.companyName,
         napamsEmail: form.napamsEmail,
         cacNumber: form.cacNumber,
         nafdacCofRNumber: form.nafdacCorNo,
         certificateOfRecognition: corFile,
         termsAccepted: agreed,
-      });
+      };
+
+      if (accountData) {
+        await manufacturerService.registerAccount({
+          ...accountData,
+          ...companyProfile,
+          role: "manufacturer",
+        });
+
+        navigate(ROUTES.VERIFY_EMAIL, {
+          replace: true,
+          state: {
+            email: accountData.email,
+            role: "manufacturer",
+          },
+        });
+        return;
+      }
+
+      await manufacturerService.submitProfile(companyProfile);
       navigate(ROUTES.MANUFACTURER_DASHBOARD);
-    } catch {
+    } catch (err) {
       setSubmitError(
-        "Registration failed. Please check your information and try again.",
+        (err as { message?: string })?.message ??
+          "Registration failed. Please check your information and try again.",
       );
     } finally {
       setSubmitting(false);

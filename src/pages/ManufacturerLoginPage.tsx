@@ -23,8 +23,12 @@ export default function ManufacturerLoginPage() {
     setError('');
     setIsSubmitting(true);
     try {
-      await login(form.email, form.password);
-      navigate(ROUTES.MANUFACTURER_DASHBOARD);
+      const user = await login(form.email, form.password);
+      navigate(
+        user?.role === "manufacturer"
+          ? ROUTES.MANUFACTURER_DASHBOARD
+          : ROUTES.DASHBOARD,
+      );
     } catch (err) {
       setError((err as { message?: string })?.message ?? 'Sign in failed. Please try again.');
     } finally {
@@ -94,7 +98,7 @@ export default function ManufacturerLoginPage() {
               {isSubmitting ? 'Signing in…' : 'Log In'}
             </button>
 
-            <Link to={ROUTES.MANUFACTURER_SIGNUP} style={s.btnSecondary}>
+            <Link to={`${ROUTES.REGISTER}?role=manufacturer`} style={s.btnSecondary}>
               Sign Up
             </Link>
           </div>

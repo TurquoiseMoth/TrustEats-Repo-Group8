@@ -8,7 +8,7 @@ interface EmailVerificationProps {
   /** Called when the person requests a new code */
   onResend: () => Promise<void> | void;
   /** Called after a successful verification (e.g. navigate to next step) */
-  onVerified?: () => void;
+  onVerified?: () => Promise<void> | void;
   /** Optional step indicator, e.g. { current: 2, total: 3 } */
   step?: { current: number; total: number };
   length?: number;
@@ -38,7 +38,7 @@ export function EmailVerification({
     length,
     onSubmit: async (code) => {
       const ok = await onVerify(code);
-      if (ok) onVerified?.();
+      if (ok) await onVerified?.();
       return ok;
     },
     onResend,

@@ -13,6 +13,8 @@ export interface IProduct extends Document {
   imagePublicId?: string;
   category: string;
   isActive: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const sanitise = (val: string) =>

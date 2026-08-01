@@ -21,8 +21,14 @@ export default function SignInPage() {
     setError('');
     setIsSubmitting(true);
     try {
-      await login(form.email, form.password);
-      navigate(ROUTES.DASHBOARD);
+      const user = await login(form.email, form.password);
+      navigate(
+        user?.role === "manufacturer"
+          ? ROUTES.MANUFACTURER_DASHBOARD
+          : user?.role === "admin"
+            ? ROUTES.ADMIN_DASHBOARD
+            : ROUTES.DASHBOARD,
+      );
     } catch (err) {
       setError((err as { message?: string })?.message ?? 'Sign in failed. Please try again.');
     } finally {

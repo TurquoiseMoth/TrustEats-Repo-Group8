@@ -1,14 +1,13 @@
 import { Link, useLocation } from "react-router";
-import { Home, QrCode, Package, Bell } from "lucide-react";
+import { Home, QrCode, Package } from "lucide-react";
 import { ROUTES } from "../../constants";
-import { DEFAULT_UNREAD_COUNT } from "../../constants/notifications";
-import { NotificationBell } from "../ui/NotificationBell";
 
 const mobileTabs = [
   { label: "Home", href: ROUTES.MANUFACTURER_DASHBOARD, icon: Home },
   { label: "QR Code", href: ROUTES.QR_CODE, icon: QrCode },
   { label: "Product", href: ROUTES.MANUFACTURER_PRODUCTS, icon: Package },
-  { label: "Notification", href: ROUTES.MANUFACTURER_NOTIFICATIONS, icon: Bell },
+  // Notifications are disabled until a backend endpoint exists.
+  // { label: "Notification", href: ROUTES.MANUFACTURER_NOTIFICATIONS, icon: Bell },
 ];
 
 /**
@@ -29,17 +28,11 @@ export function ManufacturerMobileNav() {
               to={href}
               className="flex w-full flex-col items-center justify-center gap-0.5"
             >
-              {href === ROUTES.MANUFACTURER_NOTIFICATIONS ? (
-                <span className={isActive ? "text-primary" : "text-gray-400"}>
-                  <NotificationBell count={DEFAULT_UNREAD_COUNT} iconClassName="h-5 w-5" />
-                </span>
-              ) : (
-                <Icon
-                  size={20}
-                  strokeWidth={isActive ? 2.5 : 1.8}
-                  className={isActive ? "text-primary" : "text-gray-400"}
-                />
-              )}
+              <Icon
+                size={20}
+                strokeWidth={isActive ? 2.5 : 1.8}
+                className={isActive ? "text-primary" : "text-gray-400"}
+              />
               <span
                 className={`text-xs font-medium ${isActive ? "text-primary" : "text-gray-400"}`}
               >

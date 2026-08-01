@@ -1,4 +1,9 @@
 export interface AnalyticsSummary {
+  manufacturer?: {
+    id: string;
+    companyName: string;
+    status: "pending" | "approved" | "suspended";
+  };
   totalProducts: number;
   totalCodesIssued: number;
   totalScans: number;
@@ -8,6 +13,7 @@ export interface AnalyticsSummary {
     fake: number;
   };
   recentFlags: RecentFlag[];
+  recentProducts?: RecentProduct[];
 }
 
 export interface RecentFlag {
@@ -21,6 +27,15 @@ export interface RecentFlag {
   product?: {
     name: string;
     brand: string;
+    imageUrl?: string;
   } | null;
   code: string;
+}
+
+export interface RecentProduct {
+  id: string;
+  name: string;
+  brand?: string;
+  imageUrl?: string;
+  createdAt?: string;
 }

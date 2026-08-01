@@ -4,20 +4,18 @@ import {
   QrCode,
   PackagePlus,
   Package,
-  Bell,
   Settings,
   ShieldCheck,
 } from "lucide-react";
 import { ROUTES } from "../../constants";
-import { DEFAULT_UNREAD_COUNT } from "../../constants/notifications";
-import { NotificationBell } from "../ui/NotificationBell";
 
 const sidebarLinks = [
   { label: "Dashboard", href: ROUTES.MANUFACTURER_DASHBOARD, icon: LayoutDashboard },
   { label: "QR Code", href: ROUTES.QR_CODE, icon: QrCode },
   { label: "Add Product", href: ROUTES.PRODUCT_UPLOAD, icon: PackagePlus },
   { label: "Product List", href: ROUTES.MANUFACTURER_PRODUCTS, icon: Package },
-  { label: "Notification", href: ROUTES.MANUFACTURER_NOTIFICATIONS, icon: Bell },
+  // Notifications are disabled until a backend endpoint exists.
+  // { label: "Notification", href: ROUTES.MANUFACTURER_NOTIFICATIONS, icon: Bell },
 ];
 
 /**
@@ -47,11 +45,7 @@ export function ManufacturerSidebar() {
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
             >
-              {href === ROUTES.MANUFACTURER_NOTIFICATIONS ? (
-                <NotificationBell count={DEFAULT_UNREAD_COUNT} iconClassName="h-5 w-5" />
-              ) : (
-                <Icon className="h-5 w-5" />
-              )}
+              <Icon className="h-5 w-5" />
               {label}
             </Link>
           );
