@@ -66,7 +66,7 @@ export default function HistoryPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans pb-24 relative">
-      <div className="flex items-center px-4 py-6">
+      <div className="flex items-center py-6">
         <BackButton className="mr-4" />
         <h1 className="text-[22px] font-bold text-text-main">History (Consumer)</h1>
       </div>
@@ -76,7 +76,7 @@ export default function HistoryPage() {
           <p>No scan history yet.</p>
         </div>
       ) : (
-        <div className="flex-1 px-4 space-y-3 max-w-md mx-auto w-full">
+        <div className="flex-1 space-y-3 max-w-md mx-auto w-full">
           {events.map((event) => (
             <div
               key={event._id}

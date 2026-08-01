@@ -25,9 +25,9 @@ export function setMockMode(enabled: boolean): void {
   );
 }
 
-// The app falls back to mock data when the runtime toggle is on OR when no
-// backend URL is configured (local dev). A real deployment with
-// VITE_API_BASE_URL set uses the live backend unless the user enables mock.
+// The app only uses mock data when the runtime toggle is on. When no backend
+// URL is configured it falls back to the default Render deployment (see
+// src/services/api.ts), so the live API is used unless mock mode is enabled.
 export function shouldUseMock(): boolean {
-  return isMockMode() || !import.meta.env.VITE_API_BASE_URL;
+  return isMockMode();
 }

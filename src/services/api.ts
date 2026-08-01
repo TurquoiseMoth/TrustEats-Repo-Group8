@@ -9,8 +9,20 @@ import type { ApiError } from "../types";
 // Default Render deployment for the TrustEats backend.
 const DEFAULT_API_BASE_URL = "https://trusteats-repo-group8.onrender.com";
 
-const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL as string) || DEFAULT_API_BASE_URL;
+// All backend routes are mounted under /api/v1 (see Backend/src/app.ts).
+const API_VERSION_PREFIX = "/api/v1";
+
+// Append the API version prefix unless the caller already included it.
+function resolveApiBaseUrl(url: string): string {
+  const trimmed = url.trim().replace(/\/+$/, "");
+  return trimmed.endsWith(API_VERSION_PREFIX)
+    ? trimmed
+    : `${trimmed}${API_VERSION_PREFIX}`;
+}
+
+const API_BASE_URL = resolveApiBaseUrl(
+  (import.meta.env.VITE_API_BASE_URL as string) || DEFAULT_API_BASE_URL,
+);
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -213,7 +225,7 @@ function getDefaultErrorMessage(status: number | undefined): string {
 }
 
 export function setApiBaseUrl(url: string) {
-  apiClient.defaults.baseURL = url;
+  apiClient.defaults.baseURL = resolveApiBaseUrl(url);
 }
 
 export function getApiBaseUrl() {

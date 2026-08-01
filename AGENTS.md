@@ -37,7 +37,7 @@ src/
 │   ├── verification.ts         # VerificationResult, VerificationRequest
 │   └── analytics.ts            # AnalyticsSummary, RecentFlag
 ├── services/
-│   ├── api.ts                  # Axios instance with auth/error interceptors
+│   ├── api.ts                  # Axios instance (base resolves to <origin>/api/v1) + auth/error interceptors
 │   ├── auth.ts                 # login, register, logout, getCurrentUser
 │   ├── products.ts             # CRUD + generateCodes, getCodes, revokeCode
 │   ├── verification.ts         # verifyCode, verifyCodeWithContext (mock-aware)
@@ -85,10 +85,16 @@ src/
 - Custom theme tokens in index.css: --color-brand-base(#3c7443), --color-brand-nav(#7da282), --color-brand-icons(#048340)
 
 ## Mock/Demo Mode
-- When VITE_API_BASE_URL is not set, the app uses mockVerificationService instead of the real API
+- Mock mode is an explicit runtime toggle (HomePage "Enable Mock Data", persisted in localStorage). `shouldUseMock()` in src/services/mockMode.ts returns true ONLY when the toggle is on.
+- When mock mode is off, the app always calls the live backend (default: https://trusteats-repo-group8.onrender.com). No env var is required.
+- Set VITE_API_BASE_URL in .env to override the backend origin (see .env.example).
 - Mock returns fake product data after 1.2s delay — fully testable without a backend
 - Scanning any code → GENUINE result; scanning "FAKE" or "000000" → FAKE result; scanning "SUS" or "999999" → SUSPICIOUS result
-- To switch to real API, set VITE_API_BASE_URL in .env (see .env.example)
+
+## API / Backend
+- Backend routes are mounted under /api/v1 (see Backend/src/app.ts). The Axios base URL in src/services/api.ts resolves to `<origin>/api/v1` automatically — do NOT add /api/v1 to individual service paths or it will double up.
+- All API responses wrap payloads as `{ success, data }` (see ApiResponse<T> in src/types/api.ts); services unwrap via `res.data.data`.
+- The backend defaults to http://localhost:5000 locally (Backend/package.json scripts); the deployed API is https://trusteats-repo-group8.onrender.com.
 
 ## QR Scanning Flow (End-to-End)
 1. User visits /scan → camera permission requested → live camera feed
