@@ -108,7 +108,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Log Out */}
-        <button style={styles.logoutBtn} onClick={async () => { const { authService } = await import('../services/auth'); await authService.logout(); navigate(ROUTES.LOGIN); }}>
+        <button style={styles.logoutBtn} onClick={async () => { const { authService } = await import('../services/auth'); await authService.logout(); navigate(ROUTES.HOME); }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="#ce0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M16 17L21 12L16 7" stroke="#ce0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -174,18 +174,19 @@ function NotifRow({
 
 const styles: Record<string, CSSProperties> = {
   page: {
-    minHeight: '100vh',
+    minHeight: 'calc(100dvh - 64px)',
     background: '#f0f8ff',
     fontFamily: "'Inter', sans-serif",
     display: 'flex',
     flexDirection: 'column',
-    paddingBottom: '40px',
+    paddingBottom: '24px',
+    boxSizing: 'border-box',
   },
   header: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    padding: '16px 20px 8px',
+    padding: '14px 18px 8px',
     background: '#f0f8ff',
   },
   headerTitle: {
@@ -197,7 +198,7 @@ const styles: Record<string, CSSProperties> = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '16px 20px 24px',
+    padding: '14px 18px 20px',
   },
   avatarWrap: {
     position: 'relative',
@@ -230,23 +231,33 @@ const styles: Record<string, CSSProperties> = {
     fontWeight: 700,
     color: '#292d32',
     margin: '0 0 4px',
+    maxWidth: 'calc(100vw - 48px)',
+    overflowWrap: 'anywhere',
+    textAlign: 'center',
   },
   avatarEmail: {
     fontSize: '13px',
     color: '#6B7280',
     margin: 0,
+    maxWidth: 'calc(100vw - 48px)',
+    overflowWrap: 'anywhere',
+    textAlign: 'center',
   },
   content: {
+    width: '100%',
+    margin: '0 auto',
     padding: '0 16px',
     display: 'flex',
     flexDirection: 'column',
     gap: '16px',
+    boxSizing: 'border-box',
   },
   card: {
     background: '#ffffff',
     borderRadius: '12px',
     padding: '16px',
     border: '1px solid #E8EDE8',
+    boxSizing: 'border-box',
   },
   cardTitle: {
     fontSize: '14px',
@@ -260,6 +271,7 @@ const styles: Record<string, CSSProperties> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: '12px',
     padding: '12px 0',
   },
   accountLabel: {
@@ -272,6 +284,7 @@ const styles: Record<string, CSSProperties> = {
     fontSize: '12px',
     color: '#6B7280',
     margin: 0,
+    overflowWrap: 'anywhere',
   },
   editBtn: {
     background: 'none',
@@ -297,6 +310,7 @@ const styles: Record<string, CSSProperties> = {
   },
   notifText: {
     flex: 1,
+    minWidth: 0,
   },
   notifLabel: {
     fontSize: '13px',
@@ -309,6 +323,7 @@ const styles: Record<string, CSSProperties> = {
     color: '#9CA3AF',
     margin: 0,
     lineHeight: 1.4,
+    overflowWrap: 'break-word',
   },
   toggle: {
     width: '44px',

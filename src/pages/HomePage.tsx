@@ -155,12 +155,10 @@ function HomePage() {
 
             {/* ── How TrustEats Works ──────────────────── */}
             <div className="relative mx-auto mt-10 w-full max-w-7xl px-4 pt-7 md:mt-16 md:px-6 md:pt-0 lg:px-10">
-                <div className="absolute left-1/2 top-0 z-20 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 bg-background px-4 md:px-5">
-                    <span className="relative h-0.5 w-10 bg-gray-400 before:absolute before:right-0 before:top-1/2 before:h-3 before:w-3 before:-translate-y-1/2 before:translate-x-1/2 before:rounded-full before:bg-gray-500 md:w-8" />
-                    <h2 className="whitespace-nowrap text-[clamp(1.25rem,7vw,2.15rem)] font-bold text-text-main md:text-[clamp(1.25rem,2.2vw,1.625rem)]">
+                <div className="absolute left-4 right-4 top-7 z-20 flex -translate-y-1/2 items-center justify-center md:left-6 md:right-6 md:top-0 lg:left-10 lg:right-10">
+                    <h2 className="relative bg-background px-4 text-center text-[clamp(1.25rem,7vw,2.15rem)] font-bold text-text-main before:absolute before:left-0 before:top-1/2 before:h-3 before:w-3 before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:bg-gray-500 after:absolute after:right-0 after:top-1/2 after:h-3 after:w-3 after:-translate-y-1/2 after:translate-x-1/2 after:rounded-full after:bg-gray-500 md:px-5 md:text-[clamp(1.25rem,2.2vw,1.625rem)]">
                         How <span className="text-primary">TrustEats</span> Works
                     </h2>
-                    <span className="relative h-0.5 w-10 bg-gray-400 after:absolute after:left-0 after:top-1/2 after:h-3 after:w-3 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-gray-500 md:w-8" />
                 </div>
 
                 <div className="w-full rounded-[30px] border-[1.5px] border-gray-400 px-7 pb-10 pt-20 md:px-6 md:pt-20 md:pb-14 lg:px-10">
