@@ -122,7 +122,7 @@ export default function ResultPage() {
         </button>
       </div>
 
-      <button style={styles.dashLink} onClick={() => navigate(ROUTES.HOME)}>
+      <button style={styles.dashLink} onClick={() => navigate(ROUTES.DASHBOARD)}>
         &larr; Return to Dashboard
       </button>
     </div>
