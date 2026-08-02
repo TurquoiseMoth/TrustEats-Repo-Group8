@@ -397,8 +397,8 @@ function QrCodePage() {
           <h1 className="text-lg font-bold text-white">{title}</h1>
         </header>
 
-        <main className="flex-1 overflow-y-auto px-8 py-8">
-          <div className="mx-auto max-w-2xl">
+        <main className="flex-1 overflow-y-auto px-8 py-8 2xl:px-12">
+          <div className="mx-auto w-full max-w-5xl">
             {generatedResult && selectedProduct ? (
               <QrSuccessSummary product={selectedProduct} result={generatedResult} />
             ) : (

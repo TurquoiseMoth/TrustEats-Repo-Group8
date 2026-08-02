@@ -35,7 +35,7 @@ export default function AdminOrganizationsPage() {
         <h1 className="text-2xl font-bold text-white">Admin Organizations</h1>
       </div>
 
-      <div className="px-5 md:px-8 py-6 max-w-[1400px] mx-auto">
+      <div className="mx-auto max-w-[1680px] px-5 py-6 md:px-8 2xl:px-12">
         <OrganizationsTable
           organizations={PLACEHOLDER_ORGANIZATIONS}
           viewAllHrefFor={(org) => `${ROUTES.ADMIN_ORGANIZATIONS}/${org.id}`}

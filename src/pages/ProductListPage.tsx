@@ -56,7 +56,13 @@ export default function ProductListPage({ variant = "consumer" }: ProductListPag
   };
 
   const listContent = (
-    <div className="px-4 pb-8 md:px-8 md:py-6 max-w-[1000px] mx-auto">
+    <div
+      className={
+        variant === "manufacturer"
+          ? "mx-auto w-full max-w-[1500px] px-5 pb-8 md:px-8 md:py-8 2xl:px-12"
+          : "mx-auto max-w-[1400px] px-4 pb-8 md:px-8 md:py-6"
+      }
+    >
       {error && (
         <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
           Products are unavailable until your manufacturer account is approved.
@@ -97,7 +103,7 @@ export default function ProductListPage({ variant = "consumer" }: ProductListPag
     return (
       <div className="flex min-h-screen bg-background">
         <ManufacturerSidebar />
-        <div className="ml-60 flex flex-1 flex-col">
+        <div className="ml-60 flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-30 flex h-14 items-center bg-secondary px-8">
             <h1 className="text-lg font-bold text-white">Product List</h1>
           </header>

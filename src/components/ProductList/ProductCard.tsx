@@ -34,16 +34,16 @@ export function ProductCard({ product, onGenerateQr, onRemove }: ProductCardProp
   };
 
   return (
-    <li className="list-none bg-white rounded-2xl p-4 md:p-6 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
-      <div className="flex items-start md:items-center gap-3 mb-4">
-        <img src={product.imageUrl} alt="" aria-hidden="true" className="w-12 h-12 rounded-lg object-cover bg-gray-100 shrink-0" />
-        <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-bold text-gray-900 break-words">{product.name}</h3>
-          <p className="text-xs text-gray-500">NAFDAC Reg. NO. {product.nafdacRegNo}</p>
+    <li className="flex min-w-0 flex-col gap-5 rounded-2xl bg-white p-5 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] lg:flex-row lg:items-center lg:justify-between lg:p-6">
+      <div className="flex min-w-0 flex-1 items-start gap-4 lg:items-center">
+        <img src={product.imageUrl} alt="" aria-hidden="true" className="h-16 w-16 shrink-0 rounded-xl bg-gray-100 object-cover lg:h-20 lg:w-20" />
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate text-base font-bold text-gray-900">{product.name}</h3>
+          <p className="mt-1 truncate text-sm text-gray-500">NAFDAC Reg. NO. {product.nafdacRegNo}</p>
         </div>
         <span
           className={[
-            "inline-flex items-center gap-1.5 shrink-0 px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap",
+            "inline-flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap",
             isExpired ? "bg-red-50 text-red-700" : "bg-green-50 text-primary",
           ].join(" ")}
         >
@@ -83,7 +83,7 @@ export function ProductCard({ product, onGenerateQr, onRemove }: ProductCardProp
           </div>
         </div>
       ) : (
-        <div className="flex gap-2.5">
+        <div className="grid grid-cols-2 gap-3 lg:w-[420px] lg:shrink-0">
           <button
             type="button"
             onClick={handleGenerate}
