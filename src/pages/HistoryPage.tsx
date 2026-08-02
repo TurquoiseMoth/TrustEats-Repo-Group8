@@ -65,10 +65,10 @@ export default function HistoryPage() {
   const events = data.events ?? [];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col font-sans pb-24 relative">
-      <div className="flex items-center px-4 py-6">
+    <div className="relative flex min-h-[calc(100dvh-64px)] flex-col bg-background pb-6 font-sans">
+      <div className="flex items-center px-4 pb-4 pt-5">
         <BackButton className="mr-4" />
-        <h1 className="text-[22px] font-bold text-text-main">History (Consumer)</h1>
+        <h1 className="text-[20px] font-bold text-text-main">Scan History</h1>
       </div>
 
       {events.length === 0 ? (
@@ -76,15 +76,15 @@ export default function HistoryPage() {
           <p>No scan history yet.</p>
         </div>
       ) : (
-        <div className="flex-1 px-4 space-y-3 max-w-md mx-auto w-full">
+        <div className="flex w-full flex-1 flex-col gap-3 px-4">
           {events.map((event) => (
             <div
               key={event._id}
-              className="flex items-center justify-between rounded-xl bg-white p-3.5 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] cursor-pointer hover:shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] transition-shadow"
+              className="flex cursor-pointer items-center justify-between gap-3 rounded-xl bg-white p-3.5 shadow-[0_4px_12px_rgba(15,23,42,0.08)] transition-shadow hover:shadow-[0_4px_12px_rgba(15,23,42,0.12)]"
               onClick={() => setSelectedEvent(event)}
             >
-              <div className="flex flex-col justify-center gap-1.5">
-                <h3 className="text-[16px] font-bold text-text-main leading-tight">
+              <div className="flex min-w-0 flex-col justify-center gap-1.5">
+                <h3 className="truncate text-[15px] font-bold leading-tight text-text-main">
                   {event.productName ?? event.code}
                 </h3>
                 {statusBadge(event)}
@@ -92,7 +92,7 @@ export default function HistoryPage() {
                   {formatDate(event.scannedAt)}
                 </span>
               </div>
-              <div className="text-gray-400">
+              <div className="shrink-0 text-gray-400">
                 <ChevronRight size={20} strokeWidth={2.5} />
               </div>
             </div>
@@ -102,7 +102,7 @@ export default function HistoryPage() {
 
       {selectedEvent && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center">
-          <div className="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl pt-5 pb-8 px-5">
+          <div className="max-h-[88dvh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-white px-5 pb-8 pt-5 sm:rounded-3xl">
             <div className="flex justify-end mb-4">
               <button onClick={() => setSelectedEvent(null)} className="p-1 rounded-full hover:bg-gray-100 transition-colors">
                 <X size={24} className="text-gray-700" strokeWidth={2} />
@@ -120,19 +120,19 @@ export default function HistoryPage() {
               <div className="space-y-3.5">
                 <div className="flex justify-between border-b border-gray-300 pb-3.5">
                   <span className="text-[14px] text-gray-600">Product</span>
-                  <span className="text-[14px] font-medium text-gray-800 text-right max-w-[150px]">
+                  <span className="max-w-[55%] break-words text-right text-[14px] font-medium text-gray-800">
                     {selectedEvent.productName ?? "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between border-b border-gray-300 pb-3.5">
                   <span className="text-[14px] text-gray-600">Brand</span>
-                  <span className="text-[14px] font-medium text-gray-800">
+                  <span className="max-w-[55%] break-words text-right text-[14px] font-medium text-gray-800">
                     {selectedEvent.brand ?? "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between pt-1">
                   <span className="text-[14px] text-gray-600">Code</span>
-                  <span className="text-[14px] font-medium text-gray-800">
+                  <span className="max-w-[60%] break-words text-right text-[13px] font-medium text-gray-800">
                     {selectedEvent.code}
                   </span>
                 </div>

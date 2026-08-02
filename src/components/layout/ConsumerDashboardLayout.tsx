@@ -16,7 +16,7 @@ function ConsumerDashboardLayout() {
 
   return (
     <div className="flex min-h-screen justify-center bg-[#f3f4f6] font-[system-ui,-apple-system,BlinkMacSystemFont,Segoe_UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif]">
-      <div className="relative flex min-h-screen w-full max-w-[440px] flex-col bg-[#f4f8fa] pb-16 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05)] md:max-w-7xl md:pb-0 md:shadow-none">
+      <div className="relative flex min-h-screen w-full flex-col bg-[#f4f8fa] pb-16 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05)] md:max-w-7xl md:pb-0 md:shadow-none">
         {/* Desktop top bar */}
         <header className="hidden items-center justify-between border-b border-gray-100 bg-white px-10 py-4 md:flex">
           <Link to={ROUTES.HOME} className="flex shrink-0 items-center gap-2.5">
