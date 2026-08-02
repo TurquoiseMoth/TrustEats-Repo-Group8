@@ -8,6 +8,12 @@ import { adminService, type AdminManufacturer } from "../services/admin";
 type Tab = "All" | "Approved" | "Pending" | "Rejected";
 const tabs: Tab[] = ["All", "Approved", "Pending", "Rejected"];
 
+function notify(type: "success" | "error", message: string) {
+  window.dispatchEvent(
+    new CustomEvent("trusteats:notify", { detail: { type, message } }),
+  );
+}
+
 function toApplication(manufacturer: AdminManufacturer): Application {
   const created = manufacturer.createdAt ? new Date(manufacturer.createdAt) : null;
   return {
@@ -52,13 +58,21 @@ export default function AdminApplicationsPage() {
 
   const approveMutation = useMutation({
     mutationFn: (id: string) => adminService.approveManufacturer(id),
-    onSuccess: invalidate,
+    onSuccess: () => {
+      notify("success", "Manufacturer approved successfully.");
+      invalidate();
+    },
+    onError: () => notify("error", "Unable to approve manufacturer."),
   });
 
   const rejectMutation = useMutation({
     mutationFn: (id: string) =>
       adminService.suspendManufacturer(id, "Rejected by admin"),
-    onSuccess: invalidate,
+    onSuccess: () => {
+      notify("success", "Manufacturer rejected successfully.");
+      invalidate();
+    },
+    onError: () => notify("error", "Unable to reject manufacturer."),
   });
 
   const updateStatus = (id: string, status: ApplicationStatus) => {

@@ -1,13 +1,14 @@
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import {
   LayoutDashboard,
   QrCode,
   PackagePlus,
   Package,
-  Settings,
+  LogOut,
   ShieldCheck,
 } from "lucide-react";
 import { ROUTES } from "../../constants";
+import { authService } from "../../services/auth";
 
 const sidebarLinks = [
   { label: "Dashboard", href: ROUTES.MANUFACTURER_DASHBOARD, icon: LayoutDashboard },
@@ -24,6 +25,12 @@ const sidebarLinks = [
  */
 export function ManufacturerSidebar() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await authService.logout();
+    navigate(ROUTES.DASHBOARD, { replace: true });
+  };
 
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-60 flex-col border-r border-gray-200 bg-white">
@@ -53,13 +60,14 @@ export function ManufacturerSidebar() {
       </nav>
 
       <div className="px-3 pb-5">
-        <Link
-          to={ROUTES.PROFILE}
-          className="flex items-center justify-center gap-2 rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
         >
-          <Settings className="h-4 w-4" />
-          Settings
-        </Link>
+          <LogOut className="h-4 w-4" />
+          Logout
+        </button>
       </div>
     </aside>
   );

@@ -8,6 +8,7 @@ export interface Product {
   ingredients?: string;
   storageInfo?: string;
   countryOfOrigin?: string;
+  nafdacNumber?: string;
   category?: string;
   imageUrl?: string;
   qrGenerated?: boolean;
@@ -24,6 +25,11 @@ export interface Batch {
   quantity: number;
   status: "active" | "recalled" | "expired";
   createdAt?: string;
+}
+
+export interface GeneratedCode {
+  code: string;
+  qrCodeUrl: string;
 }
 
 export interface CreateBatchPayload {

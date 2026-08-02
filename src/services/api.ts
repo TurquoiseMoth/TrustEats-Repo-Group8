@@ -5,6 +5,11 @@ import axios, {
   type AxiosRequestConfig,
 } from "axios";
 import type { ApiError } from "../types";
+import {
+  clearAuthSession,
+  getTokenForPath,
+  storeAuthSession,
+} from "./authStorage";
 
 // Default Render deployment for the TrustEats backend.
 const DEFAULT_API_BASE_URL = "https://trusteats-repo-group8.onrender.com/api/v1";
@@ -23,7 +28,7 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 15000,
+  timeout: 60000,
   // support cookie-based auth (HttpOnly refresh/access cookies)
   // Enable sending credentials by default.
   withCredentials: true,
@@ -31,9 +36,10 @@ const apiClient = axios.create({
 
 // Attach auth token when present (keeps compatibility with token-based flows)
 apiClient.interceptors.request.use((config) => {
-  // Prefer an explicit client-side token when available (localStorage).
+  // Prefer an explicit client-side token when available.
   // For development, allow an env fallback token: VITE_DEV_AUTH_TOKEN (useful for local API that doesn't use cookies).
-  const tokenFromStorage = localStorage.getItem("auth_token");
+  const requestPath = `${config.url ?? ""}`;
+  const tokenFromStorage = getTokenForPath(requestPath);
   const devToken = (import.meta.env as { VITE_DEV_AUTH_TOKEN?: string })
     .VITE_DEV_AUTH_TOKEN;
   const token =
@@ -143,7 +149,7 @@ apiClient.interceptors.response.use(
             refreshResp.data.access_token);
         if (refreshedToken) {
           try {
-            localStorage.setItem("auth_token", refreshedToken);
+            storeAuthSession(undefined, refreshedToken);
           } catch {
             // ignore storage errors
           }
@@ -165,8 +171,7 @@ apiClient.interceptors.response.use(
 
         // Clean local client-side auth state if refresh failed
         try {
-          localStorage.removeItem("auth_token");
-          localStorage.removeItem("auth_user");
+          clearAuthSession();
         } catch {
           // ignore storage errors
         }

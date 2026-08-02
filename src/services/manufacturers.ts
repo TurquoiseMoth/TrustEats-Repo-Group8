@@ -3,6 +3,7 @@ import axios, { isAxiosError } from "axios";
 import { shouldUseMock } from "./mockMode";
 import { mockManufacturerService } from "./mockManufacturers";
 import type { ApiResponse, RegisterRequest } from "../types";
+import { getRoleToken } from "./authStorage";
 
 export interface ManufacturerProfile {
   _id: string;
@@ -38,7 +39,7 @@ export type RegisterManufacturerAccountInput = RegisterRequest &
   SubmitManufacturerProfileInput;
 
 function authHeaders() {
-  const token = localStorage.getItem("auth_token");
+  const token = getRoleToken("manufacturer");
   return token ? { Authorization: `Bearer ${token}` } : undefined;
 }
 

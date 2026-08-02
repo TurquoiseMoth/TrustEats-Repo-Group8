@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import {
   LayoutDashboard,
   Building2,
@@ -6,10 +6,12 @@ import {
   FileWarning,
   Megaphone,
   Bell,
+  User,
 } from "lucide-react";
 import { ROUTES } from "../../constants";
 import { DEFAULT_UNREAD_COUNT } from "../../constants/notifications";
 import { NotificationBell } from "../ui/NotificationBell";
+import { authService } from "../../services/auth";
 import logo from "../../assets/images/Logo.png";
 
 const navItems = [
@@ -23,6 +25,12 @@ const navItems = [
 
 function AdminSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await authService.logout();
+    navigate(ROUTES.DASHBOARD, { replace: true });
+  };
 
   return (
     <aside className="hidden md:flex md:flex-col md:w-64 md:shrink-0 md:h-screen md:sticky md:top-0 bg-background border-r border-gray-200 px-5 py-6">
@@ -62,6 +70,15 @@ function AdminSidebar() {
           })}
         </ul>
       </nav>
+
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+      >
+        <User size={18} aria-hidden="true" />
+        Admin
+      </button>
     </aside>
   );
 }

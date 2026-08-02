@@ -5,6 +5,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import certificateImg from "../assets/images/certificate.png";
 import { adminService } from "../services/admin";
 
+function notify(type: "success" | "error", message: string) {
+  window.dispatchEvent(
+    new CustomEvent("trusteats:notify", { detail: { type, message } }),
+  );
+}
+
 function InfoField({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5">
@@ -39,8 +45,10 @@ export default function AdminApplicationDetailPage() {
     mutationFn: () => adminService.approveManufacturer(id!),
     onSuccess: async () => {
       await invalidate();
+      notify("success", "Manufacturer approved successfully.");
       navigate(-1);
     },
+    onError: () => notify("error", "Unable to approve manufacturer."),
   });
 
   const rejectMutation = useMutation({
@@ -48,8 +56,10 @@ export default function AdminApplicationDetailPage() {
       adminService.suspendManufacturer(id!, "Rejected by admin"),
     onSuccess: async () => {
       await invalidate();
+      notify("success", "Manufacturer rejected successfully.");
       navigate(-1);
     },
+    onError: () => notify("error", "Unable to reject manufacturer."),
   });
 
   const isSubmitting = approveMutation.isPending || rejectMutation.isPending;

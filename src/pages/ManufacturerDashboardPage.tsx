@@ -6,7 +6,28 @@ import { useQuery } from "@tanstack/react-query";
 import { analyticsService } from "../services/analytics";
 import { manufacturerService } from "../services/manufacturers";
 import { CheckCircle2, Clock3 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+const approvalSeenKey = (manufacturerId: string) =>
+  `trusteats:manufacturer-approval-seen:${manufacturerId}`;
+
+function hasSeenApprovalModal(manufacturerId?: string) {
+  if (!manufacturerId) return false;
+  try {
+    return localStorage.getItem(approvalSeenKey(manufacturerId)) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function markApprovalModalSeen(manufacturerId?: string) {
+  if (!manufacturerId) return;
+  try {
+    localStorage.setItem(approvalSeenKey(manufacturerId), "true");
+  } catch {
+    // ignore storage errors
+  }
+}
 
 /**
  * The manufacturer dashboard is split across two layouts:
@@ -17,6 +38,7 @@ import { useState } from "react";
  */
 function ManufacturerDashboardPage() {
   const [approvedModalDismissed, setApprovedModalDismissed] = useState(false);
+  const lastStatusRef = useRef<string | undefined>(undefined);
   const {
     data: summary,
     isLoading,
@@ -38,8 +60,30 @@ function ManufacturerDashboardPage() {
       query.state.data?.status === "pending" ? 5000 : false,
   });
   const status = manufacturerProfile?.status ?? summary?.manufacturer?.status;
+  const manufacturerId = manufacturerProfile?._id ?? summary?.manufacturer?.id;
   const showPendingModal = status === "pending";
   const showApprovedModal = status === "approved" && !approvedModalDismissed;
+
+  useEffect(() => {
+    if (manufacturerId) {
+      setApprovedModalDismissed(hasSeenApprovalModal(manufacturerId));
+    }
+  }, [manufacturerId]);
+
+  useEffect(() => {
+    if (status === "pending") {
+      setApprovedModalDismissed(false);
+    }
+    if (lastStatusRef.current === "pending" && status === "approved") {
+      setApprovedModalDismissed(hasSeenApprovalModal(manufacturerId));
+    }
+    lastStatusRef.current = status;
+  }, [manufacturerId, status]);
+
+  const handleApprovedModalClose = () => {
+    markApprovalModalSeen(manufacturerId);
+    setApprovedModalDismissed(true);
+  };
 
   return (
     <>
@@ -68,7 +112,7 @@ function ManufacturerDashboardPage() {
       {showApprovedModal && (
         <VerificationStatusModal
           status="approved"
-          onClose={() => setApprovedModalDismissed(true)}
+          onClose={handleApprovedModalClose}
         />
       )}
     </>

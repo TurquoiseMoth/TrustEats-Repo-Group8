@@ -1,6 +1,7 @@
-import { Link, useLocation } from "react-router";
-import { Home, QrCode, Package } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { Home, LogOut, QrCode, Package } from "lucide-react";
 import { ROUTES } from "../../constants";
+import { authService } from "../../services/auth";
 
 const mobileTabs = [
   { label: "Home", href: ROUTES.MANUFACTURER_DASHBOARD, icon: Home },
@@ -16,6 +17,12 @@ const mobileTabs = [
  */
 export function ManufacturerMobileNav() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await authService.logout();
+    navigate(ROUTES.DASHBOARD, { replace: true });
+  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white md:hidden">
@@ -41,6 +48,14 @@ export function ManufacturerMobileNav() {
             </Link>
           );
         })}
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="flex w-full flex-col items-center justify-center gap-0.5"
+        >
+          <LogOut size={20} strokeWidth={1.8} className="text-gray-400" />
+          <span className="text-xs font-medium text-gray-400">Logout</span>
+        </button>
       </div>
     </nav>
   );
