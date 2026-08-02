@@ -1,4 +1,4 @@
-import { CheckCheckIcon, User, Landmark, PackagePlus, QrCode, ScanLine, BadgeCheck, ArrowRight, FlaskConical, ChevronDown } from "lucide-react"
+import { CheckCheckIcon, User, Landmark, PackagePlus, QrCode, ScanLine, BadgeCheck, FlaskConical, ChevronDown } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link } from "react-router"
 import { Card, RoleCard, Button } from "../components/ui"
@@ -73,20 +73,32 @@ function HomePage() {
                 <div className="mx-auto flex max-w-7xl flex-col items-center gap-10 px-6 pt-5 pb-14 md:flex-row md:items-center md:justify-between md:gap-16 md:pt-8 md:pb-20 lg:px-10 lg:pt-12 lg:pb-24">
                     {/* Left column — text content */}
                     <div className="flex min-w-0 flex-1 flex-col">
-                        <h1 className="text-4xl font-bold leading-[1.1] text-text-main sm:text-[42px] md:text-[46px] lg:text-[52px]">
-                            Verify Every Product.<br />
-                            <span className="text-primary">Trust Every Bite.</span>
-                        </h1>
+                        <div className="flex items-start gap-4 md:block">
+                            <div className="ml-2 flex min-h-[240px] w-[210px] shrink-0 flex-col md:ml-0 md:h-auto md:w-auto md:min-w-0">
+                                <h1 className="text-4xl font-bold leading-[1.1] text-text-main sm:text-[42px] md:text-[46px] lg:text-[52px]">
+                                    Verify Every Product.<br />
+                                    <span className="text-primary">Trust Every Bite.</span>
+                                </h1>
 
-                        <p className="mt-6 max-w-md text-base leading-relaxed text-gray-500 md:mt-7 md:text-lg">
-                            TrustEats helps you verify the authenticity of food products in seconds using a simple QR scan.
-                        </p>
+                                <p className="mt-2 max-w-md text-base leading-relaxed text-gray-500 md:mt-7 md:text-lg">
+                                    TrustEats helps you verify the authenticity of food products in seconds using a simple QR scan.
+                                </p>
+                            </div>
 
-                        <div className="mt-8 flex flex-col gap-3 sm:flex-row md:mt-9 md:gap-4">
+                            <div className="flex h-[158px] w-[190px] shrink-0 items-center justify-center md:hidden">
+                                <img
+                                    src="/assets/ketchup-bottle.png"
+                                    alt="TrustEats verifying a food product"
+                                    className="h-full w-full object-contain"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="mt-8 hidden flex-col gap-3 sm:flex-row md:mt-9 md:flex md:gap-4">
                             <Link to={ROUTES.SCAN}>
                                 <Button className="rounded-2xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 md:px-8 md:py-3.5 md:text-[15px]">
                                     Scan a Product
-                                    <ArrowRight className="ml-2 inline h-4 w-4" />
+                                    <QrCode className="ml-2 inline h-4 w-4" />
                                 </Button>
                             </Link>
                             <Link to={ROUTES.SCAN}>
@@ -113,7 +125,7 @@ function HomePage() {
                     </div>
 
                     {/* Right column — product image */}
-                    <div className="flex w-full shrink-0 items-center justify-center sm:w-3/5 md:w-2/5 md:justify-end">
+                    <div className="hidden w-full shrink-0 items-center justify-center sm:w-3/5 md:flex md:w-2/5 md:justify-end">
                         <img
                             src="/assets/ketchup-bottle.png"
                             alt="TrustEats verifying a food product"
@@ -200,7 +212,7 @@ function HomePage() {
                         title="I'm a Consumer"
                         description="Scan QR codes on products and verify authenticity instantly"
                         accentColor="text-primary"
-                        backgroundColor="bg-primary/5"
+                        backgroundColor="bg-[rgba(60,116,67,0.20)]"
                         buttonBgColor="bg-primary"
                         buttonText="Register as a User →"
                         buttonHref={ROUTES.REGISTER}
@@ -213,7 +225,7 @@ function HomePage() {
                         title="I'm a Manufacturer"
                         description="Register products, generate QR codes, and build consumer trust"
                         accentColor="text-[#7C3AED]"
-                        backgroundColor="bg-[#F5F3FF]"
+                        backgroundColor="bg-[rgba(60,116,67,0.20)]"
                         buttonBgColor="bg-[#7C3AED]"
                         buttonText="Register as Manufacturer →"
                         buttonHref={ROUTES.MANUFACTURER_SIGNUP}

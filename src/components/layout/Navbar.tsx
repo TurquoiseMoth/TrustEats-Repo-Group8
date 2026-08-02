@@ -1,5 +1,5 @@
 import { Menu, X } from "lucide-react";
-import { useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { ROUTES } from "../../constants";
 import logo from "../../assets/Logo.png";
@@ -25,8 +25,42 @@ const manufacturerLinks = [
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   const { pathname } = useLocation();
   const navigate = useNavigate();
+
+  // Scroll-spy: track which home-page section (about / why-us / faq) is in view
+  // so the matching nav link gets the green active state. The sections only
+  // render on "/", so on other routes no callbacks fire and pathname guards apply.
+  useEffect(() => {
+    const sections = ["about", "why-us", "faq"];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting);
+        if (visible.length > 0) {
+          const top = visible.sort(
+            (a, b) => b.intersectionRatio - a.intersectionRatio
+          )[0];
+          setActiveSection(top.target.id);
+        } else {
+          setActiveSection(null);
+        }
+      },
+      { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
+    );
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [pathname]);
+
+  const isNavItemActive = (href: string) => {
+    if (href === ROUTES.HOME) return pathname === "/" && activeSection === null;
+    if (href.startsWith("/#"))
+      return pathname === "/" && activeSection === href.slice(2);
+    return false;
+  };
 
   // Smooth-scroll to an in-page section (e.g. "/#about"). If we're on another
   // route, navigate home first, then scroll once the page has rendered.
@@ -51,7 +85,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-gray-100 bg-background backdrop-blur-md shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]" aria-label="Main navigation">
+    <nav className="sticky top-0 z-50 w-full border-b border-gray-100 bg-[#f0f8ff] backdrop-blur-md shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]" aria-label="Main navigation">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 lg:px-10">
         {/* Left: Logo */}
         <Link to={ROUTES.HOME} className="flex shrink-0 items-center gap-2.5">
@@ -59,9 +93,9 @@ function Navbar() {
         </Link>
 
         {/* Center: Nav Pill */}
-        <div className="hidden md:flex items-center gap-1 rounded-full bg-secondary px-1.5 py-1">
+        <div className="hidden md:flex items-center gap-1 rounded-full bg-[#ffffff] px-1.5 py-1 shadow-[0_0_8px_0_rgba(0,0,0,0.25)]">
           {navItems.map((item) => {
-            const isActive = item.href === ROUTES.HOME && pathname === "/";
+            const isActive = isNavItemActive(item.href);
             return (
               <Link
                 key={item.label}
@@ -71,7 +105,7 @@ function Navbar() {
                 className={`rounded-full px-5 py-1.5 text-sm font-medium transition-all duration-200 ${
                   isActive
                     ? "bg-primary text-white"
-                    : "text-white/85 hover:bg-white/15 hover:text-white"
+                    : "text-text-main hover:bg-gray-100 hover:text-primary"
                 }`}
               >
                 {item.label}
@@ -111,19 +145,25 @@ function Navbar() {
       {isMenuOpen && (
         <div className="absolute left-0 top-full w-full border-b border-gray-100 bg-white shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] md:hidden">
           <div className="flex flex-col gap-1 p-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.href}
-                className="rounded-lg px-4 py-2.5 text-sm font-medium text-text-main transition-colors hover:bg-gray-50"
-                onClick={(e) => {
-                  handleNavClick(e, item.href);
-                  setIsMenuOpen(false);
-                }}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = isNavItemActive(item.href);
+              return (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`rounded-lg px-4 py-2.5 text-sm font-medium transition-colors hover:bg-gray-50 ${
+                    isActive ? "bg-primary text-white" : "text-text-main"
+                  }`}
+                  onClick={(e) => {
+                    handleNavClick(e, item.href);
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
             <hr className="my-2 border-gray-100" />
             <Link
               to={ROUTES.LOGIN}
