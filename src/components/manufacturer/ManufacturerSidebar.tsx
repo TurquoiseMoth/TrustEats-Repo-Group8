@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { ROUTES } from "../../constants";
 import { authService } from "../../services/auth";
+import { getRoleUser, getStoredUser } from "../../services/authStorage";
+import { SidebarUserSummary } from "../layout/SidebarUserSummary";
 
 const sidebarLinks = [
   { label: "Dashboard", href: ROUTES.MANUFACTURER_DASHBOARD, icon: LayoutDashboard },
@@ -26,6 +28,7 @@ const sidebarLinks = [
 export function ManufacturerSidebar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const user = getRoleUser("manufacturer") ?? getStoredUser();
 
   const handleLogout = async () => {
     await authService.logout();
@@ -60,6 +63,7 @@ export function ManufacturerSidebar() {
       </nav>
 
       <div className="px-3 pb-5">
+        <SidebarUserSummary user={user} fallbackLabel="Manufacturer" />
         <button
           type="button"
           onClick={handleLogout}

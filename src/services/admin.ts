@@ -33,7 +33,9 @@ export interface AdminManufacturer {
   country?: string;
   status: "pending" | "approved" | "suspended";
   createdAt?: string;
+  updatedAt?: string;
   approvedAt?: string;
+  productCount?: number;
 }
 
 export const adminService = {

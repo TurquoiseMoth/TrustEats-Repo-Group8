@@ -6,26 +6,29 @@ import {
   FileWarning,
   Megaphone,
   Bell,
-  User,
+  LogOut,
 } from "lucide-react";
 import { ROUTES } from "../../constants";
 import { DEFAULT_UNREAD_COUNT } from "../../constants/notifications";
 import { NotificationBell } from "../ui/NotificationBell";
 import { authService } from "../../services/auth";
+import { getRoleUser } from "../../services/authStorage";
+import { SidebarUserSummary } from "../layout/SidebarUserSummary";
 import logo from "../../assets/images/Logo.png";
 
 const navItems = [
-  { label: "Dashboard (Admin)", href: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
-  { label: "Organizations (Admin)", href: ROUTES.ADMIN_ORGANIZATIONS, icon: Building2 },
-  { label: "Applications (Admin)", href: ROUTES.ADMIN_APPLICATIONS, icon: ClipboardList },
-  { label: "Consumer Reports (Admin)", href: ROUTES.ADMIN_CONSUMER_REPORTS, icon: FileWarning },
-  { label: "Promotion & Tips (Admin)", href: ROUTES.ADMIN_PROMOTION_TIPS, icon: Megaphone },
-  { label: "Notification (Admin)", href: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
+  { label: "Dashboard", href: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
+  { label: "Organizations", href: ROUTES.ADMIN_ORGANIZATIONS, icon: Building2 },
+  { label: "Applications", href: ROUTES.ADMIN_APPLICATIONS, icon: ClipboardList },
+  { label: "Consumer Reports", href: ROUTES.ADMIN_CONSUMER_REPORTS, icon: FileWarning },
+  { label: "Promotion & Tips", href: ROUTES.ADMIN_PROMOTION_TIPS, icon: Megaphone },
+  { label: "Notification", href: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
 ];
 
 function AdminSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const user = getRoleUser("admin");
 
   const handleLogout = async () => {
     await authService.logout();
@@ -71,14 +74,17 @@ function AdminSidebar() {
         </ul>
       </nav>
 
-      <button
-        type="button"
-        onClick={handleLogout}
-        className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50"
-      >
-        <User size={18} aria-hidden="true" />
-        Admin
-      </button>
+      <div className="mt-5">
+        <SidebarUserSummary user={user} fallbackLabel="Admin" />
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+        >
+          <LogOut size={18} aria-hidden="true" />
+          Logout
+        </button>
+      </div>
     </aside>
   );
 }

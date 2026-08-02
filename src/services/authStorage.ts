@@ -8,6 +8,10 @@ function roleTokenKey(role: string) {
   return `${TOKEN_KEY}_${role}`;
 }
 
+function roleUserKey(role: string) {
+  return `${USER_KEY}_${role}`;
+}
+
 function safeGet(storage: Storage, key: string) {
   try {
     return storage.getItem(key);
@@ -45,12 +49,20 @@ export function storeAuthSession(user?: User, token?: string) {
     const raw = JSON.stringify(user);
     safeSet(sessionStorage, USER_KEY, raw);
     safeSet(localStorage, USER_KEY, raw);
+    safeSet(sessionStorage, roleUserKey(user.role), raw);
+    safeSet(localStorage, roleUserKey(user.role), raw);
   }
 }
 
 export function storeRoleToken(role: "admin" | "manufacturer" | "consumer", token: string) {
   safeSet(sessionStorage, roleTokenKey(role), token);
   safeSet(localStorage, roleTokenKey(role), token);
+}
+
+export function storeRoleUser(role: "admin" | "manufacturer" | "consumer", user: User) {
+  const raw = JSON.stringify(user);
+  safeSet(sessionStorage, roleUserKey(role), raw);
+  safeSet(localStorage, roleUserKey(role), raw);
 }
 
 export function clearAuthSession() {
@@ -61,11 +73,25 @@ export function clearAuthSession() {
   ROLES.forEach((role) => {
     safeRemove(sessionStorage, roleTokenKey(role));
     safeRemove(localStorage, roleTokenKey(role));
+    safeRemove(sessionStorage, roleUserKey(role));
+    safeRemove(localStorage, roleUserKey(role));
   });
 }
 
 export function getStoredUser(): User | null {
   const raw = safeGet(sessionStorage, USER_KEY) ?? safeGet(localStorage, USER_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as User;
+  } catch {
+    return null;
+  }
+}
+
+export function getRoleUser(role: "admin" | "manufacturer" | "consumer"): User | null {
+  const raw =
+    safeGet(sessionStorage, roleUserKey(role)) ??
+    safeGet(localStorage, roleUserKey(role));
   if (!raw) return null;
   try {
     return JSON.parse(raw) as User;
