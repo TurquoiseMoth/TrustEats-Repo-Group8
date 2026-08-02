@@ -1,4 +1,5 @@
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Scan,
   CheckCircle2,
@@ -9,10 +10,71 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 import { ROUTES } from "../constants";
+import { verificationService } from "../services/verification";
 import phone from "../assets/phone.png";
 import pepper from "../assets/pepper.png";
 
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return dateStr;
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
+
+function getStatusMeta(status: "genuine" | "suspicious" | "fake") {
+  if (status === "genuine") {
+    return {
+      label: "Verified",
+      icon: CheckCircle2,
+      className: "border-[#d1fae5] bg-[#ecfdf5] text-[#008236]",
+    };
+  }
+  if (status === "suspicious") {
+    return {
+      label: "Suspicious",
+      icon: AlertTriangle,
+      className: "border-orange-200 bg-[#fff7ed] text-[#f97316]",
+    };
+  }
+  return {
+    label: "Fake",
+    icon: XCircle,
+    className: "border-red-200 bg-[#fef2f2] text-[#ef4444]",
+  };
+}
+
 const Dashboard: React.FC = () => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["scanHistory", "dashboard"],
+    queryFn: () => verificationService.getHistory({ page: 1, limit: 30 }),
+    staleTime: 30_000,
+  });
+
+  const events = data?.events ?? [];
+  const now = new Date();
+  const monthlyEvents = events.filter((event) => {
+    const scannedAt = new Date(event.scannedAt);
+    return (
+      !Number.isNaN(scannedAt.getTime()) &&
+      scannedAt.getMonth() === now.getMonth() &&
+      scannedAt.getFullYear() === now.getFullYear()
+    );
+  });
+  const summary = monthlyEvents.reduce(
+    (acc, event) => {
+      acc.total += 1;
+      acc[event.status] += 1;
+      return acc;
+    },
+    { total: 0, genuine: 0, suspicious: 0, fake: 0 },
+  );
+  const recentScan = events[0];
+  const recentMeta = recentScan ? getStatusMeta(recentScan.status) : null;
+  const RecentIcon = recentMeta?.icon;
+
   return (
     <div className="flex flex-col gap-6 px-5 pb-[15px] pt-12 md:mx-auto md:w-full md:max-w-5xl md:px-10 md:py-10">
 
@@ -72,7 +134,9 @@ const Dashboard: React.FC = () => {
           <div className="grid grid-cols-[1fr_1.5fr] items-center gap-4">
             {/* Total Scans */}
             <div className="flex flex-col items-center justify-center">
-              <span className="text-[32px] font-extrabold leading-none text-[#2d3748]">10</span>
+              <span className="text-[32px] font-extrabold leading-none text-[#2d3748]">
+                {isLoading ? "..." : summary.total}
+              </span>
               <span className="mt-1.5 text-[13px] font-semibold text-[#4a5568]">Total Scan</span>
             </div>
 
@@ -83,7 +147,7 @@ const Dashboard: React.FC = () => {
                   <CheckCircle2 size={16} aria-hidden="true" />
                   <span>Verified</span>
                 </div>
-                <span className="text-[0.875rem] font-bold text-[#111827]">5</span>
+                <span className="text-[0.875rem] font-bold text-[#111827]">{isLoading ? "-" : summary.genuine}</span>
               </div>
 
               <div className="flex items-center justify-between border-b border-[#e2e8f0] py-2">
@@ -91,7 +155,7 @@ const Dashboard: React.FC = () => {
                   <AlertTriangle size={16} aria-hidden="true" />
                   <span>Suspicious</span>
                 </div>
-                <span className="text-[0.875rem] font-bold text-[#111827]">2</span>
+                <span className="text-[0.875rem] font-bold text-[#111827]">{isLoading ? "-" : summary.suspicious}</span>
               </div>
 
               <div className="flex items-center justify-between py-2">
@@ -99,10 +163,15 @@ const Dashboard: React.FC = () => {
                   <XCircle size={16} aria-hidden="true" />
                   <span>Fake</span>
                 </div>
-                <span className="text-[0.875rem] font-bold text-[#111827]">3</span>
+                <span className="text-[0.875rem] font-bold text-[#111827]">{isLoading ? "-" : summary.fake}</span>
               </div>
             </div>
           </div>
+          {error && (
+            <p className="mt-3 text-xs font-medium text-[#ef4444]">
+              Failed to load scan summary.
+            </p>
+          )}
         </div>
 
         {/* Recent Scans */}
@@ -114,27 +183,41 @@ const Dashboard: React.FC = () => {
             </Link>
           </div>
 
+          {isLoading ? (
+            <div className="rounded-[20px] border border-[#f3f4f6] bg-white p-5 text-center text-sm text-[#6b7280]">
+              Loading recent scan...
+            </div>
+          ) : !recentScan || !recentMeta || !RecentIcon ? (
+            <div className="rounded-[20px] border border-[#f3f4f6] bg-white p-5 text-center text-sm text-[#6b7280]">
+              No scan history yet.
+            </div>
+          ) : (
           <div className="flex items-center justify-between rounded-[20px] border border-[#f3f4f6] bg-white p-3.5">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center rounded-[12px] border border-[#f3f4f6] bg-[#f9fafb] p-1">
                 <img
-                  src={pepper}
-                  alt="Gino Pepper & Onion Paste"
+                  src={recentScan.imageUrl || pepper}
+                  alt={recentScan.productName ?? "Scanned product"}
                   className="max-h-full object-contain"
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <h4 className="m-0 text-[0.875rem] font-bold text-[#111827]">Gino Pepper & Onion Paste</h4>
-                <div className="inline-flex w-fit items-center gap-1 rounded-full border border-[#d1fae5] bg-[#ecfdf5] px-2 py-0.5 text-[0.65rem] font-semibold text-[#008236]">
-                  <CheckCircle2 size={12} aria-hidden="true" />
-                  <span>Verified</span>
+                <h4 className="m-0 text-[0.875rem] font-bold text-[#111827]">
+                  {recentScan.productName ?? recentScan.code}
+                </h4>
+                <div className={`inline-flex w-fit items-center gap-1 rounded-full border px-2 py-0.5 text-[0.65rem] font-semibold ${recentMeta.className}`}>
+                  <RecentIcon size={12} aria-hidden="true" />
+                  <span>{recentMeta.label}</span>
                 </div>
-                <p className="m-0 text-[0.7rem] text-[#9ca3af]">Today, 12:53 PM</p>
+                <p className="m-0 text-[0.7rem] text-[#9ca3af]">
+                  {formatDate(recentScan.scannedAt)}
+                </p>
               </div>
             </div>
 
             <ChevronRight size={20} className="cursor-pointer text-[#9ca3af]" aria-hidden="true" />
           </div>
+          )}
         </div>
       </div>
     </div>

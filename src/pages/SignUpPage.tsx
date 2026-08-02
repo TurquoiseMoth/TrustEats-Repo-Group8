@@ -108,11 +108,15 @@ export default function SignUpPage() {
         return;
       }
 
-      await register(payload);
+      const result = await register(payload);
+      const devOtp = result.otp;
+      if (devOtp) {
+        console.info(`[TrustEats OTP] ${payload.email}: ${devOtp}`);
+      }
 
       navigate(ROUTES.VERIFY_EMAIL, {
         replace: true,
-        state: { email: payload.email, role },
+        state: { email: payload.email, role, otp: devOtp },
       });
     } catch (err) {
       setError(

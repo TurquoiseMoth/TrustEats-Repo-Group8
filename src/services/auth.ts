@@ -61,8 +61,16 @@ export const authService = {
     const payload = (res.data && res.data.data) ? res.data.data : res.data;
     const manufacturer = (payload && (payload.manufacturer ?? payload.user)) ?? undefined;
     const token = (payload && (payload.token ?? payload.accessToken ?? payload.access_token)) ?? undefined;
-    const result: AuthResponse = { manufacturer, token };
-    storeAuth(result);
+    const otp = (payload && typeof payload.otp === "string") ? payload.otp : undefined;
+    const userId = (payload && typeof payload.userId === "string") ? payload.userId : undefined;
+    const role = (payload && typeof payload.role === "string") ? payload.role as AuthResponse["role"] : undefined;
+    const result: AuthResponse = { manufacturer, token, otp, userId, role };
+    if (otp && import.meta.env.DEV) {
+      console.info(`[TrustEats OTP] ${data.email}: ${otp}`);
+    }
+    if (manufacturer || token) {
+      storeAuth(result);
+    }
     return result;
   },
 

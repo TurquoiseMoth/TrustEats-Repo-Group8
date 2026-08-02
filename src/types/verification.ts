@@ -35,10 +35,17 @@ export interface ScanEvent {
   _id: string;
   code: string;
   status: VerificationStatus;
+  result?: VerificationStatus;
   message: string;
   scannedAt: string;
   productName?: string;
   brand?: string;
+  imageUrl?: string;
+  productId?: {
+    name?: string;
+    brand?: string;
+    imageUrl?: string;
+  } | null;
 }
 
 export interface ScanHistoryResponse {

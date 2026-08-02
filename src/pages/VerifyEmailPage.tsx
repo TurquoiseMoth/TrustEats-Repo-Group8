@@ -13,10 +13,12 @@ export default function VerifyEmailPage() {
     | {
         email?: string;
         role?: "consumer" | "manufacturer";
+        otp?: string;
       }
     | undefined;
   const email = state?.email;
   const role = state?.role ?? "consumer";
+  const initialOtp = state?.otp;
 
   const handleVerify = async (code: string): Promise<boolean> => {
     if (!email) return false;
@@ -52,7 +54,11 @@ export default function VerifyEmailPage() {
     if (!email) return;
     try {
       const { authService } = await import("../services/auth");
-      await authService.resendVerification(email);
+      const res = await authService.resendVerification(email);
+      const otp = (res.data as { otp?: string } | undefined)?.otp;
+      if (otp) {
+        console.info(`[TrustEats OTP] ${email}: ${otp}`);
+      }
     } catch {
       // ignore
     }
@@ -73,6 +79,7 @@ export default function VerifyEmailPage() {
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", background: "#eef4fc" }}>
       <EmailVerification
         email={email}
+        initialCode={initialOtp}
         onVerify={handleVerify}
         onResend={handleResend}
         onVerified={async () => {
