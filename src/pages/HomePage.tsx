@@ -1,12 +1,12 @@
-import { CheckCheckIcon, User, Landmark, PackagePlus, QrCode, ScanLine, BadgeCheck, ArrowRight, FlaskConical, ChevronDown } from "lucide-react"
-import { useEffect, useState } from "react"
+import { CheckCheckIcon, User, Landmark, PackagePlus, QrCode, ScanLine, BadgeCheck, ArrowRight, ChevronDown } from "lucide-react"
+import { useState } from "react"
 import { Link } from "react-router"
 import { Card, RoleCard, Button } from "../components/ui"
 import { WhyTrustEatSection } from "../components/WhyTrustEatSection"
 import { NafdacBanner } from "../components/NafdacBanner"
 import { ROUTES } from "../constants"
-import { isMockMode, setMockMode } from "../services/mockMode"
-import { MOCK_ACCOUNTS } from "../services/mockAuth"
+// import { isMockMode, setMockMode } from "../services/mockMode"
+// import { MOCK_ACCOUNTS } from "../services/mockAuth"
 
 const ConsumerIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -53,24 +53,24 @@ const faqs = [
 ]
 
 function HomePage() {
-    const [mockOn, setMockOn] = useState<boolean>(isMockMode())
+    // const [mockOn, setMockOn] = useState<boolean>(isMockMode())
     const [openFaq, setOpenFaq] = useState<string | null>(faqs[0].q)
 
-    useEffect(() => {
-        const sync = () => setMockOn(isMockMode())
-        window.addEventListener("trusteats:mock-mode", sync)
-        return () => window.removeEventListener("trusteats:mock-mode", sync)
-    }, [])
+    // useEffect(() => {
+    //     const sync = () => setMockOn(isMockMode())
+    //     window.addEventListener("trusteats:mock-mode", sync)
+    //     return () => window.removeEventListener("trusteats:mock-mode", sync)
+    // }, [])
 
-    const toggleMockMode = () => {
-        setMockMode(!isMockMode())
-    }
+    // const toggleMockMode = () => {
+    //     setMockMode(!isMockMode())
+    // }
 
     return (
         <section>
             {/* ── Hero Section ─────────────────────────── */}
             <header>
-                <div className="mx-auto flex max-w-7xl flex-col items-center gap-10 px-6 pt-5 pb-14 md:flex-row md:items-center md:justify-between md:gap-16 md:pt-8 md:pb-20 lg:px-10 lg:pt-12 lg:pb-24">
+                <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1.25fr)_minmax(105px,0.62fr)] items-center gap-3 px-4 pt-5 pb-8 sm:grid-cols-[minmax(0,1.25fr)_minmax(160px,0.7fr)] sm:gap-5 sm:px-6 md:grid-cols-[minmax(0,1.3fr)_minmax(300px,0.8fr)] md:gap-8 md:px-6 md:pt-8 md:pb-20 lg:gap-10 lg:px-10 lg:pt-12 lg:pb-24">
                     {/* Left column — text content */}
                     <div className="flex min-w-0 flex-1 flex-col">
                         <h1 className="text-4xl font-bold leading-[1.1] text-text-main sm:text-[42px] md:text-[46px] lg:text-[52px]">
@@ -82,26 +82,26 @@ function HomePage() {
                             TrustEats helps you verify the authenticity of food products in seconds using a simple QR scan.
                         </p>
 
-                        <div className="mt-8 flex flex-col gap-3 sm:flex-row md:mt-9 md:gap-4">
-                            <Link to={ROUTES.SCAN}>
-                                <Button className="rounded-2xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 md:px-8 md:py-3.5 md:text-[15px]">
+                        <div className="mt-8 hidden grid-cols-2 gap-2 md:mt-9 md:grid md:gap-4">
+                            <Link to={ROUTES.SCAN} className="min-w-0">
+                                <Button className="w-full rounded-2xl bg-primary px-2 py-2 text-[clamp(0.58rem,2.4vw,0.875rem)] font-semibold text-white transition-opacity hover:opacity-90 sm:px-5 sm:py-2.5 md:px-8 md:py-3.5 md:text-[15px]">
                                     Scan a Product
                                     <ArrowRight className="ml-2 inline h-4 w-4" />
                                 </Button>
                             </Link>
-                            <Link to={ROUTES.SCAN}>
-                                <Button className="rounded-2xl border border-gray-200 bg-white px-6 py-3 text-sm font-semibold text-text-main transition-colors hover:bg-gray-50 md:px-8 md:py-3.5 md:text-[15px]">
+                            <Link to={ROUTES.SCAN} className="min-w-0">
+                                <Button className="w-full rounded-2xl border border-gray-200 bg-white px-2 py-2 text-[clamp(0.58rem,2.4vw,0.875rem)] font-semibold text-text-main transition-colors hover:bg-gray-50 sm:px-5 sm:py-2.5 md:px-8 md:py-3.5 md:text-[15px]">
                                     Verify with NAFDAC NO.
                                 </Button>
                             </Link>
                         </div>
 
                         {/* Feature cards */}
-                        <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-4 md:mt-10 md:gap-5">
+                        <div className="mt-5 hidden grid-cols-3 gap-2 sm:mt-7 sm:gap-4 md:mt-10 md:grid md:gap-5">
                             {features.map((feature) => (
                                 <div
                                     key={feature.label}
-                                    className="flex flex-col items-center rounded-2xl bg-white px-3 py-4 text-center shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] md:rounded-3xl md:px-5 md:py-7 md:shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]"
+                                    className="flex flex-col items-center rounded-2xl bg-white px-2 py-4 text-center shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] sm:px-3 md:rounded-3xl md:px-5 md:py-7 md:shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]"
                                 >
                                     <feature.icon className="h-6 w-6 text-text-secondary md:h-8 md:w-8" />
                                     <p className="mt-2 text-xs font-semibold leading-snug text-text-main md:mt-3 md:text-sm lg:text-[15px]">
@@ -113,71 +113,98 @@ function HomePage() {
                     </div>
 
                     {/* Right column — product image */}
-                    <div className="flex w-full shrink-0 items-center justify-center sm:w-3/5 md:w-2/5 md:justify-end">
+                    <div className="flex min-w-0 shrink-0 items-center justify-end self-start md:self-center">
                         <img
                             src="/assets/ketchup-bottle.png"
                             alt="TrustEats verifying a food product"
-                            className="w-full max-w-[280px] object-contain md:max-w-[400px] lg:max-w-[500px]"
+                            className="w-full max-w-[130px] object-contain sm:max-w-[210px] md:max-w-[400px] lg:max-w-[500px]"
                         />
+                    </div>
+                </div>
+
+                <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6 md:hidden">
+                    <div className="grid grid-cols-2 gap-2">
+                        <Link to={ROUTES.SCAN} className="min-w-0">
+                            <Button className="w-full rounded-2xl bg-primary px-2 py-2 text-[clamp(0.58rem,2.4vw,0.875rem)] font-semibold text-white transition-opacity hover:opacity-90">
+                                Scan a Product
+                                <ArrowRight className="ml-2 inline h-4 w-4" />
+                            </Button>
+                        </Link>
+                        <Link to={ROUTES.SCAN} className="min-w-0">
+                            <Button className="w-full rounded-2xl border border-gray-200 bg-white px-2 py-2 text-[clamp(0.58rem,2.4vw,0.875rem)] font-semibold text-text-main transition-colors hover:bg-gray-50">
+                                Verify with NAFDAC NO.
+                            </Button>
+                        </Link>
+                    </div>
+
+                    <div className="mt-5 grid grid-cols-3 gap-2">
+                        {features.map((feature) => (
+                            <div
+                                key={feature.label}
+                                className="flex flex-col items-center rounded-2xl bg-white px-2 py-4 text-center shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] sm:px-3"
+                            >
+                                <feature.icon className="h-6 w-6 text-text-secondary" />
+                                <p className="mt-2 text-xs font-semibold leading-snug text-text-main">
+                                    {feature.label}
+                                </p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </header>
 
             {/* ── How TrustEats Works ──────────────────── */}
-            <div className="relative mx-auto mt-16 w-full max-w-7xl px-6 md:mt-24 lg:px-10">
-                <div className="absolute left-1/2 top-0 z-20 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 bg-background px-5">
-                    <span className="h-0.5 w-8 bg-gray-400" />
-                    <h2 className="whitespace-nowrap text-[22px] font-bold text-text-main md:text-[26px]">
+            <div className="relative mx-auto mt-10 w-full max-w-7xl px-4 pt-7 md:mt-16 md:px-6 md:pt-0 lg:px-10">
+                <div className="absolute left-1/2 top-0 z-20 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 bg-background px-4 md:px-5">
+                    <span className="relative h-0.5 w-10 bg-gray-400 before:absolute before:right-0 before:top-1/2 before:h-3 before:w-3 before:-translate-y-1/2 before:translate-x-1/2 before:rounded-full before:bg-gray-500 md:w-8" />
+                    <h2 className="whitespace-nowrap text-[clamp(1.25rem,7vw,2.15rem)] font-bold text-text-main md:text-[clamp(1.25rem,2.2vw,1.625rem)]">
                         How <span className="text-primary">TrustEats</span> Works
                     </h2>
+                    <span className="relative h-0.5 w-10 bg-gray-400 after:absolute after:left-0 after:top-1/2 after:h-3 after:w-3 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-gray-500 md:w-8" />
                 </div>
 
-                <div className="w-full rounded-[30px] border-[1.5px] border-gray-400 px-6 pt-20 pb-14 lg:px-10">
-                    <div className="grid grid-cols-1 justify-items-center gap-12 sm:grid-cols-2 md:grid-cols-2 md:gap-x-20 md:gap-y-16 lg:grid-cols-4">
-                        <div className="flex w-50 flex-col items-center text-center">
-                            <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
-                                <PackagePlus className="h-7 w-7 text-text-secondary" />
+                <div className="w-full rounded-[30px] border-[1.5px] border-gray-400 px-7 pb-10 pt-20 md:px-6 md:pt-20 md:pb-14 lg:px-10">
+                    <div className="grid grid-cols-2 justify-items-center gap-x-8 gap-y-12 md:grid-cols-4 md:gap-6 lg:gap-8">
+                        <div className="flex w-full flex-col items-center text-center md:w-50">
+                            <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/20 md:mb-3.5 md:h-16 md:w-16">
+                                <PackagePlus className="h-9 w-9 text-text-secondary md:h-7 md:w-7" />
                             </div>
-                            <p className="mb-2.5 text-[16px] font-medium text-text-main">1.</p>
-                            <div className="h-15">
-                                <p className="text-[17px] font-medium leading-[1.35] text-text-main">
-                                    Manufacturer<br />Register Product &<br />Batch
+                            <div className="h-auto md:h-15">
+                                <p className="text-[clamp(0.9rem,5vw,1.9rem)] font-medium leading-[1.18] text-text-main md:text-[clamp(0.72rem,1.15vw,1.0625rem)] md:leading-[1.35]">
+                                    1. Manufacturer<br />Register Product &<br />Batch
                                 </p>
                             </div>
                         </div>
 
-                        <div className="flex w-50 flex-col items-center text-center">
-                            <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
-                                <QrCode className="h-7 w-7 text-text-secondary" />
+                        <div className="flex w-full flex-col items-center text-center md:w-50">
+                            <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/20 md:mb-3.5 md:h-16 md:w-16">
+                                <QrCode className="h-9 w-9 text-text-secondary md:h-7 md:w-7" />
                             </div>
-                            <p className="mb-2.5 text-[16px] font-medium text-text-main">2.</p>
-                            <div className="h-15">
-                                <p className="text-[17px] font-medium leading-[1.35] text-text-main">
-                                    Unique QR Code<br />Generated for Each<br />Batch
+                            <div className="h-auto md:h-15">
+                                <p className="text-[clamp(0.9rem,5vw,1.9rem)] font-medium leading-[1.18] text-text-main md:text-[clamp(0.72rem,1.15vw,1.0625rem)] md:leading-[1.35]">
+                                    2. Unique QR Code<br />Generated for Each<br />Batch
                                 </p>
                             </div>
                         </div>
 
-                        <div className="flex w-50 flex-col items-center text-center">
-                            <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
-                                <ScanLine className="h-7 w-7 text-text-secondary" />
+                        <div className="flex w-full flex-col items-center text-center md:w-50">
+                            <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/20 md:mb-3.5 md:h-16 md:w-16">
+                                <ScanLine className="h-9 w-9 text-text-secondary md:h-7 md:w-7" />
                             </div>
-                            <p className="mb-2.5 text-[16px] font-medium text-text-main">3.</p>
-                            <div className="h-15">
-                                <p className="text-[17px] font-medium leading-[1.35] text-text-main">
-                                    Consumer Scans QR<br />Code on Product
+                            <div className="h-auto md:h-15">
+                                <p className="text-[clamp(0.9rem,5vw,1.9rem)] font-medium leading-[1.18] text-text-main md:text-[clamp(0.72rem,1.15vw,1.0625rem)] md:leading-[1.35]">
+                                    3. Consumer Scans QR<br />Code on Product
                                 </p>
                             </div>
                         </div>
 
-                        <div className="flex w-50 flex-col items-center text-center">
-                            <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
-                                <BadgeCheck className="h-7 w-7 text-text-secondary" />
+                        <div className="flex w-full flex-col items-center text-center md:w-50">
+                            <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/20 md:mb-3.5 md:h-16 md:w-16">
+                                <BadgeCheck className="h-9 w-9 text-text-secondary md:h-7 md:w-7" />
                             </div>
-                            <p className="mb-2.5 text-[16px] font-medium text-text-main">4.</p>
-                            <div className="h-15">
-                                <p className="text-[17px] font-medium leading-[1.35] text-text-main">
-                                    Get Instant Verification<br />Result
+                            <div className="h-auto md:h-15">
+                                <p className="text-[clamp(0.9rem,5vw,1.9rem)] font-medium leading-[1.18] text-text-main md:text-[clamp(0.72rem,1.15vw,1.0625rem)] md:leading-[1.35]">
+                                    4. Get Instant Verification<br />Result
                                 </p>
                             </div>
                         </div>
@@ -308,7 +335,7 @@ function HomePage() {
                 </div>
             </div>
 
-            {/* ── Mock Mode Toggle (dev/demo) ─────────── */}
+            {/* ── Mock Mode Toggle (dev/demo) ───────────
             <div className="mx-auto mt-16 w-full max-w-7xl px-6 pb-8 md:mt-20 lg:px-10">
                 <div className="flex flex-col items-center gap-4 rounded-[30px] border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center">
                     <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
@@ -353,6 +380,7 @@ function HomePage() {
                     )}
                 </div>
             </div>
+            */}
         </section>
 
     )
