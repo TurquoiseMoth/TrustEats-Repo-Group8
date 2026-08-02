@@ -6,6 +6,11 @@ export const mockAnalyticsService = {
   getSummary: async (): Promise<AnalyticsSummary> => {
     await delay();
     return {
+      manufacturer: {
+        id: "mock-mfr-1",
+        companyName: "Golden Foods LTD",
+        status: "approved",
+      },
       totalProducts: 12,
       totalCodesIssued: 1840,
       totalScans: 5213,
@@ -26,6 +31,14 @@ export const mockAnalyticsService = {
           location: { country: "Nigeria", city: "Abuja" },
           product: { name: "Farm Milk", brand: "Farm" },
           code: "6b1e9f3a-0000-4000-8000-000000000000",
+        },
+      ],
+      recentProducts: [
+        {
+          id: "mock-product-1",
+          name: "Golden Morn Cereal",
+          brand: "Golden Morn",
+          createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
         },
       ],
     };

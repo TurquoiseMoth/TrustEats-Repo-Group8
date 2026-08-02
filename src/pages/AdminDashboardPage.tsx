@@ -2,18 +2,13 @@ import { Building2, UserCheck, PackageSearch, Ban } from "lucide-react";
 import StatCard from "../components/admin/StatCard";
 import ApplicationsChart from "../components/admin/ApplicationsChart";
 import RecentApplicationsTable from "../components/admin/RecentApplicationsTable";
+import { useQuery } from "@tanstack/react-query";
+import { adminService, type AdminManufacturer } from "../services/admin";
 import type {
   Application,
   DashboardStats,
   MonthlyApplicationData,
 } from "../types/application.types";
-
-const PLACEHOLDER_STATS: DashboardStats = {
-  totalCompanies: 12,
-  verifiedCount: 7,
-  pendingCount: 5,
-  rejectedCount: 0,
-};
 
 const PLACEHOLDER_CHART_DATA: MonthlyApplicationData[] = [
   { month: "Jan", submitted: 45, approved: 42 },
@@ -25,53 +20,85 @@ const PLACEHOLDER_CHART_DATA: MonthlyApplicationData[] = [
   { month: "Jul", submitted: 78, approved: 88 },
 ];
 
-const PLACEHOLDER_APPLICATIONS: Application[] = [
-  { id: "APP-5522", organization: "Sahel Frozen Foods", type: "Renewal", submittedDate: "17 Jul, 2026", status: "submitted" },
-  { id: "APP-5523", organization: "Naija Crunch Foods Ltd", type: "Facility Addition", submittedDate: "15 Jul, 2026", status: "approved" },
-  { id: "APP-5524", organization: "AquaPure Table Water", type: "Renewal", submittedDate: "12 Jul, 2026", status: "rejected" },
-  { id: "APP-5525", organization: "Delta Palm Products", type: "New Certification", submittedDate: "10 Jul, 2026", status: "pending" },
-];
+function toApplication(manufacturer: AdminManufacturer): Application {
+  return {
+    id: manufacturer._id,
+    organization: manufacturer.companyName,
+    type: "Manufacturer Registration",
+    submittedDate: manufacturer.createdAt
+      ? new Intl.DateTimeFormat(undefined, {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }).format(new Date(manufacturer.createdAt))
+      : "N/A",
+    status:
+      manufacturer.status === "suspended"
+        ? "rejected"
+        : manufacturer.status === "approved"
+          ? "approved"
+          : "pending",
+  };
+}
 
 export default function AdminDashboardPage() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["admin-manufacturers"],
+    queryFn: () => adminService.getManufacturers(),
+    staleTime: 15_000,
+  });
+
+  const manufacturers = data?.manufacturers ?? [];
+  const stats: DashboardStats = {
+    totalCompanies: manufacturers.length,
+    verifiedCount: manufacturers.filter((m) => m.status === "approved").length,
+    pendingCount: manufacturers.filter((m) => m.status === "pending").length,
+    rejectedCount: manufacturers.filter((m) => m.status === "suspended").length,
+  };
+  const applications = manufacturers.slice(0, 5).map(toApplication);
+
   return (
     <div>
       <div className="hidden md:block bg-secondary px-8 py-6">
         <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
       </div>
 
-      <div className="px-5 md:px-8 py-6 max-w-[1400px] mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6">
+      <div className="mx-auto max-w-[1680px] px-5 py-6 md:px-8 2xl:px-12">
+        <div className="mb-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
             label="Company/Brand"
-            value={PLACEHOLDER_STATS.totalCompanies}
+            value={stats.totalCompanies}
             description="Total Company Registered"
             icon={Building2}
           />
           <StatCard
             label="Verified"
-            value={PLACEHOLDER_STATS.verifiedCount}
+            value={stats.verifiedCount}
             description="Approved Applications"
             icon={UserCheck}
           />
           <StatCard
             label="Pending"
-            value={PLACEHOLDER_STATS.pendingCount}
+            value={stats.pendingCount}
             description="Pending Applications"
             icon={PackageSearch}
           />
           <StatCard
             label="Rejected"
-            value={PLACEHOLDER_STATS.rejectedCount}
+            value={stats.rejectedCount}
             description="Rejected Applications"
             icon={Ban}
           />
         </div>
 
+        {isLoading && <p className="mb-4 text-sm text-gray-500">Loading applications...</p>}
+        {error && <p className="mb-4 text-sm text-red-600">Unable to load admin data.</p>}
+
         <div className="mb-6">
           <ApplicationsChart data={PLACEHOLDER_CHART_DATA} />
         </div>
 
-        <RecentApplicationsTable applications={PLACEHOLDER_APPLICATIONS} />
+        <RecentApplicationsTable applications={applications} />
       </div>
     </div>
   );

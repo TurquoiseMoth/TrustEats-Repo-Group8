@@ -1,24 +1,15 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { ArrowLeft, ZoomIn, X } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import certificateImg from "../assets/images/certificate.png";
+import { adminService } from "../services/admin";
 
-interface ApplicationDetail {
-  companyName: string;
-  napamsEmail: string;
-  cacNumber: string;
-  nafdacNumber: string;
-  certificateImage: string;
+function notify(type: "success" | "error", message: string) {
+  window.dispatchEvent(
+    new CustomEvent("trusteats:notify", { detail: { type, message } }),
+  );
 }
-
-// TODO: replace with real fetch by :id from your API/service layer
-const mockDetail: ApplicationDetail = {
-  companyName: "GreenField Foods LTD",
-  napamsEmail: "info@GreenFoodsLTD.com",
-  cacNumber: "RC 1234567",
-  nafdacNumber: "02-123456",
-  certificateImage: certificateImg,
-};
 
 function InfoField({ label, value }: { label: string; value: string }) {
   return (
@@ -32,30 +23,47 @@ function InfoField({ label, value }: { label: string; value: string }) {
 }
 
 export default function AdminApplicationDetailPage() {
-  
+  const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [zoomed, setZoomed] = useState(false);
-  const [submitting, setSubmitting] = useState<"approve" | "reject" | null>(null);
 
-  const detail = mockDetail; // TODO: fetch by id
+  const { data: detail, isLoading, error } = useQuery({
+    queryKey: ["admin-manufacturer", id],
+    queryFn: () => adminService.getManufacturerById(id!),
+    enabled: !!id,
+  });
 
-  const handleApprove = async () => {
-    setSubmitting("approve");
-    // TODO: call API to approve application `id`
-    setTimeout(() => {
-      setSubmitting(null);
-      navigate(-1);
-    }, 600);
+  const invalidate = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ["admin-manufacturers"] }),
+      queryClient.invalidateQueries({ queryKey: ["admin-manufacturer", id] }),
+    ]);
   };
 
-  const handleReject = async () => {
-    setSubmitting("reject");
-    // TODO: call API to reject application `id`
-    setTimeout(() => {
-      setSubmitting(null);
+  const approveMutation = useMutation({
+    mutationFn: () => adminService.approveManufacturer(id!),
+    onSuccess: async () => {
+      await invalidate();
+      notify("success", "Manufacturer approved successfully.");
       navigate(-1);
-    }, 600);
-  };
+    },
+    onError: () => notify("error", "Unable to approve manufacturer."),
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: () =>
+      adminService.suspendManufacturer(id!, "Rejected by admin"),
+    onSuccess: async () => {
+      await invalidate();
+      notify("success", "Manufacturer rejected successfully.");
+      navigate(-1);
+    },
+    onError: () => notify("error", "Unable to reject manufacturer."),
+  });
+
+  const isSubmitting = approveMutation.isPending || rejectMutation.isPending;
+  const certificateImage = detail?.certificateOfRecognitionUrl || certificateImg;
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -70,61 +78,92 @@ export default function AdminApplicationDetailPage() {
         <h1 className="text-2xl font-bold text-white">Admin Application Detail</h1>
       </div>
 
-      <div className="mx-auto max-w-4xl px-6 py-6">
-        <div className="grid grid-cols-2 gap-4">
-          <InfoField label="Company Name" value={detail.companyName} />
-          <InfoField label="NAPAMS Registered Email" value={detail.napamsEmail} />
-          <InfoField label="CAC Number" value={detail.cacNumber} />
-          <InfoField
-            label="NAFDAC Certificate of Recognition (C of R)"
-            value={detail.nafdacNumber}
-          />
-        </div>
+      <div className="mx-auto max-w-[1500px] px-6 py-6 2xl:px-12">
+        {isLoading && (
+          <p className="rounded-xl bg-white p-6 text-sm text-slate-500">
+            Loading application details...
+          </p>
+        )}
 
-        <div className="mt-4 rounded-xl border border-slate-200 bg-white p-6">
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
-              NAFDAC Certificate
-            </p>
-            <button
-              onClick={() => setZoomed(true)}
-              className="flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-700"
-            >
-              <ZoomIn className="h-3.5 w-3.5" />
-              View full size
-            </button>
-          </div>
-          <button
-            onClick={() => setZoomed(true)}
-            className="mt-4 block w-full overflow-hidden rounded-lg border border-slate-200"
-          >
-            <img
-              src={detail.certificateImage}
-              alt={`NAFDAC certificate for ${detail.companyName}`}
-              className="mx-auto max-h-[420px] w-full object-contain bg-white"
-            />
-          </button>
-        </div>
+        {error && (
+          <p className="rounded-xl bg-white p-6 text-sm text-red-600">
+            Unable to load application details.
+          </p>
+        )}
 
-        <div className="mt-6 flex gap-3">
-          <button
-            onClick={handleApprove}
-            disabled={submitting !== null}
-            className="flex-1 rounded-lg bg-emerald-800 py-3 text-sm font-semibold text-white hover:bg-emerald-900 disabled:opacity-60"
-          >
-            {submitting === "approve" ? "Approving…" : "Approve"}
-          </button>
-          <button
-            onClick={handleReject}
-            disabled={submitting !== null}
-            className="flex-1 rounded-lg border border-red-300 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:opacity-60"
-          >
-            {submitting === "reject" ? "Rejecting…" : "Reject"}
-          </button>
-        </div>
+        {detail && (
+          <>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <InfoField label="Company Name" value={detail.companyName} />
+              <InfoField
+                label="NAPAMS Registered Email"
+                value={detail.napamsEmail ?? "N/A"}
+              />
+              <InfoField label="CAC Number" value={detail.cacNumber ?? "N/A"} />
+              <InfoField
+                label="NAFDAC Certificate of Recognition (C of R)"
+                value={detail.nafdacCofRNumber ?? detail.nafdacNumber ?? "N/A"}
+              />
+              <InfoField label="Contact Email" value={detail.contactEmail ?? "N/A"} />
+              <InfoField label="Contact Phone" value={detail.contactPhone ?? "N/A"} />
+              <InfoField label="Address" value={detail.address ?? "N/A"} />
+              <InfoField label="Status" value={detail.status} />
+            </div>
+
+            <div className="mt-4 rounded-xl border border-slate-200 bg-white p-6">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                  NAFDAC Certificate
+                </p>
+                <button
+                  onClick={() => setZoomed(true)}
+                  className="flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-700"
+                >
+                  <ZoomIn className="h-3.5 w-3.5" />
+                  View full size
+                </button>
+              </div>
+              <button
+                onClick={() => setZoomed(true)}
+                className="mt-4 block w-full overflow-hidden rounded-lg border border-slate-200"
+              >
+                <img
+                  src={certificateImage}
+                  alt={`NAFDAC certificate for ${detail.companyName}`}
+                  className="mx-auto max-h-[420px] w-full bg-white object-contain"
+                />
+              </button>
+            </div>
+
+            <div className="mt-6 flex max-w-3xl gap-3">
+              <button
+                onClick={() => approveMutation.mutate()}
+                disabled={isSubmitting || detail.status === "approved"}
+                className="flex-1 rounded-lg bg-emerald-800 py-3 text-sm font-semibold text-white hover:bg-emerald-900 disabled:opacity-60"
+              >
+                {approveMutation.isPending
+                  ? "Approving..."
+                  : detail.status === "approved"
+                    ? "Approved"
+                    : "Approve"}
+              </button>
+              <button
+                onClick={() => rejectMutation.mutate()}
+                disabled={isSubmitting || detail.status === "suspended"}
+                className="flex-1 rounded-lg border border-red-300 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:opacity-60"
+              >
+                {rejectMutation.isPending
+                  ? "Rejecting..."
+                  : detail.status === "suspended"
+                    ? "Rejected"
+                    : "Reject"}
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
-      {zoomed && (
+      {zoomed && detail && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-6"
           onClick={() => setZoomed(false)}
@@ -137,7 +176,7 @@ export default function AdminApplicationDetailPage() {
             <X className="h-5 w-5" />
           </button>
           <img
-            src={detail.certificateImage}
+            src={certificateImage}
             alt={`NAFDAC certificate for ${detail.companyName}, enlarged`}
             className="max-h-full max-w-full rounded-lg object-contain"
             onClick={(e) => e.stopPropagation()}

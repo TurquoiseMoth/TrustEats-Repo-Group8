@@ -11,18 +11,6 @@ const navItems = [
   { label: "FAQ", href: "/#faq" },
 ];
 
-const consumerLinks = [
-  { label: "Scan", href: ROUTES.SCAN },
-  { label: "History", href: ROUTES.HISTORY },
-  { label: "Profile", href: ROUTES.PROFILE },
-  { label: "Notifications", href: ROUTES.NOTIFICATIONS },
-];
-
-const manufacturerLinks = [
-  { label: "Manufacturer Login", href: ROUTES.MANUFACTURER_LOGIN },
-  { label: "Manufacturer Sign Up", href: ROUTES.MANUFACTURER_SIGNUP },
-];
-
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { pathname } = useLocation();
@@ -127,7 +115,7 @@ function Navbar() {
             <hr className="my-2 border-gray-100" />
             <Link
               to={ROUTES.LOGIN}
-              className="rounded-lg px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-gray-50"
+              className="rounded-lg border border-primary bg-white px-4 py-2.5 text-center text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
               onClick={() => setIsMenuOpen(false)}
             >
               Log In
@@ -139,34 +127,6 @@ function Navbar() {
             >
               Sign Up
             </Link>
-
-            <p className="mt-3 mb-1 px-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
-              Consumer
-            </p>
-            {consumerLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="rounded-lg px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-gray-50"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
-
-            <p className="mt-3 mb-1 px-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
-              Manufacturer
-            </p>
-            {manufacturerLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="rounded-lg px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-gray-50"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
           </div>
         </div>
       )}

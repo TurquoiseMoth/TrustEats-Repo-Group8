@@ -6,21 +6,22 @@ import logo from "../../assets/Logo.png";
 interface FooterLink {
   label: string;
   href: string;
+  available?: boolean;
 }
 
 const companyLinks: FooterLink[] = [
-  { label: "About Us", href: "/about" },
-  { label: "Careers", href: "/careers" },
-  { label: "Blog", href: "/blog" },
-  { label: "News", href: "/news" },
+  { label: "About Us", href: "#about", available: true },
+  { label: "Careers", href: "#careers" },
+  { label: "Blog", href: "#blog" },
+  { label: "News", href: "#news" },
 ];
 
 const supportLinks: FooterLink[] = [
-  { label: "FAQ", href: "/faq" },
-  { label: "Contact Us", href: "/contact" },
-  { label: "Help Center", href: "/help" },
-  { label: "Privacy Policy", href: "/privacy" },
-  { label: "Terms of Service", href: "/terms" },
+  { label: "FAQ", href: "#faq", available: true },
+  { label: "Contact Us", href: "#contact" },
+  { label: "Help Center", href: "#help" },
+  { label: "Privacy Policy", href: "#privacy" },
+  { label: "Terms of Service", href: "#terms" },
 ];
 
 // ─── Brand SVG Icons ────────────────────────────────────────────────
@@ -67,14 +68,29 @@ interface FooterLinkColumnProps {
 }
 
 function FooterLinkColumn({ title, links }: FooterLinkColumnProps) {
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>, link: FooterLink) => {
+    if (link.available) return;
+
+    event.preventDefault();
+    window.dispatchEvent(
+      new CustomEvent("trusteats:notify", {
+        detail: {
+          type: "success",
+          message: `${link.label} is coming soon. This action is shown for the demo.`,
+        },
+      }),
+    );
+  };
+
   return (
-    <div className="flex flex-col">
+    <div className="flex min-w-0 flex-col">
       <h4 className="mb-5 text-[16px] font-extrabold text-white">{title}</h4>
       <ul className="flex flex-col gap-3.5">
         {links.map((link) => (
           <li key={link.label}>
             <a
               href={link.href}
+              onClick={(event) => handleClick(event, link)}
               className="text-[14px] font-normal text-white/70 transition-colors hover:text-white"
             >
               {link.label}
@@ -94,7 +110,14 @@ function Footer() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
-    // TODO: integrate with newsletter API
+    window.dispatchEvent(
+      new CustomEvent("trusteats:notify", {
+        detail: {
+          type: "success",
+          message: "Thanks for subscribing. We'll keep you posted.",
+        },
+      }),
+    );
     setEmail("");
   };
 
@@ -109,11 +132,15 @@ function Footer() {
   return (
     <footer className="bg-primary/90">
       {/* ── Top: Brand + Links + Newsletter ─────────────── */}
-      <div className="mx-auto max-w-7xl px-6 pt-16 pb-12 lg:px-10">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
+      <div className="mx-auto max-w-7xl px-4 pb-10 pt-12 sm:px-6 sm:pt-14 lg:px-10">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[minmax(18rem,1.4fr)_minmax(8rem,0.7fr)_minmax(10rem,0.8fr)_minmax(16rem,1fr)] lg:gap-14">
           {/* Brand column */}
-          <div className="flex flex-col gap-3">
-            <img src={logo} alt="TrustEats" className="h-8 w-auto brightness-0 invert" />
+          <div className="flex flex-col items-start gap-3">
+            <img
+              src={logo}
+              alt="TrustEats"
+              className="h-9 w-auto object-contain"
+            />
             <p className="text-[15px] font-semibold text-white">Scan, Verify, Shop with Confidence</p>
             <p className="text-[14px] font-normal leading-relaxed text-white/60">
               Empowering consumers and manufacturers with transparent,
@@ -140,7 +167,7 @@ function Footer() {
           <FooterLinkColumn title="Support" links={supportLinks} />
 
           {/* Newsletter */}
-          <div className="flex flex-col">
+          <div className="flex min-w-0 flex-col">
             <h4 className="mb-4 text-[16px] font-extrabold text-white">
               Stay Updated
             </h4>
@@ -178,7 +205,7 @@ function Footer() {
       {/* ── Bottom: Copyright ────────────────────────── */}
       <div className="mx-auto flex max-w-7xl items-center justify-center px-6 pb-8 pt-6 lg:px-10">
         <p className="text-center text-[13px] text-white/60">
-          &copy; 2026 TrustEat. All Rights Reserved. | Privacy Policy | Terms of Services
+          &copy; 2026 TrustEat. All Rights Reserved. | Privacy Policy | Terms of Services.
         </p>
       </div>
     </footer>

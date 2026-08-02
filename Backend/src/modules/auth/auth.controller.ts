@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+// import crypto from "crypto";
 import User from "../users/user.model";
 import Manufacturer from "../manufacturers/manufacturer.model";
 import {
@@ -18,6 +19,8 @@ const generateOTP = (): string =>
   Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
 
 const OTP_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
+
+const shouldExposeDemoOtp = (): boolean => process.env.HIDE_DEMO_OTP !== "true";
 
 // Register
 
@@ -86,6 +89,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   });
 
   // Send verification OTP email
+  // Log OTP to console for demo purposes ONLY!
+  console.log(`[DEMO OTP] Email: ${user.email} | OTP: ${otp}`);
   try {
     await sendEmail({
       to: user.email,
@@ -93,7 +98,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       html: otpEmailTemplate(otp, "verify"),
     });
   } catch (emailErr) {
-    // Don't fail registration if email fails — log and continue
+    // Don't fail registration if email fails  log and continue
     console.error("[Register] Failed to send verification email:", emailErr);
   }
 
@@ -101,7 +106,12 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     success: true,
     message:
       "Account created. Check your email for a 6-digit verification code.",
-    data: { userId: user._id, role: user.role },
+    data: {
+      userId: user._id,
+      role: user.role,
+      // DEMO ONLY, include otp in response for local testing
+      otp: shouldExposeDemoOtp() ? otp : undefined,
+    },
   });
 };
 
@@ -137,7 +147,7 @@ export const verifyEmail = async (
   if (
     !user.emailVerificationOtp ||
     !user.emailVerificationOtpExpiresAt ||
-    user.emailVerificationOtp !== otp ||
+    user.emailVerificationOtp !== String(otp).trim() ||
     user.emailVerificationOtpExpiresAt < new Date()
   ) {
     res.status(400).json({ success: false, error: "Invalid or expired OTP" });
@@ -148,11 +158,31 @@ export const verifyEmail = async (
   (user as unknown as Record<string, unknown>).emailVerificationOtp = undefined;
   (user as unknown as Record<string, unknown>).emailVerificationOtpExpiresAt =
     undefined;
+
+  const { accessToken, refreshToken } = issueTokens({
+    userId: user._id.toString(),
+    role: user.role,
+  });
+  user.refreshTokenHash = await bcrypt.hash(refreshToken, 10);
   await user.save();
+
+  setTokenCookies(res, accessToken, refreshToken);
+
+  const responseData: any = {
+    user: {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    },
+  };
+  responseData.token = accessToken;
 
   res.status(200).json({
     success: true,
-    message: "Email verified successfully. You can now log in.",
+    message: "Email verified successfully.",
+    data: responseData,
   });
 };
 
@@ -171,14 +201,13 @@ export const resendVerificationOtp = async (
 
   const user = await User.findOne({ email: email.toLowerCase().trim() });
 
-  // Always return same response, don't reveal if email exists
-  const genericResponse = {
-    success: true,
-    message: "If an unverified account exists, a new OTP has been sent.",
-  };
+  // Generic message that's safe to return in all cases
+  const genericMessage =
+    "If an unverified account exists, a new OTP has been sent.";
 
   if (!user || user.emailVerified) {
-    res.status(200).json(genericResponse);
+    // Do not reveal account existence  return generic success
+    res.status(200).json({ success: true, message: genericMessage });
     return;
   }
 
@@ -190,6 +219,9 @@ export const resendVerificationOtp = async (
     emailVerificationOtpExpiresAt: otpExpiresAt,
   });
 
+  // DEMO ONLY: log OTP to console so frontend tests can prefill it when running locally
+  console.log(`[DEMO OTP] Email: ${user.email} | New OTP: ${otp}`);
+
   try {
     await sendEmail({
       to: user.email,
@@ -200,156 +232,18 @@ export const resendVerificationOtp = async (
     console.error("[ResendOTP] Email failed:", emailErr);
   }
 
-  res.status(200).json(genericResponse);
-};
+  type GenericResponse = {
+    success: boolean;
+    message: string;
+    data?: { otp?: string } | null;
+  };
 
-// Login
+  const responseBody: GenericResponse =
+    shouldExposeDemoOtp()
+      ? { success: true, message: genericMessage, data: { otp } }
+      : { success: true, message: genericMessage };
 
-export const login = async (req: Request, res: Response): Promise<void> => {
-  const { email, password } = req.body;
-
-  if (typeof email !== "string" || typeof password !== "string") {
-    res.status(400).json({ success: false, error: "Invalid input" });
-    return;
-  }
-
-  const user = await User.findOne({ email: email.toLowerCase().trim() }).select(
-    "+passwordHash +refreshTokenHash",
-  );
-
-  if (!user || !user.isActive) {
-    res.status(401).json({ success: false, error: "Invalid credentials" });
-    return;
-  }
-
-  const isMatch = await user.comparePassword(password);
-  if (!isMatch) {
-    res.status(401).json({ success: false, error: "Invalid credentials" });
-    return;
-  }
-
-  // Block login if email not verified
-  if (!user.emailVerified) {
-    res.status(403).json({
-      success: false,
-      error:
-        "Please verify your email before logging in. Check your inbox for the OTP.",
-    });
-    return;
-  }
-
-  let manufacturerId: string | undefined;
-  if (user.role === "manufacturer") {
-    const manufacturer = await Manufacturer.findOne({ userId: user._id });
-    manufacturerId = manufacturer?._id?.toString();
-  }
-
-  const { accessToken, refreshToken } = issueTokens({
-    userId: user._id.toString(),
-    role: user.role,
-    manufacturerId,
-  });
-
-  user.refreshTokenHash = await bcrypt.hash(refreshToken, 10);
-  user.lastLoginAt = new Date();
-  await user.save();
-
-  setTokenCookies(res, accessToken, refreshToken);
-
-  res.status(200).json({
-    success: true,
-    message: "Login successful",
-    data: {
-      user: {
-        id: user._id,
-        email: user.email,
-        role: user.role,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      },
-    },
-  });
-};
-
-// Logout
-
-export const logout = async (
-  req: AuthenticatedRequest,
-  res: Response,
-): Promise<void> => {
-  await User.findByIdAndUpdate(req.user!.userId, { refreshTokenHash: null });
-  clearTokenCookies(res);
-  res.status(200).json({ success: true, message: "Logged out successfully" });
-};
-
-// Refresh
-
-export const refresh = async (req: Request, res: Response): Promise<void> => {
-  const token = req.cookies?.refreshToken;
-
-  if (!token) {
-    res.status(401).json({ success: false, error: "No refresh token" });
-    return;
-  }
-
-  try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_REFRESH_SECRET as string,
-    ) as { userId: string };
-
-    const user = await User.findById(decoded.userId).select(
-      "+refreshTokenHash",
-    );
-
-    if (!user || !user.refreshTokenHash) {
-      res.status(401).json({ success: false, error: "Invalid refresh token" });
-      return;
-    }
-
-    const isValid = await bcrypt.compare(token, user.refreshTokenHash);
-    if (!isValid) {
-      res.status(401).json({ success: false, error: "Invalid refresh token" });
-      return;
-    }
-
-    let manufacturerId: string | undefined;
-    if (user.role === "manufacturer") {
-      const manufacturer = await Manufacturer.findOne({ userId: user._id });
-      manufacturerId = manufacturer?._id?.toString();
-    }
-
-    const { accessToken, refreshToken: newRefreshToken } = issueTokens({
-      userId: user._id.toString(),
-      role: user.role,
-      manufacturerId,
-    });
-
-    user.refreshTokenHash = await bcrypt.hash(newRefreshToken, 10);
-    await user.save();
-
-    setTokenCookies(res, accessToken, newRefreshToken);
-    res.status(200).json({ success: true, message: "Token refreshed" });
-  } catch {
-    res.status(401).json({
-      success: false,
-      error: "Invalid or expired refresh token",
-    });
-  }
-};
-
-// Get Me
-
-export const getMe = async (
-  req: AuthenticatedRequest,
-  res: Response,
-): Promise<void> => {
-  const user = await User.findById(req.user!.userId);
-  if (!user) {
-    res.status(404).json({ success: false, error: "User not found" });
-    return;
-  }
-  res.status(200).json({ success: true, data: { user } });
+  res.status(200).json(responseBody);
 };
 
 // Forgot Password
@@ -365,15 +259,13 @@ export const forgotPassword = async (
     return;
   }
 
-  const genericResponse = {
-    success: true,
-    message: "If an account with that email exists, a reset OTP has been sent.",
-  };
+  const genericMessage =
+    "If an account with that email exists, a reset OTP has been sent.";
 
   const user = await User.findOne({ email: email.toLowerCase().trim() });
 
   if (!user) {
-    res.status(200).json(genericResponse);
+    res.status(200).json({ success: true, message: genericMessage });
     return;
   }
 
@@ -385,6 +277,9 @@ export const forgotPassword = async (
     passwordResetOtpExpiresAt: otpExpiresAt,
   });
 
+  // DEMO ONLY: log OTP so dev testers can pick it up
+  console.log(`[DEMO OTP] Email: ${user.email} | Reset OTP: ${otp}`);
+
   try {
     await sendEmail({
       to: user.email,
@@ -395,7 +290,18 @@ export const forgotPassword = async (
     console.error("[ForgotPassword] Email failed:", emailErr);
   }
 
-  res.status(200).json(genericResponse);
+  type GenericResponse = {
+    success: boolean;
+    message: string;
+    data?: { otp?: string } | null;
+  };
+
+  const responseBody: GenericResponse =
+    shouldExposeDemoOtp()
+      ? { success: true, message: genericMessage, data: { otp } }
+      : { success: true, message: genericMessage };
+
+  res.status(200).json(responseBody);
 };
 
 // Reset Password
@@ -455,4 +361,153 @@ export const resetPassword = async (
     success: true,
     message: "Password reset successfully. Please log in again.",
   });
+};
+
+// The remainder of the file (login, logout, refresh, getMe, etc.) remains unchanged below
+
+export const login = async (req: Request, res: Response): Promise<void> => {
+  const { email, password } = req.body;
+
+  if (typeof email !== "string" || typeof password !== "string") {
+    res.status(400).json({ success: false, error: "Invalid input" });
+    return;
+  }
+
+  const user = await User.findOne({ email: email.toLowerCase().trim() }).select(
+    "+passwordHash +refreshTokenHash",
+  );
+
+  if (!user || !user.isActive) {
+    res.status(401).json({ success: false, error: "Invalid credentials" });
+    return;
+  }
+
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) {
+    res.status(401).json({ success: false, error: "Invalid credentials" });
+    return;
+  }
+
+  // Block login if email not verified
+  if (!user.emailVerified) {
+    res.status(403).json({
+      success: false,
+      error:
+        "Please verify your email before logging in. Check your inbox for the OTP.",
+    });
+    return;
+  }
+
+  let manufacturerId: string | undefined;
+  if (user.role === "manufacturer") {
+    const manufacturer = await Manufacturer.findOne({ userId: user._id });
+    manufacturerId = manufacturer?._id?.toString();
+  }
+
+  const { accessToken, refreshToken } = issueTokens({
+    userId: user._id.toString(),
+    role: user.role,
+    manufacturerId,
+  });
+
+  user.refreshTokenHash = await bcrypt.hash(refreshToken, 10);
+  user.lastLoginAt = new Date();
+  await user.save();
+
+  setTokenCookies(res, accessToken, refreshToken);
+
+  // For local development make the access token available in the JSON response
+  // so client-side header-based flows can work when cross-origin cookies aren't sent.
+  const responseData: any = {
+    user: {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    },
+  };
+  responseData.token = accessToken;
+
+  res.status(200).json({
+    success: true,
+    message: "Login successful",
+    data: responseData,
+  });
+
+};
+
+export const logout = async (
+  req: AuthenticatedRequest,
+  res: Response,
+): Promise<void> => {
+  await User.findByIdAndUpdate(req.user!.userId, { refreshTokenHash: null });
+  clearTokenCookies(res);
+  res.status(200).json({ success: true, message: "Logged out successfully" });
+};
+
+export const refresh = async (req: Request, res: Response): Promise<void> => {
+  const token = req.cookies?.refreshToken;
+
+  if (!token) {
+    res.status(401).json({ success: false, error: "No refresh token" });
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_REFRESH_SECRET as string,
+    ) as { userId: string };
+
+    const user = await User.findById(decoded.userId).select(
+      "+refreshTokenHash",
+    );
+
+    if (!user || !user.refreshTokenHash) {
+      res.status(401).json({ success: false, error: "Invalid refresh token" });
+      return;
+    }
+
+    const isValid = await bcrypt.compare(token, user.refreshTokenHash);
+    if (!isValid) {
+      res.status(401).json({ success: false, error: "Invalid refresh token" });
+      return;
+    }
+
+    let manufacturerId: string | undefined;
+    if (user.role === "manufacturer") {
+      const manufacturer = await Manufacturer.findOne({ userId: user._id });
+      manufacturerId = manufacturer?._id?.toString();
+    }
+
+    const { accessToken, refreshToken: newRefreshToken } = issueTokens({
+      userId: user._id.toString(),
+      role: user.role,
+      manufacturerId,
+    });
+
+    user.refreshTokenHash = await bcrypt.hash(newRefreshToken, 10);
+    await user.save();
+
+    setTokenCookies(res, accessToken, newRefreshToken);
+    res.status(200).json({ success: true, message: "Token refreshed" });
+  } catch {
+    res.status(401).json({
+      success: false,
+      error: "Invalid or expired refresh token",
+    });
+  }
+};
+
+export const getMe = async (
+  req: AuthenticatedRequest,
+  res: Response,
+): Promise<void> => {
+  const user = await User.findById(req.user!.userId);
+  if (!user) {
+    res.status(404).json({ success: false, error: "User not found" });
+    return;
+  }
+  res.status(200).json({ success: true, data: { user } });
 };

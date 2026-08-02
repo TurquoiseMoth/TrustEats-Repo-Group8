@@ -7,13 +7,13 @@ import {
   type ReactNode,
 } from "react";
 import { authService } from "../services/auth";
-import type { User, RegisterRequest } from "../types";
+import type { User, RegisterRequest, AuthResponse } from "../types";
 interface AuthContextValue {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (data: RegisterRequest) => Promise<void>;
+  login: (email: string, password: string) => Promise<User | null>;
+  register: (data: RegisterRequest) => Promise<AuthResponse>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -36,12 +36,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (email: string, password: string) => {
     const result = await authService.login({ email, password });
-    setUser(result.manufacturer ?? null);
+    const nextUser = result.manufacturer ?? null;
+    setUser(nextUser);
+    return nextUser;
   }, []);
 
   const register = useCallback(async (data: RegisterRequest) => {
     const result = await authService.register(data);
-    setUser(result.manufacturer ?? null);
+    const nextUser = result.manufacturer ?? null;
+    setUser(nextUser);
+    return result;
   }, []);
 
   const refreshUser = useCallback(async () => {

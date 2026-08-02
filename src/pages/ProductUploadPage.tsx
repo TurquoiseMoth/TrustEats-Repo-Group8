@@ -11,6 +11,7 @@ import { ROUTES } from "../constants";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { ManufacturerSidebar } from "../components/manufacturer/ManufacturerSidebar";
 import { ManufacturerMobileNav } from "../components/manufacturer/ManufacturerMobileNav";
+import { Spinner } from "../components/ui";
 
 function ProductUploadPage() {
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -21,6 +22,7 @@ function ProductUploadPage() {
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isNafdacValid = /^\d{2}-\d{4,}$/.test(nafdacNo);
 
@@ -78,15 +80,24 @@ function ProductUploadPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isValid) return;
+    if (!isValid || isSubmitting) return;
 
     // Build FormData for upload
     const form = new FormData();
     form.append("name", productName);
+    form.append("brand", productName);
+    form.append(
+      "description",
+      `Product submitted with NAFDAC registration number ${nafdacNo}.`,
+    );
+    form.append("category", "food");
+    form.append("countryOfOrigin", "Nigeria");
     form.append("nafdacNumber", nafdacNo);
-    files.forEach((f) => form.append("images", f, f.name));
+    // backend expects field name "image" for single product image
+    if (files.length > 0) form.append("image", files[0], files[0].name);
 
     try {
+      setIsSubmitting(true);
       // Use productService.create to send FormData
       const { productService } = await import("../services/products");
       await productService.create(form);
@@ -98,8 +109,20 @@ function ProductUploadPage() {
       // show a toast via the global event so user sees the error
       const message = err instanceof Error ? err.message : "Upload failed";
       window.dispatchEvent(new CustomEvent("trusteats:notify", { detail: { type: "error", message } }));
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const loadingOverlay = isSubmitting ? (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/35 px-4 backdrop-blur-[1px]">
+      <div className="flex w-full max-w-[300px] flex-col items-center rounded-2xl bg-white px-8 py-9 text-center shadow-2xl">
+        <Spinner size="lg" />
+        <p className="mt-5 text-base font-bold text-gray-900">Uploading product</p>
+        <p className="mt-1 text-sm text-gray-500">Please wait...</p>
+      </div>
+    </div>
+  ) : null;
 
   /* ── Success View ──────────────────────────────── */
   const successContent = (
@@ -177,47 +200,51 @@ function ProductUploadPage() {
         </p>
       </div>
 
-      {/* Product Name */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="product-name" className="text-sm font-semibold text-gray-800">
-          Product Name
-        </label>
-        <input
-          id="product-name"
-          type="text"
-          placeholder="Enter product name"
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
-          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
-        />
-      </div>
-
-      {/* NAFDAC Number */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="nafdac-no" className="text-sm font-semibold text-gray-800">
-          Enter NAFDAC NO.
-        </label>
-        <div className="relative">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        {/* Product Name */}
+        <div className="flex flex-col gap-2">
+          <label htmlFor="product-name" className="text-sm font-semibold text-gray-800">
+            Product Name
+          </label>
           <input
-            id="nafdac-no"
+            id="product-name"
             type="text"
-            placeholder="XX-XXXX"
-            value={nafdacNo}
-            onChange={handleNafdacChange}
-            maxLength={9}
-            className={`h-12 w-full rounded-lg border bg-white px-4 pr-10 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:ring-1 focus:ring-primary ${
-              nafdacNo.length > 0
-                ? isNafdacValid
-                  ? "border-primary"
-                  : "border-red-400 focus:border-red-500 focus:ring-red-500"
-                : "border-gray-300 focus:border-primary"
-            }`}
+            placeholder="Enter product name"
+            value={productName}
+            onChange={(e) => setProductName(e.target.value)}
+            disabled={isSubmitting}
+            className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
           />
-          {nafdacNo.length > 0 && isNafdacValid && (
-            <CheckCircle2 className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-primary" />
-          )}
         </div>
-        <p className="text-xs text-gray-500">Strict alphanumeric format: XX-XXXX</p>
+
+        {/* NAFDAC Number */}
+        <div className="flex flex-col gap-2">
+          <label htmlFor="nafdac-no" className="text-sm font-semibold text-gray-800">
+            Enter NAFDAC NO.
+          </label>
+          <div className="relative">
+            <input
+              id="nafdac-no"
+              type="text"
+              placeholder="XX-XXXX"
+              value={nafdacNo}
+              onChange={handleNafdacChange}
+              maxLength={9}
+              disabled={isSubmitting}
+              className={`h-12 w-full rounded-lg border bg-white px-4 pr-10 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:ring-1 focus:ring-primary ${
+                nafdacNo.length > 0
+                  ? isNafdacValid
+                    ? "border-primary"
+                    : "border-red-400 focus:border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:border-primary"
+              }`}
+            />
+            {nafdacNo.length > 0 && isNafdacValid && (
+              <CheckCircle2 className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-primary" />
+            )}
+          </div>
+          <p className="text-xs text-gray-500">Strict alphanumeric format: XX-XXXX</p>
+        </div>
       </div>
 
       {/* File Upload Dropzone */}
@@ -244,6 +271,7 @@ function ProductUploadPage() {
                 <button
                   type="button"
                   onClick={() => removeFile(idx)}
+                  disabled={isSubmitting}
                   className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-red-500"
                 >
                   <X className="h-3 w-3" />
@@ -274,6 +302,7 @@ function ProductUploadPage() {
             accept=".jpg,.jpeg,.png"
             multiple
             onChange={handleFileSelect}
+            disabled={isSubmitting}
             className="absolute inset-0 cursor-pointer opacity-0"
           />
         </div>
@@ -283,18 +312,22 @@ function ProductUploadPage() {
       <div className="flex flex-col gap-3 pt-2 sm:flex-row">
         <button
           type="submit"
-          disabled={!isValid}
-          className={`flex h-12 flex-1 items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
-            isValid
+          disabled={!isValid || isSubmitting}
+          className={`flex h-12 flex-1 items-center justify-center gap-2 rounded-xl text-sm font-semibold transition-colors ${
+            isValid && !isSubmitting
               ? "bg-primary text-white hover:bg-primary/90"
               : "cursor-not-allowed bg-gray-200 text-white"
           }`}
         >
-          Add Product
+          {isSubmitting && <Spinner size="sm" className="border-white/50 border-t-white" />}
+          {isSubmitting ? "Adding Product..." : "Add Product"}
         </button>
         <Link
           to={ROUTES.MANUFACTURER_PRODUCTS}
-          className="flex h-12 flex-1 items-center justify-center rounded-xl border-2 border-primary text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
+          aria-disabled={isSubmitting}
+          className={`flex h-12 flex-1 items-center justify-center rounded-xl border-2 border-primary text-sm font-semibold text-primary transition-colors hover:bg-primary/5 ${
+            isSubmitting ? "pointer-events-none opacity-60" : ""
+          }`}
         >
           View Product List
         </Link>
@@ -322,6 +355,7 @@ function ProductUploadPage() {
         </main>
 
         <ManufacturerMobileNav />
+        {loadingOverlay}
       </div>
     );
   }
@@ -339,12 +373,13 @@ function ProductUploadPage() {
         </header>
 
         {/* Content */}
-        <main className="flex-1 overflow-y-auto px-8 py-8">
-          <div className="mx-auto max-w-xl">
+        <main className="flex-1 overflow-y-auto px-8 py-8 2xl:px-12">
+          <div className="mx-auto w-full max-w-4xl">
             {submitSuccess ? successContent : formContent}
           </div>
         </main>
       </div>
+      {loadingOverlay}
     </div>
   );
 }

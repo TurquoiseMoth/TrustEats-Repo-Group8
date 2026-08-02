@@ -32,6 +32,7 @@ function RecentApplicationsTable({ applications }: RecentApplicationsTableProps)
                 <th scope="col" className="px-2 pb-3">Type</th>
                 <th scope="col" className="px-2 pb-3">Submitted</th>
                 <th scope="col" className="px-2 pb-3">Status</th>
+                <th scope="col" className="px-2 pb-3">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -43,6 +44,14 @@ function RecentApplicationsTable({ applications }: RecentApplicationsTableProps)
                   <td className="px-2 py-3.5 text-gray-600 whitespace-nowrap">{app.submittedDate}</td>
                   <td className="px-2 py-3.5">
                     <StatusBadge status={app.status} />
+                  </td>
+                  <td className="px-2 py-3.5">
+                    <Link
+                      to={`/admin/applications/${app.id}`}
+                      className="font-semibold text-primary hover:underline"
+                    >
+                      Review
+                    </Link>
                   </td>
                 </tr>
               ))}

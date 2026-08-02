@@ -8,10 +8,11 @@ interface EmailVerificationProps {
   /** Called when the person requests a new code */
   onResend: () => Promise<void> | void;
   /** Called after a successful verification (e.g. navigate to next step) */
-  onVerified?: () => void;
+  onVerified?: () => Promise<void> | void;
   /** Optional step indicator, e.g. { current: 2, total: 3 } */
   step?: { current: number; total: number };
   length?: number;
+  initialCode?: string;
 }
 
 export function EmailVerification({
@@ -21,6 +22,7 @@ export function EmailVerification({
   onVerified,
   step,
   length = 6,
+  initialCode,
 }: EmailVerificationProps) {
   const {
     digits,
@@ -28,17 +30,20 @@ export function EmailVerification({
     errorMessage,
     canResend,
     isResending,
+    isComplete,
     formattedTimeLeft,
     inputRefs,
     handleChange,
     handleKeyDown,
     handlePaste,
     resend,
+    submitCode,
   } = useOtpVerification({
     length,
+    initialCode,
     onSubmit: async (code) => {
       const ok = await onVerify(code);
-      if (ok) onVerified?.();
+      if (ok) await onVerified?.();
       return ok;
     },
     onResend,
@@ -126,6 +131,16 @@ export function EmailVerification({
           </span>
         )}
       </div>
+
+      {isComplete && !isSubmitting && !isSuccess && (
+        <button
+          type="button"
+          onClick={submitCode}
+          className="mb-3 mt-1 w-full rounded-[10px] bg-[#1e7a46] px-4 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
+        >
+          Verify Code
+        </button>
+      )}
 
       <p className="mt-4 text-[13px] text-[#6b7280]">
         Didn&apos;t receive code?{" "}

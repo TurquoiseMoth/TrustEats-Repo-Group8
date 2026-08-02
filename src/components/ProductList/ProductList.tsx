@@ -34,7 +34,7 @@ export function ProductList({ products, onGenerateQr, onRemove, announcement }: 
   return (
     <div className="w-full">
       {products.length > 0 && (
-        <div className="flex gap-2 mb-4 overflow-x-auto" role="tablist" aria-label="Filter products by status">
+        <div className="mb-5 flex gap-2 overflow-x-auto" role="tablist" aria-label="Filter products by status">
           {FILTERS.map((f) => {
             const isActive = filter === f.value;
             return (
@@ -68,7 +68,7 @@ export function ProductList({ products, onGenerateQr, onRemove, announcement }: 
       ) : filteredProducts.length === 0 ? (
         <EmptyState variant="noMatches" />
       ) : (
-        <ul className="flex flex-col gap-3.5 md:gap-4">
+        <ul className="flex w-full flex-col gap-4">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} onGenerateQr={onGenerateQr} onRemove={onRemove} />
           ))}
