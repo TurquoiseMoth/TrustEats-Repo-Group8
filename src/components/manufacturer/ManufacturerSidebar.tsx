@@ -1,23 +1,24 @@
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import {
   LayoutDashboard,
   QrCode,
   PackagePlus,
   Package,
-  Bell,
-  Settings,
+  LogOut,
   ShieldCheck,
 } from "lucide-react";
 import { ROUTES } from "../../constants";
-import { DEFAULT_UNREAD_COUNT } from "../../constants/notifications";
-import { NotificationBell } from "../ui/NotificationBell";
+import { authService } from "../../services/auth";
+import { getRoleUser, getStoredUser } from "../../services/authStorage";
+import { SidebarUserSummary } from "../layout/SidebarUserSummary";
 
 const sidebarLinks = [
   { label: "Dashboard", href: ROUTES.MANUFACTURER_DASHBOARD, icon: LayoutDashboard },
   { label: "QR Code", href: ROUTES.QR_CODE, icon: QrCode },
   { label: "Add Product", href: ROUTES.PRODUCT_UPLOAD, icon: PackagePlus },
   { label: "Product List", href: ROUTES.MANUFACTURER_PRODUCTS, icon: Package },
-  { label: "Notification", href: ROUTES.MANUFACTURER_NOTIFICATIONS, icon: Bell },
+  // Notifications are disabled until a backend endpoint exists.
+  // { label: "Notification", href: ROUTES.MANUFACTURER_NOTIFICATIONS, icon: Bell },
 ];
 
 /**
@@ -26,6 +27,13 @@ const sidebarLinks = [
  */
 export function ManufacturerSidebar() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const user = getRoleUser("manufacturer") ?? getStoredUser();
+
+  const handleLogout = async () => {
+    await authService.logout();
+    navigate(ROUTES.HOME, { replace: true });
+  };
 
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-60 flex-col border-r border-gray-200 bg-white">
@@ -47,11 +55,7 @@ export function ManufacturerSidebar() {
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
             >
-              {href === ROUTES.MANUFACTURER_NOTIFICATIONS ? (
-                <NotificationBell count={DEFAULT_UNREAD_COUNT} iconClassName="h-5 w-5" />
-              ) : (
-                <Icon className="h-5 w-5" />
-              )}
+              <Icon className="h-5 w-5" />
               {label}
             </Link>
           );
@@ -59,13 +63,15 @@ export function ManufacturerSidebar() {
       </nav>
 
       <div className="px-3 pb-5">
-        <Link
-          to={ROUTES.PROFILE}
-          className="flex items-center justify-center gap-2 rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+        <SidebarUserSummary user={user} fallbackLabel="Manufacturer" />
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
         >
-          <Settings className="h-4 w-4" />
-          Settings
-        </Link>
+          <LogOut className="h-4 w-4" />
+          Logout
+        </button>
       </div>
     </aside>
   );

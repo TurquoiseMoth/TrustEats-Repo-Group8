@@ -1,14 +1,14 @@
-import { Link, useLocation } from "react-router";
-import { Home, QrCode, Package, Bell } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { Home, LogOut, QrCode, Package } from "lucide-react";
 import { ROUTES } from "../../constants";
-import { DEFAULT_UNREAD_COUNT } from "../../constants/notifications";
-import { NotificationBell } from "../ui/NotificationBell";
+import { authService } from "../../services/auth";
 
 const mobileTabs = [
   { label: "Home", href: ROUTES.MANUFACTURER_DASHBOARD, icon: Home },
   { label: "QR Code", href: ROUTES.QR_CODE, icon: QrCode },
   { label: "Product", href: ROUTES.MANUFACTURER_PRODUCTS, icon: Package },
-  { label: "Notification", href: ROUTES.MANUFACTURER_NOTIFICATIONS, icon: Bell },
+  // Notifications are disabled until a backend endpoint exists.
+  // { label: "Notification", href: ROUTES.MANUFACTURER_NOTIFICATIONS, icon: Bell },
 ];
 
 /**
@@ -17,6 +17,12 @@ const mobileTabs = [
  */
 export function ManufacturerMobileNav() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await authService.logout();
+    navigate(ROUTES.HOME, { replace: true });
+  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white md:hidden">
@@ -29,17 +35,11 @@ export function ManufacturerMobileNav() {
               to={href}
               className="flex w-full flex-col items-center justify-center gap-0.5"
             >
-              {href === ROUTES.MANUFACTURER_NOTIFICATIONS ? (
-                <span className={isActive ? "text-primary" : "text-gray-400"}>
-                  <NotificationBell count={DEFAULT_UNREAD_COUNT} iconClassName="h-5 w-5" />
-                </span>
-              ) : (
-                <Icon
-                  size={20}
-                  strokeWidth={isActive ? 2.5 : 1.8}
-                  className={isActive ? "text-primary" : "text-gray-400"}
-                />
-              )}
+              <Icon
+                size={20}
+                strokeWidth={isActive ? 2.5 : 1.8}
+                className={isActive ? "text-primary" : "text-gray-400"}
+              />
               <span
                 className={`text-xs font-medium ${isActive ? "text-primary" : "text-gray-400"}`}
               >
@@ -48,6 +48,14 @@ export function ManufacturerMobileNav() {
             </Link>
           );
         })}
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="flex w-full flex-col items-center justify-center gap-0.5"
+        >
+          <LogOut size={20} strokeWidth={1.8} className="text-gray-400" />
+          <span className="text-xs font-medium text-gray-400">Logout</span>
+        </button>
       </div>
     </nav>
   );

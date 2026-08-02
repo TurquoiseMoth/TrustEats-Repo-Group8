@@ -2,7 +2,8 @@ import apiClient, { getApiBaseUrl } from "./api";
 import axios from "axios";
 import { shouldUseMock } from "./mockMode";
 import { mockProductService } from "./mockProducts";
-import type { Product, Batch, CreateBatchPayload, ApiResponse } from "../types";
+import type { Product, Batch, CreateBatchPayload, GeneratedCode, ApiResponse } from "../types";
+import { getRoleToken } from "./authStorage";
 
 function buildFormData(data: Record<string, unknown>): FormData {
   const fd = new FormData();
@@ -21,6 +22,19 @@ function buildFormData(data: Record<string, unknown>): FormData {
   return fd;
 }
 
+function authHeaders() {
+  const token = getRoleToken("manufacturer");
+  return token ? { Authorization: `Bearer ${token}` } : undefined;
+}
+
+function requireManufacturerAuthHeaders() {
+  const headers = authHeaders();
+  if (!headers) {
+    throw new Error("Please log in as a manufacturer before uploading products.");
+  }
+  return headers;
+}
+
 export const productService = {
   // create accepts either JSON or FormData (with image files).
   create: (data: Partial<Product> | FormData) => {
@@ -29,7 +43,10 @@ export const productService = {
     if (data instanceof FormData) {
       const base = getApiBaseUrl?.() ?? apiClient.defaults.baseURL ?? "";
       return axios
-        .post(`${base.replace(/\/$/, "")}/products`, data, { withCredentials: true })
+        .post(`${base.replace(/\/$/, "")}/products`, data, {
+          withCredentials: true,
+          headers: requireManufacturerAuthHeaders(),
+        })
         .then((res) => (res.data && res.data.data) ? res.data.data : res.data);
     }
 
@@ -51,13 +68,20 @@ export const productService = {
   update: (id: string, data: Record<string, unknown>) => {
     if (shouldUseMock()) return mockProductService.update(id, data);
     const fd = buildFormData(data);
-    return apiClient.patch<ApiResponse<{ product: Product }>>(`/products/${id}`, fd)
-      .then((res) => res.data.data!.product);
+    // Use a raw axios call so the browser sets multipart boundaries correctly
+    const base = getApiBaseUrl?.() ?? apiClient.defaults.baseURL ?? "";
+    return axios
+      .patch(`${base.replace(/\/$/, "")}/products/${id}`, fd, {
+        withCredentials: true,
+        headers: requireManufacturerAuthHeaders(),
+      })
+      .then((res) => (res.data && res.data.data && res.data.data.product) ? res.data.data.product : res.data);
   },
+
 
   createBatch: (data: CreateBatchPayload) => {
     if (shouldUseMock()) return mockProductService.createBatch(data);
-    return apiClient.post<ApiResponse<{ batch: Batch; generatedCodes: { code: string; qrCodeUrl: string }[] }>>("/batches", data)
+    return apiClient.post<ApiResponse<{ batch: Batch; generatedCodes?: GeneratedCode[] }>>("/batches", data)
       .then((res) => res.data.data!);
   },
 

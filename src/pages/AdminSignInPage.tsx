@@ -4,11 +4,10 @@ import { Eye, EyeOff } from "lucide-react";
 import { ROUTES } from "../constants";
 import LeafPattern from "../components/auth/LeafPattern";
 import { BackButton, DemoAccountsHint } from "../components/ui";
-import { useAuth } from "../contexts/AuthContext";
+import { authService } from "../services/auth";
 
 export default function AdminSignInPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -24,7 +23,7 @@ export default function AdminSignInPage() {
     setFormError(null);
     setIsSubmitting(true);
     try {
-      await login(email.trim(), password);
+      await authService.loginAdmin({ email: email.trim(), password });
       navigate(ROUTES.ADMIN_DASHBOARD);
     } catch (err) {
       setFormError((err as { message?: string })?.message ?? "Sign in failed. Please try again.");

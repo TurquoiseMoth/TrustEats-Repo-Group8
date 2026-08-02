@@ -1,39 +1,95 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ApplicationCard from "../components/admin/ApplicationCard";
 import type { Application, ApplicationStatus } from "../components/admin/ApplicationCard";
-
-const initialApplications: Application[] = [
-  { id: "1", companyName: "Colgate Inc", appId: "APP-5521", status: "pending", date: "18 Jul, 2026", time: "9:45 AM" },
-  { id: "2", companyName: "Gino", appId: "APP-5521", status: "pending", date: "18 Jul, 2026", time: "9:45 AM" },
-  { id: "3", companyName: "Beleuxe", appId: "APP-5521", status: "pending", date: "18 Jul, 2026", time: "9:45 AM" },
-  { id: "4", companyName: "Delta Palm Product", appId: "APP-5521", status: "pending", date: "18 Jul, 2026", time: "9:45 AM" },
-  { id: "5", companyName: "Gino", appId: "APP-5521", status: "approved", date: "18 Jul, 2026", time: "9:45 AM" },
-  { id: "6", companyName: "Zuri Spice Company", appId: "APP-5521", status: "pending", date: "18 Jul, 2026", time: "9:45 AM", isNew: true },
-];
+import { adminService, type AdminManufacturer } from "../services/admin";
 
 type Tab = "All" | "Approved" | "Pending" | "Rejected";
 const tabs: Tab[] = ["All", "Approved", "Pending", "Rejected"];
 
+function notify(type: "success" | "error", message: string) {
+  window.dispatchEvent(
+    new CustomEvent("trusteats:notify", { detail: { type, message } }),
+  );
+}
+
+function toApplication(manufacturer: AdminManufacturer): Application {
+  const created = manufacturer.createdAt ? new Date(manufacturer.createdAt) : null;
+  return {
+    id: manufacturer._id,
+    companyName: manufacturer.companyName,
+    appId: `APP-${manufacturer._id.slice(-5).toUpperCase()}`,
+    status:
+      manufacturer.status === "suspended"
+        ? "rejected"
+        : manufacturer.status === "approved"
+          ? "approved"
+          : "pending",
+    date: created
+      ? new Intl.DateTimeFormat(undefined, {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }).format(created)
+      : "N/A",
+    time: created
+      ? new Intl.DateTimeFormat(undefined, {
+          hour: "numeric",
+          minute: "2-digit",
+        }).format(created)
+      : "",
+  };
+}
+
 export default function AdminApplicationsPage() {
-  const [applications, setApplications] = useState<Application[]>(initialApplications);
   const [activeTab, setActiveTab] = useState<Tab>("All");
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["admin-manufacturers"],
+    queryFn: () => adminService.getManufacturers(),
+    staleTime: 15_000,
+  });
+
+  const invalidate = () =>
+    queryClient.invalidateQueries({ queryKey: ["admin-manufacturers"] });
+
+  const approveMutation = useMutation({
+    mutationFn: (id: string) => adminService.approveManufacturer(id),
+    onSuccess: () => {
+      notify("success", "Manufacturer approved successfully.");
+      invalidate();
+    },
+    onError: () => notify("error", "Unable to approve manufacturer."),
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: (id: string) =>
+      adminService.suspendManufacturer(id, "Rejected by admin"),
+    onSuccess: () => {
+      notify("success", "Manufacturer rejected successfully.");
+      invalidate();
+    },
+    onError: () => notify("error", "Unable to reject manufacturer."),
+  });
 
   const updateStatus = (id: string, status: ApplicationStatus) => {
-    setApplications((prev) =>
-      prev.map((app) => (app.id === id ? { ...app, status, isNew: false } : app))
-    );
+    if (status === "approved") approveMutation.mutate(id);
+    if (status === "rejected") rejectMutation.mutate(id);
+    if (status === "pending") rejectMutation.mutate(id);
   };
 
   const handleDelete = (id: string) => {
-    setApplications((prev) => prev.filter((app) => app.id !== id));
+    rejectMutation.mutate(id);
   };
 
   const handleReviewDetails = (id: string) => {
     navigate(`/admin/applications/${id}`);
   };
 
+  const applications = (data?.manufacturers ?? []).map(toApplication);
   const filtered = applications.filter((app) => {
     if (activeTab === "All") return true;
     if (activeTab === "Approved") return app.status === "approved";
@@ -48,8 +104,8 @@ export default function AdminApplicationsPage() {
         <h1 className="text-2xl font-bold text-white">Admin Applications</h1>
       </div>
 
-      <div className="mx-auto max-w-4xl px-6 py-6">
-        <div className="mb-6 flex gap-1 rounded-xl bg-slate-100 p-1.5">
+      <div className="mx-auto max-w-[1680px] px-6 py-6 2xl:px-12">
+        <div className="mb-6 flex max-w-4xl gap-1 rounded-xl bg-slate-100 p-1.5">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -65,8 +121,16 @@ export default function AdminApplicationsPage() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-4">
-          {filtered.length === 0 ? (
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-3">
+          {isLoading ? (
+            <p className="py-12 text-center text-sm text-slate-500">
+              Loading applications...
+            </p>
+          ) : error ? (
+            <p className="py-12 text-center text-sm text-red-600">
+              Unable to load manufacturer applications.
+            </p>
+          ) : filtered.length === 0 ? (
             <p className="py-12 text-center text-sm text-slate-500">
               No applications in this category.
             </p>

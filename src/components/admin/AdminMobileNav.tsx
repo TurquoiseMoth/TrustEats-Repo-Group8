@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { Menu, X } from "lucide-react";
 import {
   LayoutDashboard,
@@ -8,24 +8,33 @@ import {
   FileWarning,
   Megaphone,
   Bell,
+  LogOut,
 } from "lucide-react";
 import { ROUTES } from "../../constants";
 import { DEFAULT_UNREAD_COUNT } from "../../constants/notifications";
 import { NotificationBell } from "../ui/NotificationBell";
+import { authService } from "../../services/auth";
 import logo from "../../assets/images/Logo.png";
 
 const navItems = [
-  { label: "Dashboard (Admin)", href: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
-  { label: "Organizations (Admin)", href: ROUTES.ADMIN_ORGANIZATIONS, icon: Building2 },
-  { label: "Applications (Admin)", href: ROUTES.ADMIN_APPLICATIONS, icon: ClipboardList },
-  { label: "Consumer Reports (Admin)", href: ROUTES.ADMIN_CONSUMER_REPORTS, icon: FileWarning },
-  { label: "Promotion & Tips (Admin)", href: ROUTES.ADMIN_PROMOTION_TIPS, icon: Megaphone },
-  { label: "Notification (Admin)", href: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
+  { label: "Dashboard", href: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
+  { label: "Organizations", href: ROUTES.ADMIN_ORGANIZATIONS, icon: Building2 },
+  { label: "Applications", href: ROUTES.ADMIN_APPLICATIONS, icon: ClipboardList },
+  { label: "Consumer Reports", href: ROUTES.ADMIN_CONSUMER_REPORTS, icon: FileWarning },
+  { label: "Promotion & Tips", href: ROUTES.ADMIN_PROMOTION_TIPS, icon: Megaphone },
+  { label: "Notification", href: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
 ];
 
 function AdminMobileNav() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await authService.logout();
+    setIsOpen(false);
+    navigate(ROUTES.HOME, { replace: true });
+  };
 
   return (
     <div className="md:hidden bg-background relative z-40">
@@ -76,6 +85,14 @@ function AdminMobileNav() {
               );
             })}
           </ul>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-gray-700"
+          >
+            <LogOut size={18} aria-hidden="true" />
+            Logout
+          </button>
         </nav>
       )}
     </div>

@@ -5,19 +5,30 @@ import axios, {
   type AxiosRequestConfig,
 } from "axios";
 import type { ApiError } from "../types";
+import {
+  clearAuthSession,
+  getTokenForPath,
+  storeAuthSession,
+} from "./authStorage";
 
 // Default Render deployment for the TrustEats backend.
-const DEFAULT_API_BASE_URL = "https://trusteats-repo-group8.onrender.com";
+const DEFAULT_API_BASE_URL = "https://trusteatslatest.onrender.com/api/v1";
 
-const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL as string) || DEFAULT_API_BASE_URL;
+function normalizeApiBaseUrl(url: string): string {
+  const trimmed = url.replace(/\/$/, "");
+  return trimmed.endsWith("/api/v1") ? trimmed : `${trimmed}/api/v1`;
+}
+
+const API_BASE_URL = normalizeApiBaseUrl(
+  (import.meta.env.VITE_API_BASE_URL as string) || DEFAULT_API_BASE_URL,
+);
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 15000,
+  timeout: 60000,
   // support cookie-based auth (HttpOnly refresh/access cookies)
   // Enable sending credentials by default.
   withCredentials: true,
@@ -25,9 +36,10 @@ const apiClient = axios.create({
 
 // Attach auth token when present (keeps compatibility with token-based flows)
 apiClient.interceptors.request.use((config) => {
-  // Prefer an explicit client-side token when available (localStorage).
+  // Prefer an explicit client-side token when available.
   // For development, allow an env fallback token: VITE_DEV_AUTH_TOKEN (useful for local API that doesn't use cookies).
-  const tokenFromStorage = localStorage.getItem("auth_token");
+  const requestPath = `${config.url ?? ""}`;
+  const tokenFromStorage = getTokenForPath(requestPath);
   const devToken = (import.meta.env as { VITE_DEV_AUTH_TOKEN?: string })
     .VITE_DEV_AUTH_TOKEN;
   const token =
@@ -137,7 +149,7 @@ apiClient.interceptors.response.use(
             refreshResp.data.access_token);
         if (refreshedToken) {
           try {
-            localStorage.setItem("auth_token", refreshedToken);
+            storeAuthSession(undefined, refreshedToken);
           } catch {
             // ignore storage errors
           }
@@ -159,8 +171,7 @@ apiClient.interceptors.response.use(
 
         // Clean local client-side auth state if refresh failed
         try {
-          localStorage.removeItem("auth_token");
-          localStorage.removeItem("auth_user");
+          clearAuthSession();
         } catch {
           // ignore storage errors
         }
@@ -175,10 +186,12 @@ apiClient.interceptors.response.use(
 
     // For other errors, normalize to ApiError
     const responseData = error.response?.data as
-      | { message?: string; details?: unknown }
+      | { message?: string; error?: string; details?: unknown }
       | undefined;
     const message =
-      responseData?.message ?? getDefaultErrorMessage(status as number);
+      responseData?.message ??
+      responseData?.error ??
+      getDefaultErrorMessage(status as number);
     const apiError: ApiError = {
       success: false,
       message,
@@ -213,7 +226,7 @@ function getDefaultErrorMessage(status: number | undefined): string {
 }
 
 export function setApiBaseUrl(url: string) {
-  apiClient.defaults.baseURL = url;
+  apiClient.defaults.baseURL = normalizeApiBaseUrl(url);
 }
 
 export function getApiBaseUrl() {

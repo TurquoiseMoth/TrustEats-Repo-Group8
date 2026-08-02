@@ -6,7 +6,7 @@ export type {
   RegisterResponse,
   AuthResponse,
 } from "./auth";
-export type { Product, Batch, CreateBatchPayload } from "./product";
+export type { Product, Batch, GeneratedCode, CreateBatchPayload } from "./product";
 export type {
   VerificationResult,
   VerificationRequest,

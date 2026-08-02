@@ -1,12 +1,24 @@
 import { useLocation, useNavigate } from "react-router";
 import { ROUTES } from "../constants";
 import { EmailVerification } from "../components/EmailVerification";
+import { useAuth } from "../contexts/AuthContext";
+import { manufacturerService } from "../services/manufacturers";
 
 export default function VerifyEmailPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { refreshUser } = useAuth();
 
-  const email = (location.state as { email?: string })?.email;
+  const state = location.state as
+    | {
+        email?: string;
+        role?: "consumer" | "manufacturer";
+        otp?: string;
+      }
+    | undefined;
+  const email = state?.email;
+  const role = state?.role ?? "consumer";
+  const initialOtp = state?.otp;
 
   const handleVerify = async (code: string): Promise<boolean> => {
     if (!email) return false;
@@ -42,7 +54,11 @@ export default function VerifyEmailPage() {
     if (!email) return;
     try {
       const { authService } = await import("../services/auth");
-      await authService.resendVerification(email);
+      const res = await authService.resendVerification(email);
+      const otp = (res.data as { otp?: string } | undefined)?.otp;
+      if (otp) {
+        console.info(`[TrustEats OTP] ${email}: ${otp}`);
+      }
     } catch {
       // ignore
     }
@@ -63,9 +79,26 @@ export default function VerifyEmailPage() {
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", background: "#eef4fc" }}>
       <EmailVerification
         email={email}
+        initialCode={initialOtp}
         onVerify={handleVerify}
         onResend={handleResend}
-        onVerified={() => navigate(ROUTES.DASHBOARD)}
+        onVerified={async () => {
+          if (role === "manufacturer") {
+            await refreshUser();
+            try {
+              await manufacturerService.getProfile();
+              navigate(ROUTES.MANUFACTURER_DASHBOARD, { replace: true });
+            } catch {
+              navigate(ROUTES.MANUFACTURER_SIGNUP, { replace: true });
+            }
+            return;
+          }
+          await refreshUser();
+          navigate(
+            ROUTES.DASHBOARD,
+            { replace: true },
+          );
+        }}
         step={{ current: 2, total: 3 }}
       />
     </div>

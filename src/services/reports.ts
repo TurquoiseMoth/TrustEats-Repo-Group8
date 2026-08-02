@@ -3,6 +3,7 @@ import axios from "axios";
 import { shouldUseMock } from "./mockMode";
 import { mockReportsService } from "./mockReports";
 import type { ApiResponse } from "../types";
+import { getStoredToken } from "./authStorage";
 
 export interface Report {
   id: string;
@@ -15,10 +16,17 @@ export interface Report {
   createdAt: string;
 }
 
+function authHeaders() {
+  const token = getStoredToken();
+  return token ? { Authorization: `Bearer ${token}` } : undefined;
+}
+
 export const reportsService = {
   getAll: () => {
     if (shouldUseMock()) return mockReportsService.getAll();
-    return apiClient.get<ApiResponse<Report[]>>("/reports").then((res) => res.data.data!);
+    return apiClient
+      .get<ApiResponse<{ reports: Report[] }>>("/reports/my")
+      .then((res) => res.data.data!.reports);
   },
 
   getById: (id: string) => {
@@ -33,7 +41,10 @@ export const reportsService = {
       // Use a plain axios call so the Content-Type header (with boundary) is set correctly by the browser
       const base = getApiBaseUrl?.() ?? apiClient.defaults.baseURL ?? "";
       return axios
-        .post(`${base.replace(/\/$/, "")}/reports`, data, { withCredentials: true })
+        .post(`${base.replace(/\/$/, "")}/reports`, data, {
+          withCredentials: true,
+          headers: authHeaders(),
+        })
         .then((res) => (res.data && res.data.data) ? res.data.data : res.data);
     }
 

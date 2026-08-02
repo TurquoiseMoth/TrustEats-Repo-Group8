@@ -4,6 +4,9 @@ import { ROUTES } from "../constants";
 import Layout from "../components/layout/Layout";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import ConsumerDashboardLayout from "../components/layout/ConsumerDashboardLayout";
+import {
+  DeviceGate,
+} from "../components/layout/DeviceGate";
 import AdminLayout from "../components/admin/AdminLayout";
 import HomePage from "../pages/HomePage";
 import RegisterPage from "../pages/SignUpPage";
@@ -59,23 +62,23 @@ export function AppRoutes() {
       <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
       <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
       <Route path={ROUTES.CHECK_YOUR_EMAIL} element={<CheckYourEmailPage />} />
-      <Route path={ROUTES.PRODUCT_UPLOAD} element={<ProductUploadPage />} />
-      <Route path={ROUTES.VERIFY} element={<VerifyPage />} />
+      <Route path={ROUTES.PRODUCT_UPLOAD} element={<DeviceGate allow="tablet-desktop"><ProductUploadPage /></DeviceGate>} />
+      <Route path={ROUTES.VERIFY} element={<DeviceGate allow="mobile"><VerifyPage /></DeviceGate>} />
       <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmailPage />} />
       <Route path={ROUTES.ADMIN_LOGIN} element={<AdminSignInPage />} />
-      <Route path={ROUTES.MANUFACTURER_DASHBOARD} element={<ManufacturerDashboardPage />} />
-      <Route path={ROUTES.MANUFACTURER_NOTIFICATIONS} element={<ManufacturerNotificationPage />} />
-      <Route path={ROUTES.MANUFACTURER_PRODUCTS} element={<ProductListPage variant="manufacturer" />} />
-      <Route path={ROUTES.QR_CODE} element={<QrCodePage />} />
-      <Route path={ROUTES.RESULT} element={<ResultPage />} />
-      <Route path={ROUTES.SCAN_CONFIRM} element={<ScanConfirmPage />} />
-      <Route path={ROUTES.REPORTS} element={<ReportPage />} />
+      <Route path={ROUTES.MANUFACTURER_DASHBOARD} element={<DeviceGate allow="tablet-desktop"><ManufacturerDashboardPage /></DeviceGate>} />
+      <Route path={ROUTES.MANUFACTURER_NOTIFICATIONS} element={<DeviceGate allow="tablet-desktop"><ManufacturerNotificationPage /></DeviceGate>} />
+      <Route path={ROUTES.MANUFACTURER_PRODUCTS} element={<DeviceGate allow="tablet-desktop"><ProductListPage variant="manufacturer" /></DeviceGate>} />
+      <Route path={ROUTES.QR_CODE} element={<DeviceGate allow="tablet-desktop"><QrCodePage /></DeviceGate>} />
+      <Route path={ROUTES.RESULT} element={<DeviceGate allow="mobile"><ResultPage /></DeviceGate>} />
+      <Route path={ROUTES.SCAN_CONFIRM} element={<DeviceGate allow="mobile"><ScanConfirmPage /></DeviceGate>} />
+      <Route path={ROUTES.REPORTS} element={<DeviceGate allow="mobile"><ReportPage /></DeviceGate>} />
 
       {/* Legacy self-contained pages (own nav) */}
-      <Route path="/dashboard-mnf" element={<ManufacturerDashboardPage />} />
-      <Route path="/dashboard-mbl" element={<ManufacturerDashboardPage />} />
-      <Route path="/consumer-reports" element={<ConsumerReports />} />
-      <Route path="/promotions" element={<Promotions />} />
+      <Route path="/dashboard-mnf" element={<DeviceGate allow="tablet-desktop"><ManufacturerDashboardPage /></DeviceGate>} />
+      <Route path="/dashboard-mbl" element={<DeviceGate allow="tablet-desktop"><ManufacturerDashboardPage /></DeviceGate>} />
+      <Route path="/consumer-reports" element={<DeviceGate allow="mobile"><ConsumerReports /></DeviceGate>} />
+      <Route path="/promotions" element={<DeviceGate allow="mobile"><Promotions /></DeviceGate>} />
 
       {/* With consumer layout (top navbar) */}
       <Route element={<Layout />}>
@@ -84,7 +87,7 @@ export function AppRoutes() {
       </Route>
 
       {/* With consumer dashboard layout (dashboard navbar + bottom nav) */}
-      <Route element={<ConsumerDashboardLayout />}>
+      <Route element={<DeviceGate allow="mobile"><ConsumerDashboardLayout /></DeviceGate>}>
         <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
         <Route path={ROUTES.SCAN} element={<ScanPage />} />
         <Route path={ROUTES.HISTORY} element={<HistoryPage />} />
@@ -93,13 +96,13 @@ export function AppRoutes() {
       </Route>
 
       {/* With dashboard layout (sidebar / bottom nav) */}
-      <Route element={<DashboardLayout />}>
+      <Route element={<DeviceGate allow="mobile"><DashboardLayout /></DeviceGate>}>
         <Route path={ROUTES.PRODUCT_LIST} element={<ProductListPage />} />
         <Route path={ROUTES.ANALYTICS} element={<AnalyticsPage />} />
       </Route>
 
       {/* With admin layout (admin sidebar) */}
-      <Route element={<AdminLayout />}>
+      <Route element={<DeviceGate allow="tablet-desktop"><AdminLayout /></DeviceGate>}>
         <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboardPage />} />
         <Route path={ROUTES.ADMIN_ORGANIZATIONS} element={<AdminOrganizationsPage />} />
         <Route path={ROUTES.ADMIN_ORGANIZATION_DETAIL} element={<AdminOrganizationDetailPage />} />

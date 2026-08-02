@@ -2,23 +2,25 @@ import apiClient from "./api";
 import { shouldUseMock } from "./mockMode";
 import { mockAuthService } from "./mockAuth";
 import type { AuthResponse, LoginRequest, RegisterRequest, ApiResponse } from "../types";
+import {
+  clearAuthSession,
+  getStoredToken,
+  getStoredUser,
+  storeAuthSession,
+  storeRoleToken,
+  storeRoleUser,
+} from "./authStorage";
 
 // Auth service wraps the backend auth endpoints. It normalizes responses to
 // the AuthResponse type in src/types/auth.ts. The functions throw the
 // ApiError shape when the request fails (handled by apiClient interceptors).
 
 function storeAuth(data: AuthResponse) {
-  if (data.token) {
-    localStorage.setItem("auth_token", data.token);
-  }
-  if (data.manufacturer) {
-    localStorage.setItem("auth_user", JSON.stringify(data.manufacturer));
-  }
+  storeAuthSession(data.manufacturer, data.token);
 }
 
 function clearAuth() {
-  localStorage.removeItem("auth_token");
-  localStorage.removeItem("auth_user");
+  clearAuthSession();
 }
 
 export const authService = {
@@ -34,14 +36,41 @@ export const authService = {
     return result;
   },
 
+  loginAdmin: async (data: LoginRequest) => {
+    if (shouldUseMock()) return mockAuthService.login(data);
+    const res = await apiClient.post("/auth/login", data);
+    const payload = (res.data && res.data.data) ? res.data.data : res.data;
+    const manufacturer = (payload && (payload.manufacturer ?? payload.user)) ?? undefined;
+    const token = (payload && (payload.token ?? payload.accessToken ?? payload.access_token)) ?? undefined;
+
+    if (manufacturer?.role !== "admin") {
+      throw new Error("Please use an admin account to sign in here.");
+    }
+    if (!token) {
+      throw new Error("Admin login did not return an access token.");
+    }
+
+    storeRoleToken("admin", token);
+    storeRoleUser("admin", manufacturer);
+    return { manufacturer, token } satisfies AuthResponse;
+  },
+
   register: async (data: RegisterRequest) => {
     if (shouldUseMock()) return mockAuthService.register(data);
     const res = await apiClient.post("/auth/register", data);
     const payload = (res.data && res.data.data) ? res.data.data : res.data;
     const manufacturer = (payload && (payload.manufacturer ?? payload.user)) ?? undefined;
     const token = (payload && (payload.token ?? payload.accessToken ?? payload.access_token)) ?? undefined;
-    const result: AuthResponse = { manufacturer, token };
-    storeAuth(result);
+    const otp = (payload && typeof payload.otp === "string") ? payload.otp : undefined;
+    const userId = (payload && typeof payload.userId === "string") ? payload.userId : undefined;
+    const role = (payload && typeof payload.role === "string") ? payload.role as AuthResponse["role"] : undefined;
+    const result: AuthResponse = { manufacturer, token, otp, userId, role };
+    if (otp && import.meta.env.DEV) {
+      console.info(`[TrustEats OTP] ${data.email}: ${otp}`);
+    }
+    if (manufacturer || token) {
+      storeAuth(result);
+    }
     return result;
   },
 
@@ -70,12 +99,7 @@ export const authService = {
   // Convenience accessors for client-side state
   getStoredUser: () => {
     if (shouldUseMock()) return mockAuthService.getStoredUser();
-    try {
-      const raw = localStorage.getItem("auth_user");
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
+    return getStoredUser();
   },
 
   // Password reset
@@ -96,6 +120,16 @@ export const authService = {
     if (shouldUseMock()) return mockAuthService.verifyEmail(payload);
     const body = { email: payload.email, otp: payload.otp ?? payload.code };
     const res = await apiClient.post<ApiResponse<Record<string, unknown>>>("/auth/verify-email", body);
+    const responsePayload = res.data?.data ?? res.data;
+    const manufacturer =
+      responsePayload && "user" in responsePayload
+        ? (responsePayload.user as AuthResponse["manufacturer"])
+        : undefined;
+    const token =
+      responsePayload && "token" in responsePayload
+        ? (responsePayload.token as string)
+        : undefined;
+    storeAuth({ manufacturer, token });
     return res.data;
   },
 
@@ -107,11 +141,7 @@ export const authService = {
 
   getStoredToken: () => {
     if (shouldUseMock()) return mockAuthService.getStoredToken();
-    try {
-      return localStorage.getItem("auth_token");
-    } catch {
-      return null;
-    }
+    return getStoredToken();
   },
 };
 

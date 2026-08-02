@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { ROUTES } from "../constants";
 import { useAuth } from "../contexts/AuthContext";
 import { BackButton, PasswordInput, DemoAccountsHint } from "../components/ui";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import logo from "../assets/Logo.png";
+
+type UserRole = "consumer" | "manufacturer";
 
 function Field({
   label,
@@ -23,23 +25,40 @@ function Field({
 
 export default function SignUpPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { register } = useAuth();
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const initialRole =
+    new URLSearchParams(location.search).get("role") === "manufacturer"
+      ? "manufacturer"
+      : "consumer";
+
+  const [role, setRole] = useState<UserRole>(initialRole);
+
   const [form, setForm] = useState({
     fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  const handleSubmit = async (e: React.MouseEvent) => {
+  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setRole(e.target.value as UserRole);
+    setError("");
+  };
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setError("");
 
@@ -52,34 +71,53 @@ export default function SignUpPage() {
       setError("All fields are required.");
       return;
     }
+
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
+
     if (form.password.length < 8) {
       setError("Password must be at least 8 characters.");
       return;
     }
+
     if (!termsAgreed) {
       setError("You must agree to the Terms & Conditions.");
       return;
     }
 
     setIsSubmitting(true);
+
     try {
       const payload = {
-        fullName: form.fullName,
-        name: form.fullName,
-        email: form.email,
+        fullName: form.fullName.trim(),
+        name: form.fullName.trim(),
+        email: form.email.trim(),
         password: form.password,
         confirmPassword: form.confirmPassword,
-        role: "consumer" as const,
+        role,
         termsAccepted: termsAgreed,
       };
 
+      if (role === "manufacturer") {
+        navigate(ROUTES.MANUFACTURER_SIGNUP, {
+          replace: true,
+          state: { accountData: payload },
+        });
+        return;
+      }
 
-      await register(payload);
-      navigate(ROUTES.DASHBOARD);
+      const result = await register(payload);
+      const devOtp = result.otp;
+      if (devOtp) {
+        console.info(`[TrustEats OTP] ${payload.email}: ${devOtp}`);
+      }
+
+      navigate(ROUTES.VERIFY_EMAIL, {
+        replace: true,
+        state: { email: payload.email, role, otp: devOtp },
+      });
     } catch (err) {
       setError(
         (err as { message?: string })?.message ??
@@ -90,19 +128,29 @@ export default function SignUpPage() {
     }
   };
 
+  const buttonText = isSubmitting
+    ? role === "manufacturer"
+      ? "Proceeding…"
+      : "Creating account…"
+    : role === "manufacturer"
+      ? "Proceed"
+      : "Sign Up";
+
   return (
     <div style={styles.phone}>
       <div style={styles.backWrap}>
         <BackButton />
       </div>
+
       <img src="/assets/Deco.svg" alt="" style={styles.archImg} />
 
-      <div style={{ ...styles.logoWrap, ...(isDesktop ? { marginTop: "24px" } : {}) }}>
-        <img
-          src={logo}
-          alt="TrustEats"
-          className="h-8 w-auto"
-        />
+      <div
+        style={{
+          ...styles.logoWrap,
+          ...(isDesktop ? { marginTop: "24px" } : {}),
+        }}
+      >
+        <img src={logo} alt="TrustEats" className="h-8 w-auto" />
       </div>
 
       <div style={styles.content}>
@@ -115,15 +163,12 @@ export default function SignUpPage() {
         <div style={styles.form}>
           <Field label="Role">
             <select
-              defaultValue="consumer"
-              onChange={(e) => {
-                if (e.target.value === "manufacturer") {
-                  navigate(ROUTES.MANUFACTURER_SIGNUP, {
-                    state: { fullName: form.fullName, email: form.email },
-                  });
-                }
+              value={role}
+              onChange={handleRoleChange}
+              style={{
+                ...styles.input,
+                height: "44px",
               }}
-              style={{ ...styles.input, height: "44px" }}
               disabled={isSubmitting}
             >
               <option value="consumer">I'm a Consumer</option>
@@ -165,6 +210,7 @@ export default function SignUpPage() {
               disabled={isSubmitting}
             />
           </Field>
+
           <p style={styles.hint}>Not less than 8 characters</p>
 
           <Field label="Confirm Password">
@@ -186,11 +232,16 @@ export default function SignUpPage() {
               style={styles.checkbox}
               disabled={isSubmitting}
             />
+
             <span style={{ marginLeft: 8 }}>
               I agree to the{" "}
               <a
                 href="#"
-                style={{ color: "#3c7443", textDecoration: "underline" }}
+                style={{
+                  color: "#3c7443",
+                  textDecoration: "underline",
+                }}
+                onClick={(e) => e.stopPropagation()}
               >
                 Terms & Conditions
               </a>
@@ -198,11 +249,16 @@ export default function SignUpPage() {
           </label>
 
           <button
-            style={styles.btnPrimary}
+            type="button"
+            style={{
+              ...styles.btnPrimary,
+              opacity: isSubmitting ? 0.7 : 1,
+              cursor: isSubmitting ? "not-allowed" : "pointer",
+            }}
             onClick={handleSubmit}
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Creating account…" : "Sign Up"}
+            {buttonText}
           </button>
         </div>
       </div>
