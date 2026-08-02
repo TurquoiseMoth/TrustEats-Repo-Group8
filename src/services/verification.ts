@@ -4,6 +4,27 @@ import { shouldUseMock } from "./mockMode";
 import type { VerificationResult, VerificationRequest, ScanHistoryResponse, ApiResponse } from "../types";
 import { MOCK_VERIFICATIONS } from "../utils/mockData";
 
+type RawScanEvent = ScanHistoryResponse["events"][number] & {
+  result?: ScanHistoryResponse["events"][number]["status"];
+};
+
+function normalizeScanHistory(data: ScanHistoryResponse): ScanHistoryResponse {
+  return {
+    ...data,
+    events: (data.events ?? []).map((event) => {
+      const status = event.status ?? (event as RawScanEvent).result ?? "fake";
+      const product = event.productId;
+      return {
+        ...event,
+        status,
+        productName: event.productName ?? product?.name,
+        brand: event.brand ?? product?.brand,
+        imageUrl: event.imageUrl ?? product?.imageUrl,
+      };
+    }),
+  };
+}
+
 export const verificationService = {
   verifyCode: (code: string): Promise<VerificationResult> => {
     if (shouldUseMock()) return mockVerificationService.verifyCode(code);
@@ -29,7 +50,7 @@ export const verificationService = {
     if (params?.limit) query.push(`limit=${params.limit}`);
     const path = `/verify/history${query.length ? `?${query.join("&")}` : ""}`;
     const res = await apiClient.get<ApiResponse<ScanHistoryResponse>>(path);
-    return res.data.data!;
+    return normalizeScanHistory(res.data.data!);
   },
 };
 

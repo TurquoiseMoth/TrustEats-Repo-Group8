@@ -32,6 +32,9 @@ export interface RegisterRequest {
 export interface AuthResponse {
   manufacturer?: User;
   token?: string;
+  otp?: string;
+  userId?: string;
+  role?: "consumer" | "manufacturer" | "admin";
 }
 
 export interface SignUpFormData {

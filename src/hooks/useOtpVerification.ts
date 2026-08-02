@@ -24,6 +24,8 @@ interface UseOtpVerificationOptions {
     | string;
   /** Called when the person taps "Resend". */
   onResend?: () => Promise<void> | void;
+  /** Optional dev/demo code to prefill into the digit boxes. */
+  initialCode?: string;
 }
 
 /**
@@ -39,12 +41,14 @@ export function useOtpVerification({
   resendCooldownSeconds = 119,
   onSubmit,
   onResend,
+  initialCode,
 }: UseOtpVerificationOptions) {
   const [digits, setDigits] = useState<string[]>(() => Array(length).fill(""));
   const [status, setStatus] = useState<VerificationStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(resendCooldownSeconds);
   const [isResending, setIsResending] = useState(false);
+  const [prefilledCode, setPrefilledCode] = useState<string | null>(null);
 
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
@@ -65,6 +69,20 @@ export function useOtpVerification({
   useEffect(() => {
     inputRefs.current[0]?.focus();
   }, []);
+
+  useEffect(() => {
+    const normalized = initialCode?.replace(/\D/g, "").slice(0, length);
+    if (!normalized) return;
+
+    const next = Array(length).fill("");
+    for (let i = 0; i < normalized.length; i++) {
+      next[i] = normalized[i];
+    }
+    setDigits(next);
+    setPrefilledCode(normalized.length === length ? normalized : null);
+    setStatus("idle");
+    setErrorMessage(null);
+  }, [initialCode, length]);
 
   const focusBox = (index: number) => {
     inputRefs.current[index]?.focus();
@@ -146,6 +164,10 @@ export function useOtpVerification({
     (index: number, rawValue: string) => {
       const value = rawValue.replace(/\D/g, "").slice(-1);
 
+      if (prefilledCode) {
+        setPrefilledCode(null);
+      }
+
       if (status === "error") {
         setStatus("idle");
         setErrorMessage(null);
@@ -162,7 +184,7 @@ export function useOtpVerification({
         submit(newCode);
       }
     },
-    [length, status, digits, submit]
+    [length, status, digits, submit, prefilledCode]
   );
 
   const handleKeyDown = useCallback(
@@ -199,6 +221,7 @@ export function useOtpVerification({
         next[i] = pasted[i];
       }
       setDigits(next);
+      setPrefilledCode(null);
 
       const nextFocusIndex = Math.min(pasted.length, length - 1);
       focusBox(nextFocusIndex);
@@ -208,6 +231,7 @@ export function useOtpVerification({
 
   const reset = useCallback(() => {
     setDigits(Array(length).fill(""));
+    setPrefilledCode(null);
     setStatus("idle");
     setErrorMessage(null);
     focusBox(0);
@@ -216,10 +240,11 @@ export function useOtpVerification({
   // Auto-submit the moment the last box is filled
   useEffect(() => {
     if (isComplete && status === "idle") {
+      if (prefilledCode && code === prefilledCode) return;
       const timeoutId = setTimeout(() => submit(code), 0);
       return () => clearTimeout(timeoutId);
     }
-  }, [isComplete, status, code, submit]);
+  }, [isComplete, status, code, submit, prefilledCode]);
 
   const resend = useCallback(async () => {
     if (!canResend) return;
@@ -239,6 +264,14 @@ export function useOtpVerification({
     return `${m}:${s.toString().padStart(2, "0")}`;
   }, [secondsLeft]);
 
+  const submitCode = useCallback(() => {
+    if (code.length !== length || status === "submitting" || status === "success") {
+      return;
+    }
+    setPrefilledCode(null);
+    submit(code);
+  }, [code, length, status, submit]);
+
   return {
     digits,
     status,
@@ -253,5 +286,6 @@ export function useOtpVerification({
     handlePaste,
     resend,
     reset,
+    submitCode,
   };
 }
