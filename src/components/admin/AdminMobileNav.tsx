@@ -33,7 +33,7 @@ function AdminMobileNav() {
   const handleLogout = async () => {
     await authService.logout();
     setIsOpen(false);
-    navigate(ROUTES.DASHBOARD, { replace: true });
+    navigate(ROUTES.HOME, { replace: true });
   };
 
   return (

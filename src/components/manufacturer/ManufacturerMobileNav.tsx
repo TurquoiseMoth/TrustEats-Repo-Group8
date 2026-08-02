@@ -21,7 +21,7 @@ export function ManufacturerMobileNav() {
 
   const handleLogout = async () => {
     await authService.logout();
-    navigate(ROUTES.DASHBOARD, { replace: true });
+    navigate(ROUTES.HOME, { replace: true });
   };
 
   return (
