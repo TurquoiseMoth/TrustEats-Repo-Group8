@@ -394,10 +394,12 @@ const desktopStyles: Record<string, React.CSSProperties> = {
   },
   archImg: {
     width: "100%",
-    maxWidth: "720px",
     height: "auto",
+    maxHeight: "180px",
+    objectFit: "cover",
     display: "block",
     marginTop: "-40px",
+    flexShrink: 0,
   },
   logoWrap: {
     display: 'flex',

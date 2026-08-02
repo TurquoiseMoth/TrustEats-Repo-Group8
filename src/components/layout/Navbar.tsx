@@ -81,16 +81,16 @@ function Navbar() {
         </div>
 
         {/* Right: Auth links */}
-        <div className="hidden md:flex items-center gap-1 rounded-full border border-primary px-1.5 py-1">
+        <div className="hidden md:flex items-center gap-1 rounded-[1.25rem] border border-[#3c7443] px-2 py-1">
           <Link
             to={ROUTES.LOGIN}
-            className="rounded-full px-4 py-1.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary/5"
+            className="rounded-lg bg-[#f0f8ff] px-4 py-1.5 text-sm font-medium text-[#3c7443] transition-colors hover:bg-[#3c7443] hover:text-white"
           >
             Log In
           </Link>
           <Link
             to={ROUTES.REGISTER}
-            className="rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-primary/90"
+            className="rounded-lg border border-[#3c7443] bg-[#f0f8ff] px-4 py-1.5 text-sm font-semibold text-[#3c7443] transition-colors hover:bg-[#3c7443] hover:text-white"
           >
             Sign Up
           </Link>
@@ -127,14 +127,14 @@ function Navbar() {
             <hr className="my-2 border-gray-100" />
             <Link
               to={ROUTES.LOGIN}
-              className="rounded-lg px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-gray-50"
+              className="rounded-lg border border-[#3c7443] bg-[#f0f8ff] px-4 py-2.5 text-sm font-medium text-[#3c7443] transition-colors hover:bg-[#3c7443] hover:text-white"
               onClick={() => setIsMenuOpen(false)}
             >
               Log In
             </Link>
             <Link
               to={ROUTES.REGISTER}
-              className="rounded-lg bg-primary px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-primary/90"
+              className="rounded-lg border border-[#3c7443] bg-[#f0f8ff] px-4 py-2.5 text-center text-sm font-semibold text-[#3c7443] transition-colors hover:bg-[#3c7443] hover:text-white"
               onClick={() => setIsMenuOpen(false)}
             >
               Sign Up
