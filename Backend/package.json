@@ -10,6 +10,7 @@
     "seed": "ts-node-dev --transpile-only --exit-child src/seed/seed.ts"
   },
   "dependencies": {
+    "@types/node": "^26.1.2",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",
@@ -31,10 +32,9 @@
     "redis": "^6.1.0",
     "resend": "^6.18.1",
     "sanitize-html": "^2.17.6",
+    "typescript": "^5.9.3",
     "uuid": "^14.0.1",
-    "zod": "^4.4.3",
-    "@types/node": "^26.1.2",
-    "typescript": "^5.9.3"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
