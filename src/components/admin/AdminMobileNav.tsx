@@ -8,7 +8,7 @@ import {
   FileWarning,
   Megaphone,
   Bell,
-  User,
+  LogOut,
 } from "lucide-react";
 import { ROUTES } from "../../constants";
 import { DEFAULT_UNREAD_COUNT } from "../../constants/notifications";
@@ -17,12 +17,12 @@ import { authService } from "../../services/auth";
 import logo from "../../assets/images/Logo.png";
 
 const navItems = [
-  { label: "Dashboard (Admin)", href: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
-  { label: "Organizations (Admin)", href: ROUTES.ADMIN_ORGANIZATIONS, icon: Building2 },
-  { label: "Applications (Admin)", href: ROUTES.ADMIN_APPLICATIONS, icon: ClipboardList },
-  { label: "Consumer Reports (Admin)", href: ROUTES.ADMIN_CONSUMER_REPORTS, icon: FileWarning },
-  { label: "Promotion & Tips (Admin)", href: ROUTES.ADMIN_PROMOTION_TIPS, icon: Megaphone },
-  { label: "Notification (Admin)", href: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
+  { label: "Dashboard", href: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
+  { label: "Organizations", href: ROUTES.ADMIN_ORGANIZATIONS, icon: Building2 },
+  { label: "Applications", href: ROUTES.ADMIN_APPLICATIONS, icon: ClipboardList },
+  { label: "Consumer Reports", href: ROUTES.ADMIN_CONSUMER_REPORTS, icon: FileWarning },
+  { label: "Promotion & Tips", href: ROUTES.ADMIN_PROMOTION_TIPS, icon: Megaphone },
+  { label: "Notification", href: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
 ];
 
 function AdminMobileNav() {
@@ -90,8 +90,8 @@ function AdminMobileNav() {
             onClick={handleLogout}
             className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-gray-700"
           >
-            <User size={18} aria-hidden="true" />
-            Admin
+            <LogOut size={18} aria-hidden="true" />
+            Logout
           </button>
         </nav>
       )}

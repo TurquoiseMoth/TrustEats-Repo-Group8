@@ -8,6 +8,7 @@ import {
   getStoredUser,
   storeAuthSession,
   storeRoleToken,
+  storeRoleUser,
 } from "./authStorage";
 
 // Auth service wraps the backend auth endpoints. It normalizes responses to
@@ -50,6 +51,7 @@ export const authService = {
     }
 
     storeRoleToken("admin", token);
+    storeRoleUser("admin", manufacturer);
     return { manufacturer, token } satisfies AuthResponse;
   },
 
