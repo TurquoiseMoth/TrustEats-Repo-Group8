@@ -12,7 +12,7 @@ import {
 } from "./authStorage";
 
 // Default Render deployment for the TrustEats backend.
-const DEFAULT_API_BASE_URL = "https://trusteats-repo-group8.onrender.com/api/v1";
+const DEFAULT_API_BASE_URL = "https://trusteatslatest.onrender.com/api/v1";
 
 function normalizeApiBaseUrl(url: string): string {
   const trimmed = url.replace(/\/$/, "");
