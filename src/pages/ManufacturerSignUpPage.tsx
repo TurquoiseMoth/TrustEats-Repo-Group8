@@ -416,7 +416,6 @@ const desktopStyles: Record<string, React.CSSProperties> = {
     flexDirection: "column",
     flex: 1,
     width: "100%",
-    maxWidth: "640px",
   },
   heading: {
     fontSize: "30px",

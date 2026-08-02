@@ -74,7 +74,7 @@ function HomePage() {
                     {/* Left column — text content */}
                     <div className="flex min-w-0 flex-1 flex-col">
                         <div className="flex items-start gap-4 md:block">
-                            <div className="ml-2 flex min-h-[240px] w-[210px] shrink-0 flex-col md:ml-0 md:h-auto md:w-auto md:min-w-0">
+                            <div className="ml-4 flex min-h-[240px] w-[210px] shrink-0 flex-col md:ml-0 md:h-auto md:w-auto md:min-w-0">
                                 <h1 className="text-4xl font-bold leading-[1.1] text-text-main sm:text-[42px] md:text-[46px] lg:text-[52px]">
                                     Verify Every Product.<br />
                                     <span className="text-primary">Trust Every Bite.</span>
@@ -85,11 +85,21 @@ function HomePage() {
                                 </p>
                             </div>
 
-                            <div className="flex h-[158px] w-[190px] shrink-0 items-center justify-center md:hidden">
+                            <div className="relative flex h-[158px] w-[190px] shrink-0 items-center justify-center md:hidden">
+                                <svg
+                                    viewBox="0 0 200 200"
+                                    aria-hidden="true"
+                                    className="absolute left-1/2 top-1/2 h-56 w-48 -translate-x-1/2 -translate-y-1/2 sm:h-64 sm:w-56"
+                                >
+                                    <path
+                                        fill="rgba(4,131,64,0.20)"
+                                        d="M143.7 39.3c11.4 8.4 18.2 22.1 23 36.1 4.8 14 7.6 28.4 4.8 42.1-2.8 13.7-11.2 26.7-22.7 36.1-11.5 9.4-26.1 15.2-40.9 16.1-14.8.9-29.8-3.1-42.6-11.5-12.8-8.4-23.4-21.2-28.7-35.8-5.3-14.6-5.3-31 0.3-44.9 5.6-13.9 16.7-25.3 29-33.6 12.3-8.3 25.8-13.5 39-14.8 13.2-1.3 27.4 1.7 38.8 10.2z"
+                                    />
+                                </svg>
                                 <img
                                     src="/assets/ketchup-bottle.png"
                                     alt="TrustEats verifying a food product"
-                                    className="h-full w-full object-contain"
+                                    className="relative h-full w-full object-contain"
                                 />
                             </div>
                         </div>
@@ -109,7 +119,7 @@ function HomePage() {
                         </div>
 
                         {/* Feature cards */}
-                        <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-4 md:mt-10 md:gap-5">
+                        <div className="mx-4 mt-8 grid grid-cols-3 gap-3 sm:gap-4 md:mx-0 md:mt-10 md:gap-5">
                             {features.map((feature) => (
                                 <div
                                     key={feature.label}
@@ -125,18 +135,30 @@ function HomePage() {
                     </div>
 
                     {/* Right column — product image */}
-                    <div className="hidden w-full shrink-0 items-center justify-center sm:w-3/5 md:flex md:w-2/5 md:justify-end">
-                        <img
-                            src="/assets/ketchup-bottle.png"
-                            alt="TrustEats verifying a food product"
-                            className="w-full max-w-[280px] object-contain md:max-w-[400px] lg:max-w-[500px]"
-                        />
+                    <div className="relative hidden w-full shrink-0 items-center justify-center sm:w-3/5 md:flex md:w-2/5 md:justify-end">
+                        <div className="relative">
+                            <svg
+                                viewBox="0 0 200 200"
+                                aria-hidden="true"
+                                className="absolute left-1/2 top-1/2 h-[440px] w-[400px] -translate-x-1/2 -translate-y-1/2 md:h-[500px] md:w-[440px] lg:h-[600px] lg:w-[540px] xl:h-[640px] xl:w-[580px]"
+                            >
+                                <path
+                                    fill="rgba(4,131,64,0.20)"
+                                    d="M143.7 39.3c11.4 8.4 18.2 22.1 23 36.1 4.8 14 7.6 28.4 4.8 42.1-2.8 13.7-11.2 26.7-22.7 36.1-11.5 9.4-26.1 15.2-40.9 16.1-14.8.9-29.8-3.1-42.6-11.5-12.8-8.4-23.4-21.2-28.7-35.8-5.3-14.6-5.3-31 0.3-44.9 5.6-13.9 16.7-25.3 29-33.6 12.3-8.3 25.8-13.5 39-14.8 13.2-1.3 27.4 1.7 38.8 10.2z"
+                                />
+                            </svg>
+                            <img
+                                src="/assets/ketchup-bottle.png"
+                                alt="TrustEats verifying a food product"
+                                className="relative w-[280px] md:w-[360px] lg:w-[460px] xl:w-[500px]"
+                            />
+                        </div>
                     </div>
                 </div>
             </header>
 
             {/* ── How TrustEats Works ──────────────────── */}
-            <div className="relative mx-auto mt-16 w-full max-w-7xl px-6 md:mt-24 lg:px-10">
+            <div className="relative mx-auto mt-8 w-full max-w-7xl px-6 md:mt-24 lg:px-10">
                 <div className="absolute left-1/2 top-0 z-20 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 bg-background px-5">
                     <span className="h-0.5 w-8 bg-gray-400" />
                     <h2 className="whitespace-nowrap text-[22px] font-bold text-text-main md:text-[26px]">
