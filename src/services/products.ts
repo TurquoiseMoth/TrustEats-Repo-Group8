@@ -2,7 +2,8 @@ import apiClient, { getApiBaseUrl } from "./api";
 import axios from "axios";
 import { shouldUseMock } from "./mockMode";
 import { mockProductService } from "./mockProducts";
-import type { Product, Batch, CreateBatchPayload, ApiResponse } from "../types";
+import type { Product, Batch, CreateBatchPayload, GeneratedCode, ApiResponse } from "../types";
+import { getRoleToken } from "./authStorage";
 
 function buildFormData(data: Record<string, unknown>): FormData {
   const fd = new FormData();
@@ -22,8 +23,16 @@ function buildFormData(data: Record<string, unknown>): FormData {
 }
 
 function authHeaders() {
-  const token = localStorage.getItem("auth_token");
+  const token = getRoleToken("manufacturer");
   return token ? { Authorization: `Bearer ${token}` } : undefined;
+}
+
+function requireManufacturerAuthHeaders() {
+  const headers = authHeaders();
+  if (!headers) {
+    throw new Error("Please log in as a manufacturer before uploading products.");
+  }
+  return headers;
 }
 
 export const productService = {
@@ -36,7 +45,7 @@ export const productService = {
       return axios
         .post(`${base.replace(/\/$/, "")}/products`, data, {
           withCredentials: true,
-          headers: authHeaders(),
+          headers: requireManufacturerAuthHeaders(),
         })
         .then((res) => (res.data && res.data.data) ? res.data.data : res.data);
     }
@@ -64,7 +73,7 @@ export const productService = {
     return axios
       .patch(`${base.replace(/\/$/, "")}/products/${id}`, fd, {
         withCredentials: true,
-        headers: authHeaders(),
+        headers: requireManufacturerAuthHeaders(),
       })
       .then((res) => (res.data && res.data.data && res.data.data.product) ? res.data.data.product : res.data);
   },
@@ -72,7 +81,7 @@ export const productService = {
 
   createBatch: (data: CreateBatchPayload) => {
     if (shouldUseMock()) return mockProductService.createBatch(data);
-    return apiClient.post<ApiResponse<{ batch: Batch; generatedCodes: { code: string; qrCodeUrl: string }[] }>>("/batches", data)
+    return apiClient.post<ApiResponse<{ batch: Batch; generatedCodes?: GeneratedCode[] }>>("/batches", data)
       .then((res) => res.data.data!);
   },
 

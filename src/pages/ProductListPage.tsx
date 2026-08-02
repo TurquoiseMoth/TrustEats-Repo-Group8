@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
-import { ProductList, QrPreviewModal, SelectProductsForQrModal } from "../components/ProductList";
+import { ProductList } from "../components/ProductList";
 import DashboardPageHeader from "../components/layout/DashboardPageHeader";
 import { ManufacturerSidebar } from "../components/manufacturer/ManufacturerSidebar";
 import { ManufacturerMobileNav } from "../components/manufacturer/ManufacturerMobileNav";
@@ -11,13 +11,14 @@ import type { Product as ApiProduct } from "../types/product";
 import type { Product as ListProduct } from "../types/product.types";
 import { Spinner } from "../components/ui";
 import { useMediaQuery } from "../hooks/useMediaQuery";
+import { ROUTES } from "../constants";
 
 function toListProduct(p: ApiProduct): ListProduct {
   return {
     id: p._id ?? p.id ?? "",
     name: p.name,
     imageUrl: p.imageUrl ?? "",
-    nafdacRegNo: "N/A",
+    nafdacRegNo: p.nafdacNumber ?? "N/A",
     status: "active",
     qrGenerated: p.qrGenerated ?? false,
   };
@@ -32,9 +33,6 @@ export default function ProductListPage({ variant = "consumer" }: ProductListPag
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const navigate = useNavigate();
   const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
-  const [qrProduct, setQrProduct] = useState<ListProduct | null>(null);
-  const [qrSelectProducts, setQrSelectProducts] = useState<ListProduct[]>([]);
-  const [generatedIds, setGeneratedIds] = useState<Set<string>>(new Set());
   const [announcement, setAnnouncement] = useState("");
 
   const { data, isLoading, error } = useQuery({
@@ -45,36 +43,10 @@ export default function ProductListPage({ variant = "consumer" }: ProductListPag
   });
 
   const sourceProducts = data ? data.products.map(toListProduct) : [];
-  const products = sourceProducts
-    .filter((p) => !removedIds.has(p.id))
-    .map((p) => (generatedIds.has(p.id) ? { ...p, qrGenerated: true } : p));
-
-  const pendingQrProducts = products.filter((p) => !p.qrGenerated);
+  const products = sourceProducts.filter((p) => !removedIds.has(p.id));
 
   const handleGenerateQr = async (product: ListProduct) => {
-    await new Promise((r) => setTimeout(r, 700));
-    if (product.qrGenerated) {
-      setQrProduct(product);
-      return;
-    }
-    // Product exists but no QR code yet -> show the select-all popup
-    // where the product card/image would be.
-    setQrSelectProducts(pendingQrProducts.length > 0 ? pendingQrProducts : [product]);
-  };
-
-  const handleGenerateSelected = async (selected: ListProduct[]) => {
-    setGeneratedIds((prev) => {
-      const next = new Set(prev);
-      selected.forEach((p) => next.add(p.id));
-      return next;
-    });
-    setAnnouncement(
-      `QR code generated for ${selected.length} product${selected.length === 1 ? "" : "s"}`,
-    );
-    setQrSelectProducts([]);
-    if (selected.length === 1) {
-      setQrProduct(selected[0]);
-    }
+    navigate(`${ROUTES.QR_CODE}?productId=${encodeURIComponent(product.id)}`);
   };
 
   const handleRemove = async (product: ListProduct) => {
@@ -99,19 +71,6 @@ export default function ProductListPage({ variant = "consumer" }: ProductListPag
     </div>
   );
 
-  const modals = (
-    <>
-      {qrSelectProducts.length > 0 && (
-        <SelectProductsForQrModal
-          products={qrSelectProducts}
-          onClose={() => setQrSelectProducts([])}
-          onGenerate={handleGenerateSelected}
-        />
-      )}
-      {qrProduct && <QrPreviewModal product={qrProduct} onClose={() => setQrProduct(null)} />}
-    </>
-  );
-
   if (variant === "manufacturer") {
     if (!isDesktop) {
       return (
@@ -130,7 +89,6 @@ export default function ProductListPage({ variant = "consumer" }: ProductListPag
           ) : (
             listContent
           )}
-          {modals}
           <ManufacturerMobileNav />
         </div>
       );
@@ -152,7 +110,6 @@ export default function ProductListPage({ variant = "consumer" }: ProductListPag
             listContent
           )}
         </div>
-        {modals}
       </div>
     );
   }
@@ -167,7 +124,6 @@ export default function ProductListPage({ variant = "consumer" }: ProductListPag
       ) : (
         listContent
       )}
-      {modals}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import axios from "axios";
 import { shouldUseMock } from "./mockMode";
 import { mockReportsService } from "./mockReports";
 import type { ApiResponse } from "../types";
+import { getStoredToken } from "./authStorage";
 
 export interface Report {
   id: string;
@@ -16,7 +17,7 @@ export interface Report {
 }
 
 function authHeaders() {
-  const token = localStorage.getItem("auth_token");
+  const token = getStoredToken();
   return token ? { Authorization: `Bearer ${token}` } : undefined;
 }
 
