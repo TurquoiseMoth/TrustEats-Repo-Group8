@@ -78,7 +78,7 @@ export default function AdminApplicationDetailPage() {
         <h1 className="text-2xl font-bold text-white">Admin Application Detail</h1>
       </div>
 
-      <div className="mx-auto max-w-4xl px-6 py-6">
+      <div className="mx-auto max-w-[1500px] px-6 py-6 2xl:px-12">
         {isLoading && (
           <p className="rounded-xl bg-white p-6 text-sm text-slate-500">
             Loading application details...
@@ -93,7 +93,7 @@ export default function AdminApplicationDetailPage() {
 
         {detail && (
           <>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
               <InfoField label="Company Name" value={detail.companyName} />
               <InfoField
                 label="NAPAMS Registered Email"
@@ -135,7 +135,7 @@ export default function AdminApplicationDetailPage() {
               </button>
             </div>
 
-            <div className="mt-6 flex gap-3">
+            <div className="mt-6 flex max-w-3xl gap-3">
               <button
                 onClick={() => approveMutation.mutate()}
                 disabled={isSubmitting || detail.status === "approved"}

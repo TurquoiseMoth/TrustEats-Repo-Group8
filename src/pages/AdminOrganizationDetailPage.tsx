@@ -19,7 +19,7 @@ export default function AdminOrganizationDetailPage() {
         <h1 className="text-2xl font-bold text-white">Organization Details</h1>
       </div>
 
-      <div className="px-5 md:px-8 py-6 max-w-[1400px] mx-auto">
+      <div className="mx-auto max-w-[1680px] px-5 py-6 md:px-8 2xl:px-12">
         <div className="rounded-2xl bg-white p-6 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
           <div className="flex items-center gap-3 mb-5">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">

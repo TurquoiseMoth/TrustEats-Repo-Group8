@@ -38,19 +38,19 @@ export default function ApplicationCard({
   const { id, companyName, appId, status, date, time, isNew } = application;
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
-      <div className="flex items-start justify-between">
-        <div className="flex gap-3">
+    <div className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
+      <div className="flex min-w-0 items-start justify-between gap-3">
+        <div className="flex min-w-0 gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
             <FileText className="h-5 w-5 text-primary" />
           </div>
-          <div>
-            <p className="text-sm font-semibold text-slate-800">
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-slate-800">
               {companyName}
               <span className="ml-1 font-normal text-slate-400">· {appId}</span>
             </p>
             <p className="mt-0.5 text-xs text-slate-500">{statusLabel[status]}</p>
-            <div className="mt-1.5 flex items-center gap-3 text-xs text-slate-500">
+            <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
               <span className="flex items-center gap-1">
                 <Calendar className="h-3.5 w-3.5" />
                 {date}
@@ -74,14 +74,14 @@ export default function ApplicationCard({
         ) : (
           <button
             onClick={() => onReviewDetails(id)}
-            className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="shrink-0 rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             Review Details
           </button>
         )}
       </div>
 
-      <div className="mt-4 flex gap-3">
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {isNew && (
           <button
             onClick={() => onReviewDetails(id)}

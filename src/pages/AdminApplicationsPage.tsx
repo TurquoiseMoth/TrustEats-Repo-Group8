@@ -104,8 +104,8 @@ export default function AdminApplicationsPage() {
         <h1 className="text-2xl font-bold text-white">Admin Applications</h1>
       </div>
 
-      <div className="mx-auto max-w-4xl px-6 py-6">
-        <div className="mb-6 flex gap-1 rounded-xl bg-slate-100 p-1.5">
+      <div className="mx-auto max-w-[1680px] px-6 py-6 2xl:px-12">
+        <div className="mb-6 flex max-w-4xl gap-1 rounded-xl bg-slate-100 p-1.5">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -121,7 +121,7 @@ export default function AdminApplicationsPage() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-3">
           {isLoading ? (
             <p className="py-12 text-center text-sm text-slate-500">
               Loading applications...

@@ -63,8 +63,8 @@ export default function AdminDashboardPage() {
         <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
       </div>
 
-      <div className="px-5 md:px-8 py-6 max-w-[1400px] mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6">
+      <div className="mx-auto max-w-[1680px] px-5 py-6 md:px-8 2xl:px-12">
+        <div className="mb-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
             label="Company/Brand"
             value={stats.totalCompanies}

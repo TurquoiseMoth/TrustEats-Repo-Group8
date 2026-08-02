@@ -125,23 +125,24 @@ const activities: ActivityItem[] = [
 
         {/* ================= Hero ================= */}
 
-        <section className="m-8 bg-[#3C744333] rounded-[12px] pt-[38px] pb-[38px] px-8 flex justify-between relative h-[429px] text-text-main">
+        <section className="mx-4 my-6 overflow-hidden rounded-[12px] bg-[#3C744333] px-5 py-6 text-text-main sm:mx-6 lg:m-8 lg:px-8 lg:py-8">
 
-          <div className="max-w-[55%] pl-[18px]">
+          <div className="grid min-w-0 grid-cols-[minmax(0,0.95fr)_minmax(180px,0.75fr)] items-center gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.9fr)]">
+          <div className="min-w-0 lg:max-w-[480px] lg:pl-2">
 
-            <h1 className="text-[30px] text-[#1c2e24] leading-[1.2] mb-3 font-bold">
+            <h1 className="mb-3 text-[clamp(1.55rem,3vw,2.15rem)] font-bold leading-[1.2] text-[#1c2e24]">
               Register Product
               <br />
               Generate QR Code
             </h1>
 
-            <p className="text-[13px] text-[#4b5e53] mb-5 leading-[1.4]">
+            <p className="mb-5 max-w-[34rem] text-[13px] leading-[1.5] text-[#4b5e53]">
               Register your product by verifying your
               NAFDAC Registration Number and generate
               a unique QR code.
             </p>
 
-            <div className="flex flex-col gap-3 mb-6">
+            <div className="mb-6 flex flex-col gap-3">
 
               <div>
 
@@ -178,7 +179,7 @@ const activities: ActivityItem[] = [
 
             </div>
 
-            <Link to={ROUTES.PRODUCT_UPLOAD} className="bg-primary text-white border-none px-9 py-3 rounded-lg font-semibold text-sm cursor-pointer transition-colors duration-200 w-full inline-block text-center hover:bg-[#325d3e]">
+            <Link to={ROUTES.PRODUCT_UPLOAD} className="inline-flex min-h-11 w-full max-w-[16.5rem] items-center justify-center rounded-lg border-none bg-primary px-5 py-3 text-center text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#325d3e] lg:max-w-[18rem]">
               Register Product
             </Link>
 
@@ -186,24 +187,29 @@ const activities: ActivityItem[] = [
 
           {/* Placeholder Image */}
 
-<div className="flex-1 flex items-end justify-end relative h-full">
-      <img src={phone} alt="Phone illustration" className="absolute left-2 -bottom-[38px] h-[430px] w-auto object-contain pointer-events-none" />
-    </div>
+          <div className="relative flex min-h-[240px] min-w-0 items-end justify-center lg:min-h-[330px]">
+            <img
+              src={phone}
+              alt="Phone illustration"
+              className="h-auto max-h-[280px] w-full max-w-[320px] object-contain object-bottom lg:max-h-[380px] lg:max-w-[440px]"
+            />
+          </div>
+          </div>
 
         </section>
 
         {/* ================= Stats ================= */}
 
-        <section className="grid grid-cols-3 gap-5 mx-8 mb-8 px-8">
+        <section className="mx-4 mb-8 grid grid-cols-1 gap-4 sm:mx-6 sm:grid-cols-3 lg:mx-8">
 
           {stats.map((item, index) => (
 
             <div
               key={index}
-              className="bg-[#d6e5dd] px-5 py-4 rounded-[10px] text-center"
+              className="min-w-0 rounded-[10px] bg-[#d6e5dd] px-4 py-4 text-center"
             >
 
-              <small className="block text-[13px] text-text-main mb-[6px] font-semibold">{item.title}</small>
+              <small className="mb-[6px] block text-[13px] font-semibold leading-tight text-text-main">{item.title}</small>
 
               <h2 className="text-[22px] text-primary font-bold">{item.value}</h2>
 
@@ -216,21 +222,21 @@ const activities: ActivityItem[] = [
 
                 {/* ================= Quick Access ================= */}
 
-        <section className="mx-8 mb-8 px-8">
+        <section className="mx-4 mb-8 sm:mx-6 lg:mx-8">
 
           <h3 className="text-[16px] text-[#122118] mb-3 font-bold">
             Quick Access
           </h3>
 
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
 
-            <Link to={ROUTES.PRODUCT_UPLOAD} className="bg-primary text-white px-6 py-[18px] rounded-[10px] flex items-center gap-4 cursor-pointer transition-all duration-200 hover:bg-[#325d3e] hover:-translate-y-[2px]">
+            <Link to={ROUTES.PRODUCT_UPLOAD} className="flex min-w-0 cursor-pointer items-center gap-4 rounded-[10px] bg-primary px-5 py-[18px] text-white transition-all duration-200 hover:-translate-y-[2px] hover:bg-[#325d3e]">
 
               <div className="text-[32px] flex items-center">
                 {<HiOutlinePlusCircle />}
               </div>
 
-              <div>
+              <div className="min-w-0">
 
                 <h4 className="text-[15px] mb-1 font-semibold">Add New Product</h4>
 
@@ -243,13 +249,13 @@ const activities: ActivityItem[] = [
 
             </Link>
 
-            <Link to={ROUTES.QR_CODE} className="bg-primary text-white px-6 py-[18px] rounded-[10px] flex items-center gap-4 cursor-pointer transition-all duration-200 hover:bg-[#325d3e] hover:-translate-y-[2px]">
+            <Link to={ROUTES.QR_CODE} className="flex min-w-0 cursor-pointer items-center gap-4 rounded-[10px] bg-primary px-5 py-[18px] text-white transition-all duration-200 hover:-translate-y-[2px] hover:bg-[#325d3e]">
 
               <div className="text-[32px] flex items-center">
                 <HiOutlineQrCode />
               </div>
 
-              <div>
+              <div className="min-w-0">
 
                 <h4 className="text-[15px] mb-1 font-semibold">Generate QR Code</h4>
 
@@ -268,15 +274,15 @@ const activities: ActivityItem[] = [
 
         {/* ================= Recent Activities ================= */}
 
-        <section className="mx-8 mb-8 bg-white rounded-[12px] pt-6 pb-6 px-8">
-  <div className="flex justify-between items-center mb-4">
+        <section className="mx-4 mb-8 rounded-[12px] bg-white px-4 py-6 sm:mx-6 sm:px-6 lg:mx-8 lg:px-8">
+  <div className="mb-4 flex items-center justify-between">
     <h3 className="text-[16px] text-[#122118] font-bold">Recent Activities</h3>
   </div>
 
   <div className="flex flex-col gap-3">
     {activities.map((activity, index) => (
-      <div key={index} className="bg-[#e5ece8] rounded-lg px-4 py-3 flex justify-between items-center">
-        <div className="flex items-center gap-3">
+      <div key={index} className="flex min-w-0 flex-col gap-3 rounded-lg bg-[#e5ece8] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 items-center gap-3">
           
           {/* Render image if present, otherwise render the icon */}
           <div className="w-10 h-[38px] text-[24px] text-[#2b4536] rounded-[6px] flex items-center justify-center overflow-hidden shrink-0">
@@ -287,13 +293,13 @@ const activities: ActivityItem[] = [
             )}
           </div>
 
-          <div>
-            <h4 className="text-[13px] text-[#1a2a21] mb-[2px]">{activity.title}</h4>
-            <p className="text-[11px] text-[#62776a]">{activity.subtitle}</p>
+          <div className="min-w-0">
+            <h4 className="mb-[2px] truncate text-[13px] text-[#1a2a21]">{activity.title}</h4>
+            <p className="truncate text-[11px] text-[#62776a]">{activity.subtitle}</p>
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-1">
+        <div className="flex shrink-0 flex-row items-center justify-between gap-2 sm:flex-col sm:items-end">
   {activity.status && (
     <span className="bg-white text-primary border border-primary text-[11px] font-bold px-[10px] py-[3px] rounded-[12px] inline-flex items-center gap-1 whitespace-nowrap">
       <FiCheckCircle size={12} /> {activity.status}

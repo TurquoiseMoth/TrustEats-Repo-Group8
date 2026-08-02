@@ -200,49 +200,51 @@ function ProductUploadPage() {
         </p>
       </div>
 
-      {/* Product Name */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="product-name" className="text-sm font-semibold text-gray-800">
-          Product Name
-        </label>
-        <input
-          id="product-name"
-          type="text"
-          placeholder="Enter product name"
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        {/* Product Name */}
+        <div className="flex flex-col gap-2">
+          <label htmlFor="product-name" className="text-sm font-semibold text-gray-800">
+            Product Name
+          </label>
+          <input
+            id="product-name"
+            type="text"
+            placeholder="Enter product name"
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
             disabled={isSubmitting}
             className="h-12 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
-        />
-      </div>
-
-      {/* NAFDAC Number */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="nafdac-no" className="text-sm font-semibold text-gray-800">
-          Enter NAFDAC NO.
-        </label>
-        <div className="relative">
-          <input
-            id="nafdac-no"
-            type="text"
-            placeholder="XX-XXXX"
-            value={nafdacNo}
-            onChange={handleNafdacChange}
-            maxLength={9}
-            disabled={isSubmitting}
-            className={`h-12 w-full rounded-lg border bg-white px-4 pr-10 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:ring-1 focus:ring-primary ${
-              nafdacNo.length > 0
-                ? isNafdacValid
-                  ? "border-primary"
-                  : "border-red-400 focus:border-red-500 focus:ring-red-500"
-                : "border-gray-300 focus:border-primary"
-            }`}
           />
-          {nafdacNo.length > 0 && isNafdacValid && (
-            <CheckCircle2 className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-primary" />
-          )}
         </div>
-        <p className="text-xs text-gray-500">Strict alphanumeric format: XX-XXXX</p>
+
+        {/* NAFDAC Number */}
+        <div className="flex flex-col gap-2">
+          <label htmlFor="nafdac-no" className="text-sm font-semibold text-gray-800">
+            Enter NAFDAC NO.
+          </label>
+          <div className="relative">
+            <input
+              id="nafdac-no"
+              type="text"
+              placeholder="XX-XXXX"
+              value={nafdacNo}
+              onChange={handleNafdacChange}
+              maxLength={9}
+              disabled={isSubmitting}
+              className={`h-12 w-full rounded-lg border bg-white px-4 pr-10 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:ring-1 focus:ring-primary ${
+                nafdacNo.length > 0
+                  ? isNafdacValid
+                    ? "border-primary"
+                    : "border-red-400 focus:border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:border-primary"
+              }`}
+            />
+            {nafdacNo.length > 0 && isNafdacValid && (
+              <CheckCircle2 className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-primary" />
+            )}
+          </div>
+          <p className="text-xs text-gray-500">Strict alphanumeric format: XX-XXXX</p>
+        </div>
       </div>
 
       {/* File Upload Dropzone */}
@@ -371,8 +373,8 @@ function ProductUploadPage() {
         </header>
 
         {/* Content */}
-        <main className="flex-1 overflow-y-auto px-8 py-8">
-          <div className="mx-auto max-w-xl">
+        <main className="flex-1 overflow-y-auto px-8 py-8 2xl:px-12">
+          <div className="mx-auto w-full max-w-4xl">
             {submitSuccess ? successContent : formContent}
           </div>
         </main>
